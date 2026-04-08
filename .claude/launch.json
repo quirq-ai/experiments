@@ -1,0 +1,26 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "server",
+      "runtimeExecutable": "/Users/surshar/.nvm/versions/node/v23.3.0/bin/node",
+      "runtimeArgs": ["node_modules/.pnpm/tsx@4.21.0/node_modules/tsx/dist/cli.mjs", "server/src/index.ts"],
+      "port": 3100
+    },
+    {
+      "name": "ui",
+      "runtimeExecutable": "/Users/surshar/.nvm/versions/node/v23.3.0/bin/node",
+      "runtimeArgs": ["node_modules/vite/bin/vite.js"],
+      "cwd": "ui",
+      "port": 5173
+    },
+    {
+      "name": "docs",
+      "runtimeExecutable": "/Users/surshar/.nvm/versions/node/v23.3.0/bin/node",
+      "runtimeArgs": ["/Users/surshar/.nvm/versions/node/v23.3.0/bin/npx", "mintlify", "dev"],
+      "cwd": "docs",
+      "port": 3000,
+      "autoPort": true
+    }
+  ]
+}

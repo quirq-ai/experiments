@@ -1,0 +1,17 @@
+$ claude "load customers.csv, compute monthly churn"
+→ loaded 12,847 rows from customers.csv
+→ cohorting by signup_month
+→ monthly churn (last 6 mo): 11.4% 12.1% 13.0% 13.8% 13.9% 14.2%
+→ cohort <30d has 2.3x the churn of >90d
+
+$ claude "is it concentrated by plan?"
+→ free→starter conversion drops 38% MoM
+→ starter churn carries 71% of total churn
+→ top cancel reason text: "couldn't get it set up"
+
+$ claude "what about pro?"
+→ pro plan churn flat at 4.1% for 6 months
+→ enterprise: n=8 churned, no signal
+
+$ claude "save the cohort table"
+→ wrote cohort_table.csv (180 rows)

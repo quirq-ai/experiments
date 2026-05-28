@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Churn deck</title>
+<style>
+  :root { --bg:#0a0d09; --xo:#83d63a; --text:#e7ecdf; --muted:#8a937a; --line:#1e2419; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
+    font:14px/1.55 ui-sans-serif, system-ui, "Inter", sans-serif; height:100%; }
+  .deck { padding: 18px; display: grid; gap: 14px; }
+  .slide {
+    background: linear-gradient(135deg, #131811, #0d100c);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 28px 32px; min-height: 220px; position: relative;
+  }
+  .slide h2 { color: var(--xo); margin: 0 0 10px; font-size: 22px; }
+  .slide h3 { margin: 0 0 6px; font-size: 16px; color: var(--text); }
+  .slide p, .slide li { color: #d6dccb; }
+  .slide ul { padding-left: 20px; margin: 6px 0 0; }
+  .pageno { position: absolute; right: 16px; bottom: 12px;
+    color: var(--muted); font: 11px ui-monospace, monospace; }
+  .kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 6px; }
+  .kpi .card { background: #0d100c; border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+  .kpi .num { font-size: 26px; font-weight: 600; color: var(--text); }
+  .kpi .lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  svg { background: #07090b; border-radius: 6px; }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <section class="slide">
+    <h2>Churn: a starter-onboarding problem</h2>
+    <p>Monthly review · prepared for leadership · May 2026</p>
+    <p style="color:var(--muted);margin-top:32px;">Owner: growth · Source: cohort_table.csv</p>
+    <span class="pageno">1 / 6</span>
+  </section>
+
+  <section class="slide">
+    <h2>The thesis in one sentence</h2>
+    <h3>Monthly churn rose from 11.4% to 14.2%; 71% of that increase is starter accounts cancelling in their first 30 days.</h3>
+    <span class="pageno">2 / 6</span>
+  </section>
+
+  <section class="slide">
+    <h2>The numbers</h2>
+    <div class="kpi">
+      <div class="card"><div class="num">14.2%</div><div class="lbl">monthly churn (was 11.4%)</div></div>
+      <div class="card"><div class="num">2.3x</div><div class="lbl">&lt;30d cohort vs &gt;90d</div></div>
+      <div class="card"><div class="num">71%</div><div class="lbl">of new churn is starter plan</div></div>
+    </div>
+    <span class="pageno">3 / 6</span>
+  </section>
+
+  <section class="slide">
+    <h2>Cohorts over time</h2>
+    <svg viewBox="0 0 600 160" width="100%" height="180">
+      <path d="M0,140 L80,128 L160,116 L240,100 L320,86 L400,72 L480,58 L560,46 L600,40 L600,160 L0,160 Z"
+            fill="#83d63a" fill-opacity=".22" stroke="#83d63a" stroke-width="1.6" />
+      <path d="M0,148 L80,142 L160,134 L240,124 L320,114 L400,104 L480,94 L560,84 L600,80 L600,160 L0,160 Z"
+            fill="#d6a93a" fill-opacity=".22" stroke="#d6a93a" stroke-width="1.4" />
+      <path d="M0,154 L80,150 L160,146 L240,142 L320,138 L400,134 L480,130 L560,126 L600,122 L600,160 L0,160 Z"
+            fill="#6aa7d6" fill-opacity=".22" stroke="#6aa7d6" stroke-width="1.2" />
+    </svg>
+    <p style="margin-top:8px;color:var(--muted);">starter (green) drives the trend; pro (yellow) and enterprise (blue) flat.</p>
+    <span class="pageno">4 / 6</span>
+  </section>
+
+  <section class="slide">
+    <h2>The ask</h2>
+    <h3>One sprint, growth team, starter day 0 to 14.</h3>
+    <ul>
+      <li>Goal: starter day-30 retention from 56% to 68% by end of Q3</li>
+      <li>Dependencies: activation events from platform</li>
+      <li>Out of scope: pricing changes, free-tier limits, enterprise churn</li>
+    </ul>
+    <span class="pageno">5 / 6</span>
+  </section>
+
+  <section class="slide">
+    <h2>What I need from you today</h2>
+    <ul>
+      <li>Sign-off on the sprint</li>
+      <li>Cover for the postponed pricing experiment</li>
+      <li>Intro to a starter customer for one 30-minute call this week</li>
+    </ul>
+    <span class="pageno">6 / 6</span>
+  </section>
+
+</div>
+</body>
+</html>

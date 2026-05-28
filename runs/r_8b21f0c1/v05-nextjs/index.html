@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Churn dashboard · preview</title>
+<style>
+  :root { --bg:#0a0d09; --xo:#83d63a; --text:#e7ecdf; --muted:#8a937a;
+    --line:#1e2419; --panel:#11140f; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
+    font: 14px/1.55 ui-sans-serif, system-ui, "Inter", sans-serif; }
+  .topbar { height: 36px; background: #11140f; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; padding: 0 14px; gap: 10px; }
+  .pill { background: #07090b; border: 1px solid var(--line); color: var(--muted);
+    font: 11px ui-monospace, monospace; padding: 4px 10px; border-radius: 999px; flex: 1; }
+  .pill b { color: var(--xo); font-weight: 600; }
+  .app { padding: 22px 26px; }
+  .app h1 { margin: 0 0 18px; font-size: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; }
+  .card h2 { margin: 0 0 8px; font-size: 12px; color: var(--xo);
+    text-transform: uppercase; letter-spacing: 0.08em; }
+  .num { font-size: 26px; font-weight: 600; }
+  .delta { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .delta.up { color: #e07a5f; }
+  .delta.down { color: var(--xo); }
+  .wide { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span style="color:#5a8f2a;">●</span>
+    <span style="color:#d6a93a;">●</span>
+    <span style="color:#e07a5f;">●</span>
+    <span class="pill"><b>churn.xo-sandbox.run</b> / dashboard</span>
+  </div>
+  <div class="app">
+    <h1>Churn dashboard</h1>
+    <div class="grid">
+      <div class="card"><h2>Day-30 retention</h2><div class="num">56.1%</div><div class="delta">Target: 68% by Q3</div></div>
+      <div class="card"><h2>Monthly churn</h2><div class="num">14.2%</div><div class="delta up">+2.8 pts vs 6mo ago</div></div>
+      <div class="card"><h2>Starter share of churn</h2><div class="num">71%</div><div class="delta up">+12 pts</div></div>
+      <div class="card"><h2>Free → starter</h2><div class="num">3.1%</div><div class="delta up">-38% MoM</div></div>
+
+      <div class="card wide">
+        <h2>Cohorts by signup month</h2>
+        <svg viewBox="0 0 800 140" width="100%" height="140">
+          <path d="M0,124 L100,114 L200,104 L300,88 L400,76 L500,62 L600,48 L700,38 L800,32 L800,140 L0,140 Z" fill="#83d63a" fill-opacity=".22" stroke="#83d63a" stroke-width="1.4" />
+          <path d="M0,132 L100,128 L200,122 L300,114 L400,106 L500,98 L600,90 L700,82 L800,78 L800,140 L0,140 Z" fill="#d6a93a" fill-opacity=".22" stroke="#d6a93a" stroke-width="1.2" />
+          <path d="M0,138 L100,136 L200,134 L300,132 L400,130 L500,128 L600,126 L700,124 L800,122 L800,140 L0,140 Z" fill="#6aa7d6" fill-opacity=".22" stroke="#6aa7d6" stroke-width="1.0" />
+        </svg>
+        <p style="margin-top:8px;color:var(--muted);font-size:12px;">starter (green) drives the trend; pro (yellow), enterprise (blue) flat.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

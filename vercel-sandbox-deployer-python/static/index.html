@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vercel Sandbox Deployer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/material-darker.min.css" />
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --bg2: #141416;
+      --bg3: #1c1c1f;
+      --border: #2a2a2e;
+      --border-h: #3a3a3f;
+      --text: #e4e4e7;
+      --muted: #71717a;
+      --accent: #3b82f6;
+      --accent-h: #2563eb;
+      --success: #22c55e;
+      --error: #ef4444;
+      --warn: #eab308;
+      --r: 10px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; -webkit-font-smoothing: antialiased;
+    }
+    .app { max-width: 1100px; margin: 0 auto; padding: 40px 24px; }
+
+    /* Header */
+    .header { margin-bottom: 40px; }
+    .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .header h1 span { background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header p { color: var(--muted); font-size: 15px; }
+    .header .badge { display: inline-block; margin-top: 8px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: rgba(34,197,94,0.15); color: var(--success); }
+
+    /* Templates */
+    .templates { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+    .template-btn {
+      background: var(--bg2); border: 1px solid var(--border); color: var(--muted);
+      padding: 6px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: all 0.15s;
+    }
+    .template-btn:hover { border-color: var(--border-h); color: var(--text); }
+
+    /* Controls */
+    .controls { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; align-items: center; }
+    select {
+      appearance: none; background: var(--bg2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 12px center;
+      border: 1px solid var(--border); color: var(--text);
+      padding: 8px 36px 8px 14px; border-radius: var(--r); font-size: 14px; cursor: pointer;
+    }
+    select:hover { border-color: var(--border-h); }
+    .port-group { display: flex; align-items: center; gap: 8px; }
+    .port-group label { font-size: 13px; color: var(--muted); white-space: nowrap; }
+    .port-group input {
+      background: var(--bg2); border: 1px solid var(--border); color: var(--text);
+      padding: 8px 14px; border-radius: var(--r); font-size: 14px; width: 90px;
+    }
+    .port-group input:focus { border-color: var(--border-h); outline: none; }
+    .port-group input::placeholder { color: var(--muted); }
+
+    .deploy-btn {
+      background: var(--accent); color: white; border: none;
+      padding: 8px 20px; border-radius: var(--r); font-size: 14px; font-weight: 600;
+      cursor: pointer; margin-left: auto; display: flex; align-items: center; gap: 8px;
+      transition: background 0.15s;
+    }
+    .deploy-btn:hover:not(:disabled) { background: var(--accent-h); }
+    .deploy-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Editor */
+    .editor-wrap { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 20px; }
+    .CodeMirror { height: 350px; font-size: 14px; font-family: "SF Mono","Fira Code",Menlo,monospace; }
+
+    /* Output */
+    .output { border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+    .output-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px; background: var(--bg2); border-bottom: 1px solid var(--border);
+    }
+    .output-header h3 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+    .badge-status { font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; display: none; }
+    .badge-status.running  { display: inline; background: rgba(59,130,246,0.15); color: var(--accent); }
+    .badge-status.success  { display: inline; background: rgba(34,197,94,0.15); color: var(--success); }
+    .badge-status.error    { display: inline; background: rgba(239,68,68,0.15); color: var(--error); }
+    .badge-status.deploying { display: inline; background: rgba(234,179,8,0.15); color: var(--warn); }
+    .output-body { padding: 16px; min-height: 120px; background: var(--bg); }
+    .output-body pre {
+      font-family: "SF Mono","Fira Code",Menlo,monospace; font-size: 13px; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .placeholder { color: var(--muted); font-style: italic; font-size: 14px; }
+    .sandbox-url {
+      display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
+      padding: 8px 16px; background: rgba(59,130,246,0.1);
+      border: 1px solid rgba(59,130,246,0.3); border-radius: var(--r); font-size: 14px;
+    }
+    .sandbox-url a { color: var(--accent); text-decoration: none; }
+    .sandbox-url a:hover { text-decoration: underline; }
+
+    .info-box {
+      margin-top: 24px; padding: 16px; background: var(--bg2);
+      border: 1px solid var(--border); border-radius: var(--r);
+      font-size: 13px; color: var(--muted); line-height: 1.6;
+    }
+    .info-box strong { color: var(--text); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner {
+      width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white; border-radius: 50%; animation: spin 0.6s linear infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <h1><span>Sandbox</span> Deployer</h1>
+      <p>Write code and deploy it to an ephemeral Vercel Sandbox MicroVM</p>
+      <span class="badge">Python Edition</span>
+    </header>
+
+    <div class="templates" id="templates"></div>
+
+    <div class="controls">
+      <select id="language">
+        <option value="node">Node.js 22</option>
+        <option value="python">Python 3.13</option>
+      </select>
+      <div class="port-group">
+        <label>Port:</label>
+        <input id="port" type="text" placeholder="None" />
+      </div>
+      <button class="deploy-btn" id="deployBtn" onclick="deploy()">
+        Deploy to Sandbox
+      </button>
+    </div>
+
+    <div class="editor-wrap">
+      <textarea id="editor"></textarea>
+    </div>
+
+    <div class="output">
+      <div class="output-header">
+        <h3>Output</h3>
+        <span class="badge-status" id="statusBadge"></span>
+      </div>
+      <div class="output-body" id="outputBody">
+        <p class="placeholder">Deploy your code to see the output here</p>
+      </div>
+    </div>
+
+    <div class="info-box">
+      <strong>How it works:</strong> Your code runs inside an isolated
+      Firecracker MicroVM powered by Vercel Sandbox. Scripts run and return
+      output. If you specify a port, a server is started and you get a live
+      URL. Sandboxes are ephemeral and auto-terminate after 5 minutes.
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/python/python.min.js"></script>
+  <script>
+    const TEMPLATES = {
+      "Hello World (Node)": {
+        language: "node", port: "",
+        code: `console.log("Hello from Vercel Sandbox!");\nconsole.log("Node.js version:", process.version);\nconsole.log("Platform:", process.platform);\nconsole.log("");\nconsole.log("Running inside an isolated Firecracker MicroVM.");`
+      },
+      "HTTP Server (Node)": {
+        language: "node", port: "3000",
+        code: `const http = require("http");\n\nconst server = http.createServer((req, res) => {\n  res.writeHead(200, { "Content-Type": "application/json" });\n  res.end(JSON.stringify({\n    message: "Hello from Vercel Sandbox!",\n    method: req.method,\n    url: req.url,\n    time: new Date().toISOString(),\n  }, null, 2));\n});\n\nserver.listen(3000, () => console.log("Server on port 3000"));`
+      },
+      "Express API (Node)": {
+        language: "node", port: "3000",
+        code: `const express = require("express");\nconst app = express();\napp.use(express.json());\n\nconst todos = [\n  { id: 1, text: "Learn Vercel Sandbox", done: true },\n  { id: 2, text: "Build something cool", done: false },\n];\n\napp.get("/", (req, res) => res.json({\n  message: "Todo API in Vercel Sandbox",\n  routes: ["GET /todos", "POST /todos"],\n}));\n\napp.get("/todos", (req, res) => res.json(todos));\n\napp.post("/todos", (req, res) => {\n  const todo = { id: todos.length + 1, text: req.body.text || "New", done: false };\n  todos.push(todo);\n  res.status(201).json(todo);\n});\n\napp.listen(3000, () => console.log("Express API on port 3000"));`
+      },
+      "Hello World (Python)": {
+        language: "python", port: "",
+        code: `import sys\nimport platform\n\nprint("Hello from Vercel Sandbox!")\nprint(f"Python version: {sys.version}")\nprint(f"Platform: {platform.platform()}")\nprint(f"Machine: {platform.machine()}")\nprint()\nprint("Running inside an isolated Firecracker MicroVM.")`
+      },
+      "HTTP Server (Python)": {
+        language: "python", port: "8000",
+        code: `from http.server import HTTPServer, BaseHTTPRequestHandler\nimport json\nfrom datetime import datetime\n\nclass Handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        self.send_response(200)\n        self.send_header("Content-Type", "application/json")\n        self.end_headers()\n        self.wfile.write(json.dumps({\n            "message": "Python server in Vercel Sandbox",\n            "path": self.path,\n            "time": datetime.now().isoformat(),\n        }, indent=2).encode())\n\nserver = HTTPServer(("0.0.0.0", 8000), Handler)\nprint("Python HTTP server on port 8000")\nserver.serve_forever()`
+      },
+    };
+
+    // Initialize CodeMirror
+    const editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
+      theme: "material-darker",
+      lineNumbers: true,
+      matchBrackets: true,
+      autoCloseBrackets: true,
+      indentWithTabs: false,
+      tabSize: 2,
+      mode: "javascript",
+    });
+    editor.setValue(TEMPLATES["Hello World (Node)"].code);
+
+    // Render template buttons
+    const templatesEl = document.getElementById("templates");
+    Object.keys(TEMPLATES).forEach(name => {
+      const btn = document.createElement("button");
+      btn.className = "template-btn";
+      btn.textContent = name;
+      btn.onclick = () => loadTemplate(name);
+      templatesEl.appendChild(btn);
+    });
+
+    function loadTemplate(name) {
+      const t = TEMPLATES[name];
+      document.getElementById("language").value = t.language;
+      document.getElementById("port").value = t.port;
+      editor.setValue(t.code);
+      editor.setOption("mode", t.language === "python" ? "python" : "javascript");
+      clearOutput();
+    }
+
+    // Language change → update editor mode
+    document.getElementById("language").addEventListener("change", (e) => {
+      editor.setOption("mode", e.target.value === "python" ? "python" : "javascript");
+    });
+
+    function clearOutput() {
+      document.getElementById("outputBody").innerHTML = '<p class="placeholder">Deploy your code to see the output here</p>';
+      const badge = document.getElementById("statusBadge");
+      badge.className = "badge-status";
+      badge.textContent = "";
+    }
+
+    async function deploy() {
+      const btn = document.getElementById("deployBtn");
+      const badge = document.getElementById("statusBadge");
+      const body = document.getElementById("outputBody");
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> Deploying...';
+      badge.className = "badge-status deploying";
+      badge.textContent = "deploying";
+      body.innerHTML = '<p class="placeholder">Creating sandbox and running your code...</p>';
+
+      try {
+        const res = await fetch("/api/sandbox", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: editor.getValue(),
+            language: document.getElementById("language").value,
+            port: document.getElementById("port").value || null,
+          }),
+        });
+
+        const data = await res.json();
+
+        badge.className = `badge-status ${data.status}`;
+        badge.textContent = data.status;
+
+        let html = "";
+        if (data.sandboxId) {
+          html += `<pre style="color:#71717a;margin-bottom:8px">Sandbox ID: ${esc(data.sandboxId)}</pre>`;
+        }
+        html += `<pre>${esc(data.output || data.error || "(no output)")}</pre>`;
+        if (data.url) {
+          html += `<div class="sandbox-url"><a href="${esc(data.url)}" target="_blank" rel="noopener">${esc(data.url)}</a></div>`;
+        }
+        body.innerHTML = html;
+      } catch (err) {
+        badge.className = "badge-status error";
+        badge.textContent = "error";
+        body.innerHTML = `<pre>${esc(err.message)}</pre>`;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = "Deploy to Sandbox";
+      }
+    }
+
+    function esc(s) {
+      const d = document.createElement("div");
+      d.textContent = s;
+      return d.innerHTML;
+    }
+  </script>
+</body>
+</html>

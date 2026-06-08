@@ -1,0 +1,8 @@
+{
+  "name": "sandbox-bridge",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@vercel/sandbox": "latest"
+  }
+}

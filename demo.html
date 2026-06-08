@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>XO Visualizer — git wave</title>
+<style>
+  :root{--bg:#08090a;--card:#101113;--line:#1c1e21;--ink:#e9ecea;--muted:#8a8f8b;--lime:#83d63a;--green:#5ef38b;--red:#ff5d6c;}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+  /* navbar mirrors xo-swarm conditional-layout header */
+  header.nav{position:relative;display:flex;height:64px;flex-shrink:0;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:0 16px}
+  .center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+  .center .crumb{display:flex;align-items:baseline;gap:6px}
+  .center .bname{font-size:14px;font-weight:500}
+  .center .stat{margin-left:4px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+  .cluster{display:flex;align-items:center;gap:6px}
+  .icbtn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border:0;background:transparent;color:#c7ccc8;border-radius:6px;cursor:pointer;font-size:18px;line-height:1}
+  .icbtn:hover{background:#161819}
+  .ghost{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;color:var(--ink);border-radius:6px;padding:6px 8px;font-size:13px;cursor:pointer}
+  .ghost:hover{background:#161819}
+  .outline{display:inline-flex;align-items:center;gap:6px;border:1px solid #2a2f2a;background:var(--bg);color:#c7ccc8;border-radius:6px;padding:6px 10px;font-size:13px;font-weight:500;cursor:pointer}
+  .outline:hover{border-color:var(--lime);color:#9be35a;background:#0c0f0a}
+  .repo{display:flex;align-items:center;gap:6px;max-width:220px;font-size:12px;color:var(--muted)}
+  .repo span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .body{display:flex;flex:1;min-height:0}
+  aside{width:240px;flex-shrink:0;display:flex;flex-direction:column;border-right:1px solid var(--line);background:var(--card)}
+  .brand{display:flex;align-items:center;gap:8px;padding:16px;font-size:13px;font-weight:500}
+  .lbl{padding:0 12px 8px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#5a605b}
+  .branches{flex:1;overflow-y:auto;padding:0 8px}
+  .br{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;color:#c7ccc8;text-align:left;font-size:13px;padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:2px}
+  .br:hover{background:#161819}
+  .br.on{background:rgba(131,214,58,.10);color:#9be35a}
+  .dot{width:6px;height:6px;border-radius:50%;background:#3a3f3b;flex-shrink:0}
+  .br.on .dot{background:var(--lime)}
+  .br .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .br .ct{font-size:11px;color:#5a605b;font-variant-numeric:tabular-nums}
+  .stage{position:relative;flex:1;min-width:0}
+  canvas{display:block;width:100%;height:100%}
+  .tip{position:absolute;pointer-events:none;background:#0e0f11;border:1px solid #23262a;border-radius:6px;padding:8px 12px;font-size:12px;max-width:240px;opacity:0;transition:opacity .12s}
+  .tip b{font-weight:500;display:block}
+  .ar{color:var(--muted)}
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="center"><span class="crumb"><span class="bname" id="hb">main</span><span class="stat"><span style="color:var(--green)" id="hadd">+0</span> <span style="color:var(--red)" id="hdel">-0</span></span></span></div>
+  <div class="cluster">
+    <button class="icbtn" id="toggleL" title="Toggle sidebar">&#9776;</button>
+    <button class="ghost" id="crumbBtn">Branches <span class="ar">&rsaquo;</span></button>
+    <span class="stat" id="hcount" style="font-size:12px;color:var(--muted)">0 commits</span>
+  </div>
+  <div class="cluster">
+    <span class="repo"><span id="hrepo">sample data</span></span>
+    <button class="outline" id="createBtn">+ Create new</button>
+    <button class="ghost" id="replayBtn">&#9654; Replay</button>
+    <button class="icbtn" id="toggleR" title="Toggle sidebar">&#9707;</button>
+  </div>
+</header>
+<div class="body">
+  <aside id="aside">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 500 500">
+        <polyline stroke="#fff" stroke-width="15.38" fill="none" stroke-miterlimit="10" points="36.99 165.84 118.47 247.31 31.16 334.61"/>
+        <polyline stroke="#fff" stroke-width="15.38" fill="none" stroke-miterlimit="10" points="244.91 165.84 163.44 247.31 250.74 334.61"/>
+        <polyline stroke="#83d63a" stroke-width="15.38" fill="none" stroke-miterlimit="10" points="328.12 165.06 246.65 246.53 333.95 333.84"/>
+        <polyline stroke="#83d63a" stroke-width="15.38" fill="none" stroke-miterlimit="10" points="380.51 165.06 461.99 246.53 374.68 333.84"/>
+      </svg>Visualizer
+    </div>
+    <div class="lbl">Branches</div>
+    <div class="branches" id="branches"></div>
+  </aside>
+  <div class="stage" id="stage">
+    <canvas id="c"></canvas>
+    <div class="tip" id="tip"></div>
+  </div>
+</div>
+<script>
+(function(){
+  const GREEN='#5ef38b',RED='#ff5d6c';
+  const BRANCHES=[{name:'main',count:142,head:true},{name:'feat/wave-renderer',count:38},{name:'feat/branch-sidebar',count:21},{name:'fix/retina-scaling',count:9},{name:'experiment/particles',count:27},{name:'release/0.1',count:64}];
+  const SUB=['wire up the wave renderer','tune easing curves','add branch sidebar','smooth the envelope','fix retina scaling','glow pass on the crest','warp the time axis','reduce overdraw','polish hover guide','stream commits on load','refactor scale helpers','drop dead code','rewrite the reducer','calm the motion','balance green and red'];
+  const AUTH=['mira','sol','june','kit','dev'];
+  function rnd(s){s=Math.sin(s)*1e4;return s-Math.floor(s)}
+  function gen(branch){const meta=BRANCHES.find(b=>b.name===branch)||{count:120};const n=Math.max(24,meta.count),base=branch.split('').reduce((a,c)=>a+c.charCodeAt(0),0),now=Date.now(),span=1000*60*60*24*240,out=[];
+    for(let i=0;i<n;i++){const k=base+i;const ts=now-Math.pow(rnd(k*3.1),1.6)*span;const big=rnd(k*1.7)>0.9?1:0;
+      out.push({ts,add:Math.floor(2+Math.pow(rnd(k*2.3),3)*(big?1400:240)),del:Math.floor(1+Math.pow(rnd(k*5.9),3)*(big?900:160)*rnd(k*0.7)),subj:SUB[Math.floor(rnd(k*5.5)*SUB.length)],author:AUTH[Math.floor(rnd(k*9.4)*AUTH.length)],hash:Math.floor(rnd(k*4.2)*0xfffffff).toString(16).padStart(7,'0')});}
+    return out.sort((a,b)=>a.ts-b.ts);}
+  const cv=document.getElementById('c'),ctx=cv.getContext('2d'),stage=document.getElementById('stage'),tip=document.getElementById('tip');
+  let W=0,H=0,dpr=Math.min(2,devicePixelRatio||1),pad=48,step=2,cols=0,top=new Float32Array(0),bot=new Float32Array(0),cx=[],commits=[],t=0,reveal=0,hover=-1;
+  function rebuild(){if(!W||!commits.length){top=new Float32Array(0);bot=new Float32Array(0);return}
+    const usable=W-pad*2,n=commits.length,spacing=n>1?usable/(n-1):usable;step=Math.max(1.5,Math.min(3,spacing/2));cols=Math.ceil(usable/step)+1;
+    cx=commits.map((_,i)=>pad+(n>1?i*usable/(n-1):usable/2));
+    const sigma=Math.max(spacing*0.85,6),inv=1/(2*sigma*sigma),reach=Math.ceil(sigma*3/spacing)+1,pw=0.6;let mx=1;
+    for(const c of commits)mx=Math.max(mx,Math.pow(c.add,pw),Math.pow(c.del,pw));
+    top=new Float32Array(cols);bot=new Float32Array(cols);
+    for(let col=0;col<cols;col++){const x=pad+col*step,ic=Math.round((x-pad)/spacing);let a=0,d=0;
+      for(let j=Math.max(0,ic-reach);j<=Math.min(n-1,ic+reach);j++){const dx=x-cx[j],g=Math.exp(-(dx*dx)*inv);a+=Math.pow(commits[j].add,pw)/mx*g;d+=Math.pow(commits[j].del,pw)/mx*g}
+      top[col]=a;bot[col]=d}
+    const maxAmp=Math.max(40,H/2-44);let peak=1e-4;for(let i=0;i<cols;i++)peak=Math.max(peak,top[i],bot[i]);const k=maxAmp/peak;for(let i=0;i<cols;i++){top[i]*=k;bot[i]*=k}}
+  function size(){W=stage.clientWidth;H=stage.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);rebuild()}
+  const ease=x=>1-Math.pow(1-x,3);
+  function ridge(sign,amp,baseY){ctx.beginPath();ctx.moveTo(pad,baseY);for(let col=0;col<cols;col++)ctx.lineTo(pad+col*step,baseY-sign*amp(col));ctx.lineTo(pad+(cols-1)*step,baseY);ctx.closePath()}
+  function frame(){t+=0.016;const baseY=H/2;ctx.fillStyle='#08090a';ctx.fillRect(0,0,W,H);
+    if(cols>1){if(reveal<1)reveal=Math.min(1,reveal+0.012);const revX=pad+ease(reveal)*(W-pad*2);
+      const wob=col=>1+0.06*Math.sin(t*0.8+col*0.045)+0.03*Math.sin(t*0.37-col*0.02);const ta=col=>top[col]*wob(col),ba=col=>bot[col]*wob(col+100);
+      ctx.save();ctx.beginPath();ctx.rect(0,0,revX,H);ctx.clip();
+      let g=ctx.createLinearGradient(0,baseY-(H/2-30),0,baseY);g.addColorStop(0,'rgba(94,243,139,0)');g.addColorStop(1,'rgba(94,243,139,0.30)');ridge(1,ta,baseY);ctx.fillStyle=g;ctx.fill();
+      let r=ctx.createLinearGradient(0,baseY,0,baseY+(H/2-30));r.addColorStop(0,'rgba(255,93,108,0.30)');r.addColorStop(1,'rgba(255,93,108,0)');ridge(-1,ba,baseY);ctx.fillStyle=r;ctx.fill();
+      ctx.lineJoin='round';ctx.shadowBlur=14;
+      ctx.beginPath();for(let col=0;col<cols;col++){const x=pad+col*step,y=baseY-ta(col);col?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.strokeStyle=GREEN;ctx.shadowColor=GREEN;ctx.lineWidth=1.6;ctx.stroke();
+      ctx.beginPath();for(let col=0;col<cols;col++){const x=pad+col*step,y=baseY+ba(col);col?ctx.lineTo(x,y):ctx.moveTo(x,y)}ctx.strokeStyle=RED;ctx.shadowColor=RED;ctx.stroke();
+      ctx.shadowBlur=0;ctx.restore();
+      const sx=pad+((t*70)%(W-pad*2));if(sx<revX){let sw=ctx.createLinearGradient(sx-60,0,sx+60,0);sw.addColorStop(0,'rgba(255,255,255,0)');sw.addColorStop(.5,'rgba(255,255,255,0.05)');sw.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=sw;ctx.fillRect(sx-60,0,120,H)}}
+    ctx.strokeStyle='rgba(131,214,58,0.22)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad,baseY);ctx.lineTo(W-pad,baseY);ctx.stroke();
+    if(hover>=0&&hover<commits.length){const x=cx[hover],col=Math.round((x-pad)/step),tA=top[col]||0,bA=bot[col]||0;
+      ctx.strokeStyle='rgba(255,255,255,0.14)';ctx.beginPath();ctx.moveTo(x,baseY-tA-10);ctx.lineTo(x,baseY+bA+10);ctx.stroke();
+      [[baseY-tA,GREEN],[baseY+bA,RED]].forEach(p=>{ctx.beginPath();ctx.arc(x,p[0],3.2,0,6.283);ctx.fillStyle=p[1];ctx.shadowColor=p[1];ctx.shadowBlur=10;ctx.fill();ctx.shadowBlur=0})}
+    requestAnimationFrame(frame);}
+  stage.addEventListener('mousemove',e=>{const r=cv.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+    if(!commits.length||mx<pad||mx>W-pad){hover=-1;tip.style.opacity=0;return}
+    const n=commits.length,spacing=n>1?(W-pad*2)/(n-1):1,idx=Math.max(0,Math.min(n-1,Math.round((mx-pad)/spacing)));hover=idx;const c=commits[idx];
+    tip.innerHTML='<b>'+c.subj+'</b><span style="display:block;margin-top:4px;font-size:11px"><i style="color:'+GREEN+'">+'+c.add.toLocaleString()+'</i>  <i style="color:'+RED+'">-'+c.del.toLocaleString()+'</i>  <i style="color:#7a807b">'+c.hash+' · '+c.author+'</i></span>';
+    tip.style.opacity=1;let tx=cx[idx]+14,ty=my-10;if(tx>r.width-250)tx=cx[idx]-240;if(ty<6)ty=6;if(ty>H-60)ty=H-60;tip.style.left=tx+'px';tip.style.top=ty+'px'});
+  stage.addEventListener('mouseleave',()=>{hover=-1;tip.style.opacity=0});
+  function select(name){commits=gen(name);reveal=0;rebuild();document.getElementById('hb').textContent=name;
+    const a=commits.reduce((s,c)=>s+c.add,0),d=commits.reduce((s,c)=>s+c.del,0);
+    document.getElementById('hadd').textContent='+'+a.toLocaleString();document.getElementById('hdel').textContent='-'+d.toLocaleString();
+    document.getElementById('hcount').textContent=commits.length+' commits';
+    [...document.querySelectorAll('.br')].forEach(el=>el.classList.toggle('on',el.dataset.n===name));}
+  const list=document.getElementById('branches');
+  BRANCHES.forEach(b=>{const el=document.createElement('button');el.className='br'+(b.name==='main'?' on':'');el.dataset.n=b.name;
+    el.innerHTML='<span class="dot"></span><span class="nm">'+b.name+'</span>'+(b.head?'<span class="ct">HEAD</span>':'')+'<span class="ct">'+b.count+'</span>';
+    el.onclick=()=>select(b.name);list.appendChild(el)});
+  function toggle(){const a=document.getElementById('aside');a.style.display=a.style.display==='none'?'flex':'none';setTimeout(size,0)}
+  document.getElementById('toggleL').onclick=toggle;
+  document.getElementById('toggleR').onclick=toggle;
+  document.getElementById('crumbBtn').onclick=toggle;
+  document.getElementById('replayBtn').onclick=()=>{reveal=0};
+  document.getElementById('createBtn').onclick=()=>{alert('Create new: in the Next.js app this opens a folder prompt and runs git log on it. This standalone demo uses sample data only.')};
+  addEventListener('resize',size);size();select('main');frame();
+})();
+</script>
+</body>
+</html>

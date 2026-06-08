@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* XO brand palette */
+  --xo-charcoal: #08090a;
+  --xo-panel: #101113;
+  --xo-line: #1c1e21;
+  --xo-lime: #83d63a;
+  --xo-neon: #41ff00;
+  --xo-ink: #e9ecea;
+  --xo-muted: #8a8f8b;
+
+  /* shadcn tokens (neutral base, dark-first to match the cosmic stage) */
+  --radius: 0.625rem;
+  --background: #08090a;
+  --foreground: #e9ecea;
+  --card: #101113;
+  --card-foreground: #e9ecea;
+  --popover: #0e0f11;
+  --popover-foreground: #e9ecea;
+  --primary: #83d63a;
+  --primary-foreground: #07210a;
+  --secondary: #161819;
+  --secondary-foreground: #e9ecea;
+  --muted: #141617;
+  --muted-foreground: #8a8f8b;
+  --accent: #161819;
+  --accent-foreground: #9be35a;
+  --destructive: #ff5d6c;
+  --destructive-foreground: #1a0709;
+  --border: #1c1e21;
+  --input: #23262a;
+  --ring: #83d63a;
+
+  /* shadcn sidebar tokens (xo-swarm parity, tuned to the XO dark palette) */
+  --sidebar: #0a0b0c;
+  --sidebar-foreground: #e9ecea;
+  --sidebar-primary: #83d63a;
+  --sidebar-primary-foreground: #07210a;
+  --sidebar-accent: #161819;
+  --sidebar-accent-foreground: #9be35a;
+  --sidebar-border: #1c1e21;
+  --sidebar-ring: #83d63a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--xo-charcoal);
+  color: var(--xo-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--xo-lime);
+  color: #07210a;
+}

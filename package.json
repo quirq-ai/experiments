@@ -1,0 +1,29 @@
+{
+  "name": "marble-taxonomy",
+  "version": "1.0.0",
+  "description": "An open, graph-structured taxonomy of primary/elementary learning.",
+  "private": true,
+  "type": "module",
+  "license": "(ODbL-1.0 AND CC-BY-SA-4.0)",
+  "homepage": "https://withmarble.com",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --pretty false",
+    "validate": "node scripts/validate.mjs",
+    "validate:technology": "node scripts/validate-technology.mjs",
+    "verify": "npm run validate && npm run validate:technology && npm run typecheck && npm run build"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.5.2",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

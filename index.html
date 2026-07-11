@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How a Tree Eats Air — A Carbon Simulation</title>
+<style>
+  :root{
+    --bg:#080d09; --panel:#0e150f; --panel2:#0b110c; --border:#1c2a1d;
+    --text:#dbe8d6; --muted:#7f9479; --dim:#5a6d57;
+    --green:#83d63a; --leaf:#4ea83a; --leaf2:#2f7a2a;
+    --co2:#9fb0bd; --o2:#5fd0e0; --sugar:#ecb24b; --water:#4a9fe0;
+    --sun:#ffd24a; --wood:#8a5a34; --root:#b98a5e; --amber:#e8a24b;
+    --shadow:0 2px 20px rgba(0,0,0,.5);
+    font-synthesis:none;
+  }
+  *{box-sizing:border-box; margin:0; padding:0}
+  html,body{height:100%}
+  body{
+    background:radial-gradient(1200px 600px at 70% -10%, #10201180, transparent),var(--bg);
+    color:var(--text);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:13px; line-height:1.4; overflow:hidden;
+  }
+  .app{display:flex; flex-direction:column; height:100vh; width:100vw}
+
+  /* Header */
+  header{
+    display:flex; align-items:center; gap:18px; padding:10px 18px;
+    border-bottom:1px solid var(--border); background:linear-gradient(180deg,#0f170f,#0b110c);
+    flex-wrap:wrap;
+  }
+  header .brand{display:flex; align-items:baseline; gap:10px}
+  header h1{font-size:15px; font-weight:700; letter-spacing:.2px}
+  header h1 .accent{color:var(--green)}
+  header .sub{color:var(--muted); font-size:11px}
+  .eq{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12.5px;
+    padding:5px 12px; border:1px solid var(--border); border-radius:8px; background:#0a110b;
+    white-space:nowrap;
+  }
+  .eq .co2{color:var(--co2)} .eq .h2o{color:var(--water)} .eq .light{color:var(--sun)}
+  .eq .glu{color:var(--sugar)} .eq .o2{color:var(--o2)}
+  .clock{margin-left:auto; display:flex; gap:16px; align-items:center; font-variant-numeric:tabular-nums}
+  .clock .big{font-size:20px; font-weight:700}
+  .clock .lbl{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.6px}
+  .clock .col{text-align:right}
+
+  /* Controls */
+  .controls{
+    display:flex; align-items:center; gap:18px; padding:8px 18px; flex-wrap:wrap;
+    border-bottom:1px solid var(--border); background:#0a100b;
+  }
+  .btns{display:flex; gap:6px}
+  button{
+    font:inherit; color:var(--text); background:#132014; border:1px solid var(--border);
+    padding:6px 12px; border-radius:7px; cursor:pointer; transition:.12s; font-size:12px;
+  }
+  button:hover{background:#1a2c1b; border-color:#2c4a2d}
+  button.primary{background:var(--green); color:#08130a; border-color:var(--green); font-weight:700}
+  button.primary:hover{background:#95e84c}
+  button.on{background:#1f3a20; border-color:var(--green); color:var(--green)}
+  .ctl{display:flex; flex-direction:column; gap:3px; min-width:118px}
+  .ctl label{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; display:flex; justify-content:space-between; gap:8px}
+  .ctl label b{color:var(--text); font-variant-numeric:tabular-nums; font-weight:600}
+  input[type=range]{
+    -webkit-appearance:none; appearance:none; height:4px; border-radius:3px;
+    background:#24361f; outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+    background:var(--green); cursor:pointer; border:2px solid #0a100b; box-shadow:0 0 0 1px var(--green)
+  }
+  input[type=range]::-moz-range-thumb{
+    width:12px; height:12px; border-radius:50%; background:var(--green); cursor:pointer; border:2px solid #0a100b
+  }
+  .seg{display:flex; border:1px solid var(--border); border-radius:7px; overflow:hidden}
+  .seg button{border:none; border-radius:0; padding:6px 10px}
+  .seg button+button{border-left:1px solid var(--border)}
+
+  /* Main grid */
+  .main{flex:1; display:grid; grid-template-columns:352px 1fr 336px; gap:1px; background:var(--border); min-height:0}
+  .panel{background:var(--panel); position:relative; overflow:hidden; display:flex; flex-direction:column; min-height:0}
+  .panel .phead{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:8px 12px; border-bottom:1px solid var(--border); background:#0b120c; flex:0 0 auto;
+  }
+  .phead .t{font-size:11px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:var(--text)}
+  .phead .t .num{color:var(--green); margin-right:6px}
+  .phead .hint{font-size:10px; color:var(--dim)}
+  .canvas-wrap{position:relative; flex:1; min-height:0}
+  canvas{position:absolute; inset:0; width:100%; height:100%; display:block}
+
+  /* Leaf panel extras */
+  .leafcol{display:flex; flex-direction:column}
+  .leaf-canvas-wrap{flex:1 1 auto; min-height:120px}
+  .subproc{
+    flex:0 0 auto; padding:9px 12px; border-top:1px solid var(--border); background:var(--panel2);
+    display:grid; grid-template-columns:1fr 1fr; gap:9px;
+  }
+  .rx{border:1px solid var(--border); border-radius:8px; padding:8px 9px; background:#0a110b; position:relative; overflow:hidden}
+  .rx h4{font-size:10px; letter-spacing:.4px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; display:flex; align-items:center; gap:5px}
+  .rx .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .rx p{font-size:10.5px; color:var(--dim); line-height:1.35}
+  .rx .prod{color:var(--text)}
+  .rx.active{border-color:#2c4a2d; box-shadow:0 0 14px #1a3a1440}
+  .flux{
+    flex:0 0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border);
+    border-top:1px solid var(--border);
+  }
+  .flux .f{background:var(--panel2); padding:7px 10px; text-align:center}
+  .flux .f .v{font-size:14px; font-weight:700; font-variant-numeric:tabular-nums}
+  .flux .f .k{font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-top:1px}
+
+  /* Accounting panel */
+  .acct{overflow-y:auto; padding:0}
+  .acct::-webkit-scrollbar{width:8px} .acct::-webkit-scrollbar-thumb{background:#1f2e20;border-radius:4px}
+  .sect{padding:11px 13px; border-bottom:1px solid var(--border)}
+  .sect h3{font-size:10px; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+  .bigstat{display:flex; align-items:baseline; gap:7px; margin-bottom:2px}
+  .bigstat .v{font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.5px}
+  .bigstat .u{font-size:12px; color:var(--muted)}
+  .bigstat .sub{margin-left:auto; font-size:10px; color:var(--dim); text-align:right}
+  .flows{display:flex; flex-direction:column; gap:7px}
+  .flowrow{display:grid; grid-template-columns:15px 1fr auto; align-items:center; gap:8px}
+  .flowrow .ic{width:11px; height:11px; border-radius:3px}
+  .flowrow .nm{font-size:11px; color:var(--text)}
+  .flowrow .nm small{color:var(--dim); font-size:9.5px}
+  .flowrow .amt{font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; text-align:right}
+  .stackbar{height:22px; border-radius:6px; overflow:hidden; display:flex; margin-top:9px; border:1px solid var(--border)}
+  .stackbar div{height:100%; transition:width .3s}
+  .legend{display:flex; flex-wrap:wrap; gap:9px; margin-top:8px}
+  .legend span{display:flex; align-items:center; gap:5px; font-size:10px; color:var(--muted)}
+  .legend i{width:9px; height:9px; border-radius:2px; display:inline-block}
+  .tank{height:12px; background:#0a110b; border:1px solid var(--border); border-radius:7px; overflow:hidden; position:relative; margin-top:6px}
+  .tank .fill{height:100%; background:linear-gradient(90deg,#b9822f,var(--sugar)); transition:width .25s}
+  .rates{display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:var(--border); border-radius:8px; overflow:hidden; border:1px solid var(--border)}
+  .rates .r{background:var(--panel2); padding:8px; text-align:center}
+  .rates .r .v{font-size:13px; font-weight:700; font-variant-numeric:tabular-nums}
+  .rates .r .k{font-size:9px; color:var(--muted); text-transform:uppercase; margin-top:1px; letter-spacing:.3px}
+  .factoid{background:linear-gradient(180deg,#101e10,#0b140b); border:1px solid #23401f; border-radius:9px; padding:11px 12px}
+  .factoid .hl{color:var(--green); font-weight:700; font-size:22px; font-variant-numeric:tabular-nums}
+  .factoid p{font-size:11px; color:var(--muted); margin-top:4px; line-height:1.45}
+
+  /* Bottom bar */
+  .bottom{
+    flex:0 0 auto; height:158px; display:grid; grid-template-columns:1fr 400px; gap:1px;
+    background:var(--border); border-top:1px solid var(--border);
+  }
+  .chartbox{background:var(--panel); position:relative; display:flex; flex-direction:column}
+  .chartbox .phead{border-bottom:1px solid var(--border)}
+  .chart-wrap{flex:1; position:relative; min-height:0}
+  .narration{background:var(--panel2); padding:12px 15px; display:flex; flex-direction:column; gap:8px; overflow:hidden}
+  .narration .stage{display:flex; align-items:center; gap:8px; font-size:12px; font-weight:700; letter-spacing:.3px}
+  .narration .stage .pip{width:9px; height:9px; border-radius:50%; box-shadow:0 0 8px currentColor}
+  .narration p{font-size:11.5px; color:var(--muted); line-height:1.5}
+  .narration .season-strip{display:flex; gap:2px; margin-top:auto}
+  .narration .season-strip .s{flex:1; height:5px; border-radius:2px; background:#182518; opacity:.5}
+  .narration .season-strip .s.on{opacity:1}
+
+  details.model{border-top:1px solid var(--border)}
+  details.model summary{padding:6px 18px; cursor:pointer; font-size:10.5px; color:var(--muted); background:#0a100b; list-style:none}
+  details.model summary::-webkit-details-marker{display:none}
+  details.model summary:before{content:"▸ "; color:var(--green)}
+  details.model[open] summary:before{content:"▾ "}
+  details.model .body{padding:10px 18px; font-size:11px; color:var(--muted); line-height:1.6; background:#080d09; max-height:180px; overflow-y:auto}
+  details.model .body code{color:var(--green); font-family:ui-monospace,monospace}
+  details.model .body b{color:var(--text)}
+
+  /* mode toggle in header */
+  .modebtn{
+    background:#132014; border:1px solid #2c4a2d; color:var(--green); font-weight:700;
+    padding:6px 13px; border-radius:8px; letter-spacing:.3px;
+  }
+  .modebtn:hover{background:#1c3320}
+  .modebtn.on{background:var(--green); color:#08130a; border-color:var(--green)}
+
+  /* jump-by-years buttons + species seg (3-wide) */
+  .jump{display:flex; gap:4px; align-items:center}
+  .jump .jl{font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-right:2px}
+  .jump button{padding:6px 9px; font-size:11px; font-variant-numeric:tabular-nums}
+  .jump button:hover{border-color:var(--green); color:var(--green)}
+
+  /* ---------- MATH MODE VIEW ---------- */
+  #mathView{display:none; flex:1; min-height:0; flex-direction:column; background:var(--bg)}
+  body.math .main, body.math .bottom, body.math details.model{display:none !important}
+  body.math #mathView{display:flex}
+  .math-toolbar{
+    display:flex; align-items:center; gap:14px; padding:9px 18px; flex-wrap:wrap;
+    border-bottom:1px solid var(--border); background:#0b120c; flex:0 0 auto;
+  }
+  .math-toolbar .mt-title{font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase}
+  .math-toolbar .mt-title .accent{color:var(--green)}
+  .math-toolbar .meta{display:flex; gap:16px; font-size:11px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .math-toolbar .meta b{color:var(--text)}
+  .math-toolbar .sp{margin-left:auto; display:flex; gap:6px; align-items:center}
+  .math-toolbar button{font-size:12px}
+  .math-toolbar .dtnote{font-size:10px; color:var(--dim)}
+  .math-body{flex:1; display:grid; grid-template-columns:1fr 400px; gap:1px; background:var(--border); min-height:0}
+  .cascade{background:var(--bg); overflow-y:auto; padding:12px 16px}
+  .cascade::-webkit-scrollbar,.mside::-webkit-scrollbar{width:9px}
+  .cascade::-webkit-scrollbar-thumb,.mside::-webkit-scrollbar-thumb{background:#1f2e20;border-radius:4px}
+  .stage{border:1px solid var(--border); border-radius:9px; margin-bottom:11px; overflow:hidden; background:var(--panel)}
+  .stage>h3{
+    font-size:11px; letter-spacing:.4px; text-transform:uppercase; padding:7px 12px; background:#0c130d;
+    border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px;
+  }
+  .stage>h3 .st-n{width:18px;height:18px;border-radius:5px;background:#16241590;color:var(--green);
+    display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+  .stage>h3 .st-out{margin-left:auto;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+  .eqline{padding:7px 12px; border-bottom:1px solid #14201580; display:grid; grid-template-columns:150px 1fr auto; gap:10px; align-items:baseline}
+  .eqline:last-child{border-bottom:none}
+  .eqline .lab{color:var(--muted); font-size:11px}
+  .eqline .frm{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; color:#b9d1b0; line-height:1.5; word-break:break-word}
+  .eqline .frm .sub{color:var(--sun)}                 /* substituted numbers */
+  .eqline .frm .op{color:var(--dim)}
+  .eqline .res{font-family:ui-monospace,monospace; font-size:12px; font-weight:700; color:var(--green); white-space:nowrap; font-variant-numeric:tabular-nums}
+  .eqline .res.neg{color:var(--amber)}
+  .stage.night>h3{opacity:.75}
+  .mside{background:var(--panel2); overflow-y:auto; padding:0}
+  .mside .msec{padding:11px 13px; border-bottom:1px solid var(--border)}
+  .mside h4{font-size:10px; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); margin-bottom:8px}
+  .kv{display:grid; grid-template-columns:1fr auto; gap:3px 10px; font-size:11px; font-variant-numeric:tabular-nums}
+  .kv .k{color:var(--dim); font-family:ui-monospace,monospace}
+  .kv .v{color:var(--text); text-align:right; font-family:ui-monospace,monospace}
+  .chem .ceq{border:1px solid var(--border); border-radius:8px; padding:9px 10px; margin-bottom:9px; background:#0a110b}
+  .chem .ceq .ct{font-size:11px; font-weight:700; color:var(--text); margin-bottom:4px}
+  .chem .ceq .cf{font-family:ui-monospace,monospace; font-size:11.5px; color:var(--green); line-height:1.5; word-break:break-word}
+  .chem .ceq .cw{font-family:ui-monospace,monospace; font-size:10.5px; color:var(--sugar); margin-top:4px; line-height:1.45}
+  .chem .ceq .cn{font-size:10.5px; color:var(--muted); margin-top:5px; line-height:1.45}
+  .rwtable{width:100%; border-collapse:collapse; font-size:11px}
+  .rwtable td{padding:4px 6px; border-bottom:1px solid #14201560; vertical-align:top}
+  .rwtable td:first-child{color:var(--muted); white-space:nowrap}
+  .rwtable td:last-child{color:var(--text); text-align:right; font-variant-numeric:tabular-nums; font-family:ui-monospace,monospace}
+  .rwtable td.note{color:var(--dim); font-size:9.5px; text-align:left; font-family:inherit}
+  .chem-para{font-size:11px; color:var(--muted); line-height:1.55; margin-bottom:8px}
+  .chem-para b{color:var(--text)}
+  .cites{font-size:9.5px; color:var(--dim); line-height:1.5; word-break:break-all}
+  .cites a{color:var(--leaf); text-decoration:none}
+  .loading{color:var(--dim); font-size:11px; font-style:italic}
+  @media (max-width:1120px){ .math-body{grid-template-columns:1fr; grid-auto-rows:auto} }
+
+  @media (max-width:1120px){
+    .main{grid-template-columns:1fr; grid-auto-rows:minmax(260px,auto); overflow-y:auto}
+    .bottom{grid-template-columns:1fr; height:auto}
+    body{overflow:auto}
+    .app{height:auto; min-height:100vh}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <h1><span class="accent">Tree</span> ⟶ how it eats air</h1>
+      <span class="sub">a carbon &amp; oxygen simulation</span>
+    </div>
+    <div class="eq">
+      6 <span class="co2">CO₂</span> + 6 <span class="h2o">H₂O</span> + <span class="light">light</span>
+      &nbsp;→&nbsp; <span class="glu">C₆H₁₂O₆</span> + 6 <span class="o2">O₂</span>
+    </div>
+    <button id="btnMathMode" class="modebtn" title="See every equation and the numbers flowing through each iteration">∑ Math mode</button>
+    <div class="clock">
+      <div class="col"><div class="big" id="clkYear">Yr 0</div><div class="lbl" id="clkSeason">Spring</div></div>
+      <div class="col"><div class="big" id="clkTime">06:00</div><div class="lbl" id="clkDay">Day 1</div></div>
+      <div class="col"><div class="big" id="clkTemp">—°C</div><div class="lbl">Leaf temp</div></div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="btns">
+      <button class="primary" id="btnPlay">❚❚ Pause</button>
+      <button id="btnReset">↺ Reset</button>
+    </div>
+    <div class="ctl">
+      <label>Speed <b id="vSpeed">4 d/s</b></label>
+      <input type="range" id="cSpeed" min="0" max="5" step="1" value="2">
+    </div>
+    <div class="ctl" style="min-width:auto">
+      <label>Simulate in years</label>
+      <div class="jump">
+        <button id="jy1">+1 yr</button>
+        <button id="jy10">+10 yr</button>
+        <button id="jy100">+100 yr</button>
+        <button id="jy1000">+1000 yr</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label>Sunlight <b id="vSun">100%</b></label>
+      <input type="range" id="cSun" min="0" max="130" step="1" value="100">
+    </div>
+    <div class="ctl">
+      <label>CO₂ <b id="vCO2">420 ppm</b></label>
+      <input type="range" id="cCO2" min="150" max="1200" step="10" value="420">
+    </div>
+    <div class="ctl">
+      <label>Soil water <b id="vWater">75%</b></label>
+      <input type="range" id="cWater" min="0" max="100" step="1" value="75">
+    </div>
+    <div class="ctl">
+      <label>Climate temp <b id="vTemp">+0°C</b></label>
+      <input type="range" id="cTemp" min="-8" max="10" step="1" value="0">
+    </div>
+    <div class="ctl" style="min-width:auto">
+      <label>Tree type</label>
+      <div class="seg">
+        <button id="btnDecid" class="on">Deciduous</button>
+        <button id="btnEver">Evergreen</button>
+        <button id="btnRedwood">🌲 Redwood</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- LEFT: leaf engine -->
+    <div class="panel leafcol">
+      <div class="phead">
+        <div class="t"><span class="num">1</span>The Leaf · photosynthesis engine</div>
+        <div class="hint" id="leafHint">stomata open</div>
+      </div>
+      <div class="canvas-wrap leaf-canvas-wrap"><canvas id="leafCanvas"></canvas></div>
+      <div class="flux">
+        <div class="f"><div class="v" style="color:var(--co2)" id="fxCO2">0</div><div class="k">CO₂ in /s</div></div>
+        <div class="f"><div class="v" style="color:var(--o2)" id="fxO2">0</div><div class="k">O₂ out /s</div></div>
+        <div class="f"><div class="v" style="color:var(--sugar)" id="fxSug">0</div><div class="k">sugar /s</div></div>
+      </div>
+      <div class="subproc">
+        <div class="rx" id="rxLight">
+          <h4><span class="dot" style="background:var(--o2)"></span>Light reactions</h4>
+          <p>Water is split by <span class="prod">light</span> on the thylakoid membrane →
+          releases <span class="prod" style="color:var(--o2)">O₂</span>, charges ATP + NADPH.</p>
+        </div>
+        <div class="rx" id="rxCalvin">
+          <h4><span class="dot" style="background:var(--sugar)"></span>Calvin cycle</h4>
+          <p><span class="prod">RuBisCO</span> fixes <span class="prod" style="color:var(--co2)">CO₂</span>
+          into G3P → <span class="prod" style="color:var(--sugar)">glucose</span>, spending ATP + NADPH.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER: the tree -->
+    <div class="panel">
+      <div class="phead">
+        <div class="t"><span class="num">2</span>The Tree · carbon becomes structure</div>
+        <div class="hint" id="treeHint">seedling</div>
+      </div>
+      <div class="canvas-wrap"><canvas id="treeCanvas"></canvas></div>
+    </div>
+
+    <!-- RIGHT: accounting -->
+    <div class="panel acct">
+      <div class="sect">
+        <h3>Dry biomass built</h3>
+        <div class="bigstat">
+          <span class="v" id="statMass">0</span><span class="u" id="statMassU">g</span>
+          <span class="sub" id="statMassSub">a seedling</span>
+        </div>
+        <div class="stackbar" id="stack">
+          <div style="background:var(--leaf); width:20%"></div>
+          <div style="background:#7a5230; width:30%"></div>
+          <div style="background:#9c6a3f; width:25%"></div>
+          <div style="background:var(--root); width:25%"></div>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--leaf)"></i>Leaves <b id="lgLeaf" style="color:var(--text)">0g</b></span>
+          <span><i style="background:#7a5230"></i>Stem <b id="lgStem" style="color:var(--text)">0g</b></span>
+          <span><i style="background:#9c6a3f"></i>Branches <b id="lgBranch" style="color:var(--text)">0g</b></span>
+          <span><i style="background:var(--root)"></i>Roots <b id="lgRoot" style="color:var(--text)">0g</b></span>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h3>Live carbon flux</h3>
+        <div class="rates">
+          <div class="r"><div class="v" style="color:var(--green)" id="rGPP">0</div><div class="k">GPP in</div></div>
+          <div class="r"><div class="v" style="color:var(--amber)" id="rResp">0</div><div class="k">Respired</div></div>
+          <div class="r"><div class="v" id="rNPP">0</div><div class="k">Net (NPP)</div></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:9px;font-size:10px;color:var(--muted)">
+          <span>Sugar reserve (starch)</span><span id="tankPct">—</span>
+        </div>
+        <div class="tank"><div class="fill" id="tankFill" style="width:20%"></div></div>
+      </div>
+
+      <div class="sect">
+        <h3>Cumulative gas &amp; water exchange</h3>
+        <div class="flows">
+          <div class="flowrow">
+            <span class="ic" style="background:var(--co2)"></span>
+            <span class="nm">CO₂ absorbed <small>from the air</small></span>
+            <span class="amt" id="cumCO2">0 g</span>
+          </div>
+          <div class="flowrow">
+            <span class="ic" style="background:var(--o2)"></span>
+            <span class="nm">O₂ released <small>from photosynthesis</small></span>
+            <span class="amt" id="cumO2">0 g</span>
+          </div>
+          <div class="flowrow">
+            <span class="ic" style="background:var(--water)"></span>
+            <span class="nm">Water transpired <small>root → sky</small></span>
+            <span class="amt" id="cumH2O">0 L</span>
+          </div>
+          <div class="flowrow">
+            <span class="ic" style="background:#5a4a2a"></span>
+            <span class="nm">Carbon locked in wood</span>
+            <span class="amt" id="cumWood">0 g</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sect">
+        <h3>The counter-intuitive part</h3>
+        <div class="factoid">
+          <span class="hl" id="airPct">95%</span>
+          <p>of this tree's dry mass was pulled out of thin <b style="color:var(--text)">air and water</b>,
+          not the soil. Nearly half its weight is <b style="color:var(--text)">carbon</b> that was
+          floating as CO₂. <span id="vhNote">Roots mostly drink water and borrow a few minerals.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <div class="chartbox">
+      <div class="phead">
+        <div class="t"><span class="num">3</span>Growth over time</div>
+        <div class="hint" id="chartHint">biomass vs. leaf area, per year</div>
+      </div>
+      <div class="chart-wrap"><canvas id="chartCanvas"></canvas></div>
+    </div>
+    <div class="narration">
+      <div class="stage"><span class="pip" id="narPip" style="background:var(--green);color:var(--green)"></span><span id="narTitle">Germination</span></div>
+      <p id="narText">Press play. A seed unfurls its first leaves and begins trading air for structure.</p>
+      <div class="season-strip" id="seasonStrip">
+        <div class="s" data-s="0">❄ Winter</div><div class="s" data-s="1">🌱 Spring</div>
+        <div class="s" data-s="2">☀ Summer</div><div class="s" data-s="3">🍂 Autumn</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MATH MODE ================= -->
+  <div id="mathView">
+    <div class="math-toolbar">
+      <div class="mt-title"><span class="accent">∑</span> Iteration trace · every equation, live</div>
+      <div class="meta">
+        <span>iter <b id="mIter">0</b></span>
+        <span>t = <b id="mDay">0.00</b> d</span>
+        <span>Δt = <b id="mDt">0.020</b> d</span>
+        <span id="mClock">Yr 0 · Spring · 06:00 · 15°C</span>
+      </div>
+      <div class="sp">
+        <span class="dtnote">1 step = one 0.02-day sub-step (~29 min)</span>
+        <button id="mStep">Step ▸</button>
+        <button id="mRun" class="primary">▶ Run</button>
+        <button id="mJumpYr">▸ 1 yr</button>
+      </div>
+    </div>
+    <div class="math-body">
+      <div class="cascade" id="cascade"><div class="loading">Press “Step ▸” to compute one iteration and watch every number.</div></div>
+      <div class="mside">
+        <div class="msec"><h4>Constants (K) &amp; active species</h4><div class="kv" id="mConst"></div></div>
+        <div class="msec"><h4>State after this step (grams of carbon)</h4><div class="kv" id="mState"></div></div>
+        <div class="msec chem" id="chemBox">
+          <h4>Wood chemistry · how CO₂ becomes redwood</h4>
+          <div class="loading" id="chemLoading">Compiling verified redwood chemistry &amp; math…</div>
+          <div id="chemContent"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="model">
+    <summary>Model &amp; assumptions (illustrative, order-of-magnitude plant physiology)</summary>
+    <div class="body">
+      <b>Photosynthesis</b> uses a non-rectangular hyperbola light response
+      (<code>Pmax=22 µmol·m⁻²·s⁻¹</code>, quantum yield <code>α=0.05</code>, curvature <code>θ=0.7</code>),
+      scaled by a CO₂ Michaelis term (<code>ppm/(ppm+280)</code>), a RuBisCO temperature bell
+      (<code>peak 27°C, σ=9</code>, capturing photorespiration at high heat and enzyme slow-down in cold),
+      and a stomatal water factor. Leaf area = leaf dry-mass × SLA (<code>~13 m²/kg</code>).<br>
+      <b>Respiration</b> = maintenance (∝ living biomass, <code>Q10=2</code>) + growth respiration
+      (<code>~28%</code> of what's built). Autotrophic respiration typically burns roughly half of gross photosynthesis (GPP);
+      the remainder is Net Primary Production (NPP) that becomes biomass. At night GPP=0, so the tree is a net CO₂ emitter.<br>
+      <b>Allocation</b> of NPP: leaves 25% · stem 30% · branches 20% · roots 25% (leaf share tapers as the canopy fills, giving an S-shaped growth curve as maintenance catches up with light capture).<br>
+      <b>Stoichiometry</b> is exact: 1 O₂ released per CO₂ fixed; dry biomass is ~<code>50%</code> carbon.
+      Water-use efficiency ≈ <code>3 g C per kg H₂O</code> (hundreds of water molecules lost per CO₂ captured).<br>
+      <b>Van Helmont (1640s):</b> grew a willow 5 years; it gained ~<code>74 kg</code>, the soil lost only ~<code>57 g</code>.
+      He wrongly concluded "all from water" — but he'd proven the mass doesn't come from soil. The carbon comes from the air.
+      Constants are tuned for legibility over a browsable timescale, not for a specific species.
+    </div>
+  </details>
+</div>
+
+<script>
+"use strict";
+(function(){
+  /* ---------- utility ---------- */
+  const clamp=(x,a,b)=>x<a?a:x>b?b:x;
+  const lerp=(a,b,t)=>a+(b-a)*t;
+  const smooth=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
+  const TAU=Math.PI*2;
+  // deterministic PRNG so tree structure is stable frame-to-frame
+  function mulberry32(seed){return function(){seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+  /* ---------- model constants (illustrative plant physiology) ---------- */
+  const K={
+    Pmax:14, alpha:0.05, theta:0.7, Kco2:280,   // light-response (non-rect. hyperbola) + CO2 half-sat
+    Topt:27, Tsig:9,                             // RuBisCO temperature bell
+    rm:9.0e-9, Q10:2.0, growthResp:0.25, woodLive:0.06, // respiration
+    SLA:13, Cfrac:0.5, WUE:3.0,                  // leaf area, carbon fraction, water-use efficiency
+    kFlush:0.12, kGrow:0.015, reserveBufK:1.1,   // leaf flush rate, wood growth rate, winter starch buffer
+    Lmax:4500, wHalf:30000,                      // canopy carrying capacity (gives the growth S-curve)
+    alloc:{stem:0.42, branch:0.28, root:0.30}    // partition of new woody+root growth
+  };
+  const SPD=[0.5,1,4,12,30,90]; // sim days per real second
+
+  // species presets: multipliers on the base carrying-capacity / respiration / photosynthesis.
+  // Redwood: enormous canopy ceiling + very slow maintenance => it keeps growing for millennia.
+  const SPECIES={
+    deciduous:{decid:true,  label:"Deciduous", LmaxF:1.0,  wHalfF:1.0,  rmF:1.0,  PmaxF:1.0,  wood:"#6b482b"},
+    evergreen:{decid:false, label:"Evergreen", LmaxF:1.15, wHalfF:1.3,  rmF:0.95, PmaxF:1.0,  wood:"#5c6b3a"},
+    redwood:  {decid:false, label:"Redwood",   LmaxF:20,   wHalfF:140,  rmF:0.35, PmaxF:1.2,  wood:"#7a3b2a"}
+  };
+  function spInfo(){ return SPECIES[params&&params.species] || SPECIES.deciduous; }
+
+  /* ---------- math-mode trace ---------- */
+  let traceOn=false, LAST=null, mathMode=false;
+
+  /* ---------- state ---------- */
+  let S, params, running=true;
+  function fresh(){
+    return {
+      simDay:0,
+      // carbon pools, grams C
+      leafC:1.6, stemC:2.5, branchC:1.0, rootC:2.5, reserveC:4.0,
+      litterC:0,
+      // cumulative
+      grossCC:0, respCC:0, o2NetG:0, o2GrossG:0, co2GrossG:0, waterKg:0, woodC:0,
+      // diagnostics (instant)
+      I:0,T:15,A:0,gpp:0,resp:0,npp:0,ppmEff:420,leafArea:0,stoma:1,
+      // phenology
+      canopy:1, senesceColor:0,
+      // iteration counter (math mode)
+      iter:0,
+      // history for chart
+      hist:[], histAcc:0
+    };
+  }
+  function readParams(){
+    const species=params?params.species:"deciduous";
+    return {
+      speed:SPD[+el.cSpeed.value],
+      sun:+el.cSun.value/100,
+      co2:+el.cCO2.value,
+      water:+el.cWater.value/100,
+      tOff:+el.cTemp.value,
+      species:species,
+      decid:(SPECIES[species]||SPECIES.deciduous).decid
+    };
+  }
+
+  /* ---------- environment ---------- */
+  function env(simDay){
+    const doy=((simDay%365)+365)%365;
+    const s=TAU*(doy-172)/365;                 // 0 at summer solstice (day 172)
+    const cosS=Math.cos(s);
+    const daylen=12+4*cosS;                     // 8h winter .. 16h summer
+    const sunrise=12-daylen/2, sunset=12+daylen/2;
+    const hour=(((simDay%1)+1)%1)*24;
+    // seasonal mean temp lags solstice by ~28 days
+    const sLag=TAU*(doy-200)/365;
+    const Tmean=12+11*Math.cos(sLag)+params.tOff;
+    const T=Tmean+7*Math.sin(TAU*(hour-8.5)/24);
+    // light
+    const Imax=2000*(0.55+0.45*cosS)*params.sun;
+    let I=0;
+    if(hour>sunrise&&hour<sunset){ I=Imax*Math.sin(Math.PI*(hour-sunrise)/daylen); }
+    I=Math.max(0,I);
+    return {doy,s,cosS,daylen,sunrise,sunset,hour,Tmean,T,I,Imax:Math.max(1,Imax),elev:I/Math.max(1,Imax)};
+  }
+  function seasonIndex(doy){ // 0 winter,1 spring,2 summer,3 autumn
+    if(doy<80||doy>=355)return 0; if(doy<172)return 1; if(doy<266)return 2; return 3;
+  }
+  const seasonName=["Winter","Spring","Summer","Autumn"];
+
+  /* photosynthesis: per-area gross rate µmol CO2 m-2 s-1, returning all intermediates for the trace */
+  function photoDetail(I,T,ppm,wf,Pmax){
+    const aI=K.alpha*I, b=aI+Pmax;                        // non-rectangular hyperbola in light
+    const disc=Math.max(0,b*b-4*K.theta*aI*Pmax);
+    const P=(b-Math.sqrt(disc))/(2*K.theta);              // light-limited gross rate
+    const fCO2=ppm/(ppm+K.Kco2);                          // CO2 (Michaelis) factor
+    const fT=Math.exp(-0.5*Math.pow((T-K.Topt)/K.Tsig,2));// RuBisCO temperature bell
+    const A=Math.max(0,P*fCO2*fT*wf);
+    return {aI,b,disc,P,fCO2,fT,A};
+  }
+
+  /* ---------- phenology ---------- */
+  // deciduous canopy fraction over the year: leaf-out in spring, drop in autumn
+  function canopyTarget(doy){
+    return clamp(smooth(100,140,doy)-smooth(278,315,doy),0,1);
+  }
+
+  /* ---------- one integration sub-step ---------- */
+  function step(dDays){
+    const sp=spInfo();
+    const Lmax=K.Lmax*sp.LmaxF, wHalf=K.wHalf*sp.wHalfF, rmC=K.rm*sp.rmF, Pmax=K.Pmax*sp.PmaxF;
+    const e=env(S.simDay);
+    const wf=clamp(params.water/0.75,0,1.05);      // water stress factor (0.75 = well-watered ref)
+    const stoma=clamp(0.25+0.75*params.water,0,1); // stomatal aperture
+    const ppm=params.co2;
+    const ph=photoDetail(e.I,e.T,ppm,wf,Pmax);     // {aI,b,disc,P,fCO2,fT,A}
+    S.A=ph.A;                                       // µmol CO2 m-2 s-1, per unit leaf area
+
+    // canopy phenology: deciduous drops for winter, evergreen keeps leaves (minor cold dip)
+    const cTgt=sp.decid?canopyTarget(e.doy):clamp(0.85+0.15*smooth(0,12,e.T),0,1);
+    S.canopy+=(cTgt-S.canopy)*clamp(dDays*0.5,0,1);
+    S.senesceColor=sp.decid?smooth(266,300,e.doy)*(1-smooth(300,320,e.doy)):0;
+
+    const leafArea=(S.leafC/K.Cfrac/1000)*K.SLA;   // m² (leaf mass already tracks the canopy)
+    const secs=dDays*86400;
+    const gpp=S.A*leafArea*12e-6;                   // gross carbon fixed, gC/s
+    const woodyC=S.stemC+S.branchC;
+
+    // maintenance respiration (Q10 temperature response); only a slice of wood is living sapwood
+    const livingC=S.leafC+0.4*S.rootC+K.woodLive*woodyC+S.reserveC;
+    const q10=Math.pow(K.Q10,(e.T-20)/10);
+    const rmaint=rmC*livingC*q10;
+    let respC=rmaint*secs;
+    S.reserveC+=gpp*secs-respC;                     // net photosynthate fills the starch reserve
+
+    // leaf dynamics: flush from reserves in spring, shed to litter in autumn
+    const leafCap=Lmax*(1-Math.exp(-woodyC/wHalf));// max leaf the tree's size can support
+    const desiredLeafC=leafCap*clamp(S.canopy,0,1);
+    const warm=e.T>3?1:0;
+    let flush=0, shed=0;
+    if(S.leafC<desiredLeafC-1e-4 && S.reserveC>1.0 && warm){
+      const want=desiredLeafC-S.leafC;
+      flush=Math.min(want, want*K.kFlush*dDays*20, Math.max(0,S.reserveC-0.8)/(1+K.growthResp));
+      flush=Math.max(0,flush);
+      S.leafC+=flush; S.reserveC-=flush*(1+K.growthResp); respC+=flush*K.growthResp;
+    } else if(S.leafC>desiredLeafC+1e-4){
+      shed=(S.leafC-desiredLeafC)*clamp(dDays*0.18,0,1);
+      S.leafC-=shed; S.reserveC+=shed*0.45; S.litterC+=shed*0.55; // resorb ~45%, drop the rest
+    }
+
+    // woody + root growth: spend reserve surplus above the winter buffer needed to re-flush leaves
+    const reserveBuf=K.reserveBufK*leafCap*(1+K.growthResp);
+    const surplus=Math.max(0,S.reserveC-reserveBuf);
+    let build=surplus*clamp(dDays*K.kGrow*20,0,0.6)*warm;
+    const cost=build*(1+K.growthResp);
+    if(cost>S.reserveC-0.2){ build*=Math.max(0,S.reserveC-0.2)/Math.max(cost,1e-9); }
+    S.reserveC-=build*(1+K.growthResp); respC+=build*K.growthResp;
+    const dStem=build*K.alloc.stem, dBranch=build*K.alloc.branch, dRoot=build*K.alloc.root;
+    S.stemC+=dStem; S.branchC+=dBranch; S.rootC+=dRoot;
+    S.woodC+=dStem+dBranch;
+    if(S.reserveC<0)S.reserveC=0;
+
+    // diagnostics for the renderers
+    S.leafArea=leafArea; S.stoma=stoma; S.I=e.I; S.T=e.T; S.ppmEff=ppm;
+    S.gpp=gpp; S.resp=respC/Math.max(secs,1e-6); S.npp=gpp-S.resp;
+
+    // cumulative bookkeeping (1 O2 released per CO2 fixed; respiration consumes O2 / releases CO2)
+    const gppStep=gpp*secs, o2gStep=gppStep/12*32, o2nStep=(gppStep-respC)/12*32, co2Step=gppStep/12*44;
+    const waterStep=gppStep/K.WUE*(0.6+0.4*stoma);
+    S.grossCC+=gppStep; S.respCC+=respC;
+    S.o2GrossG+=o2gStep; S.o2NetG+=o2nStep; S.co2GrossG+=co2Step; S.waterKg+=waterStep;
+
+    S.simDay+=dDays; S.iter++;
+
+    if(traceOn){
+      LAST={iter:S.iter, dt:dDays, secs, sp:sp.label, Lmax, wHalf, rmC, Pmax,
+        doy:e.doy, s:e.s, cosS:e.cosS, daylen:e.daylen, sunrise:e.sunrise, sunset:e.sunset, hour:e.hour,
+        Imax:e.Imax, I:e.I, Tmean:e.Tmean, T:e.T, wf, stoma, ppm,
+        aI:ph.aI, b:ph.b, disc:ph.disc, P:ph.P, fCO2:ph.fCO2, fT:ph.fT, A:ph.A,
+        dmLeaf:S.leafC/K.Cfrac, leafArea, gpp, gppStep, woodyC, livingC, q10, rmaint, respStepMaint:rmaint*secs,
+        cTgt, canopy:S.canopy, leafCap, desiredLeafC, warm, flush, shed, reserveBuf, surplus, build, growthResp:build*K.growthResp,
+        dStem, dBranch, dRoot, respC,
+        o2gStep, o2nStep, co2Step, waterStep,
+        night:e.I<1};
+    }
+  }
+
+  function pushHist(){
+    S.hist.push({day:S.simDay, mass:totalC()/K.Cfrac, leaf:S.leafArea, wood:S.woodC/K.Cfrac});
+    if(S.hist.length>3000)S.hist.shift();
+  }
+  // integrate forward dDays. dtMax controls sub-step size (fine for real-time, coarser for big jumps).
+  function advance(dDays, dtMax){
+    dtMax=dtMax||0.02;
+    const sampleEvery=Math.max(3, dDays/1400);   // keep the growth chart to ~1400 points over a jump
+    const cap=dDays>20 ? 30000000 : 800;
+    let remain=dDays, guard=0;
+    while(remain>1e-6 && guard++<cap){
+      const d=Math.min(remain,dtMax);
+      step(d); remain-=d;
+      S.histAcc+=d;
+      if(S.histAcc>=sampleEvery){ S.histAcc=0; pushHist(); }
+    }
+  }
+  // fast-forward the simulation by whole years (coarser sub-steps for longer jumps to stay snappy)
+  function jumpYears(y){
+    const dtMax = y<=10 ? 0.05 : y<=100 ? 0.12 : 0.3;
+    advance(y*365, dtMax);
+  }
+  const totalC=()=>S.leafC+S.stemC+S.branchC+S.rootC+S.reserveC;
+
+  /* ---------- canvases ---------- */
+  const el={};
+  ["btnPlay","btnReset","cSpeed","cSun","cCO2","cWater","cTemp","btnDecid","btnEver","btnRedwood",
+   "vSpeed","vSun","vCO2","vWater","vTemp",
+   "clkYear","clkSeason","clkTime","clkDay","clkTemp",
+   "leafHint","treeHint","chartHint",
+   "fxCO2","fxO2","fxSug","rxLight","rxCalvin",
+   "statMass","statMassU","statMassSub","stack","lgLeaf","lgStem","lgBranch","lgRoot",
+   "rGPP","rResp","rNPP","tankFill","tankPct",
+   "cumCO2","cumO2","cumH2O","cumWood","airPct","vhNote",
+   "narTitle","narText","narPip","seasonStrip",
+   "btnMathMode","jy1","jy10","jy100","jy1000",
+   "mIter","mDay","mDt","mClock","mStep","mRun","mJumpYr","cascade","mConst","mState","chemLoading","chemContent"
+  ].forEach(id=>el[id]=document.getElementById(id));
+
+  function makeCanvas(id){
+    const c=document.getElementById(id), ctx=c.getContext("2d");
+    const wrap=c.parentElement;
+    function resize(){
+      const r=wrap.getBoundingClientRect();
+      const dpr=Math.min(2,window.devicePixelRatio||1);
+      c.width=Math.max(1,r.width*dpr); c.height=Math.max(1,r.height*dpr);
+      c._w=r.width; c._h=r.height; ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    new ResizeObserver(resize).observe(wrap); resize();
+    return {c,ctx};
+  }
+  const leaf=makeCanvas("leafCanvas");
+  const tree=makeCanvas("treeCanvas");
+  const chart=makeCanvas("chartCanvas");
+
+  /* ---------- leaf engine render + particles ---------- */
+  const parts=[]; // {type,x,y,vx,vy,life,max}
+  let spawnAcc=0;
+  function spawnParticles(dt){
+    const w=leaf.c._w,h=leaf.c._h;
+    const active=S.I>1 && S.canopy>0.1;
+    // rate proportional to instantaneous per-area assimilation
+    const rate=active? clamp(S.A/3,0,10)*3 : 0;
+    spawnAcc+=rate*dt;
+    while(spawnAcc>=1){
+      spawnAcc-=1;
+      // choose a chloroplast target
+      const cx=w*(0.32+Math.random()*0.42), cy=h*(0.30+Math.random()*0.22);
+      // CO2 enters from a stoma (bottom), water from vein (bottom-left)
+      const stoX=w*(0.36+Math.random()*0.4), stoY=h*0.80;
+      parts.push({type:"co2", x:stoX, y:stoY, tx:cx, ty:cy, life:0, max:1.1+Math.random()*0.5});
+      if(Math.random()<0.8) parts.push({type:"h2o", x:w*0.12, y:h*(0.55+Math.random()*0.3), tx:cx, ty:cy, life:0, max:1.2});
+      if(Math.random()<0.9) parts.push({type:"photon", x:w*(0.2+Math.random()*0.6), y:-6, tx:cx, ty:cy, life:0, max:0.7});
+    }
+    // advance particles; when a co2 reaches chloroplast, emit O2 (up/out) + sugar (down)
+    for(let i=parts.length-1;i>=0;i--){
+      const p=parts[i]; p.life+=dt;
+      const t=clamp(p.life/p.max,0,1);
+      if(p.type==="o2"||p.type==="sugar"){
+        p.x+=p.vx*dt; p.y+=p.vy*dt;
+        if(p.life>p.max){parts.splice(i,1);continue;}
+      } else {
+        // ease toward target
+        p.x=lerp(p.x,p.tx,clamp(dt*3,0,1));
+        p.y=lerp(p.y,p.ty,clamp(dt*3,0,1));
+        if(t>=1){
+          if(p.type==="co2"){
+            // fixed -> emit O2 out through nearest stoma + sugar down to phloem
+            parts.push({type:"o2", x:p.tx, y:p.ty, vx:(Math.random()-0.5)*20, vy:-40-Math.random()*30, life:0, max:1.4});
+            parts.push({type:"sugar", x:p.tx, y:p.ty, vx:(Math.random()-0.5)*12, vy:34+Math.random()*20, life:0, max:1.5});
+          }
+          parts.splice(i,1);
+        }
+      }
+    }
+    if(parts.length>420)parts.splice(0,parts.length-420);
+  }
+  function drawLeaf(){
+    const ctx=leaf.ctx,w=leaf.c._w,h=leaf.c._h;
+    ctx.clearRect(0,0,w,h);
+    // background gradient (sky above leaf, tissue below)
+    const nightK=1-clamp(S.I/900,0,1);
+    const sky=ctx.createLinearGradient(0,0,0,h*0.22);
+    sky.addColorStop(0, `rgb(${lerp(120,10,nightK)|0},${lerp(180,20,nightK)|0},${lerp(230,40,nightK)|0})`);
+    sky.addColorStop(1,"#0e150f");
+    ctx.fillStyle=sky; ctx.fillRect(0,0,w,h*0.22);
+    // leaf tissue layers
+    const top=h*0.22, bot=h*0.86;
+    // upper epidermis
+    ctx.fillStyle="#20361f"; ctx.fillRect(0,top,w,(bot-top)*0.12);
+    // palisade mesophyll
+    ctx.fillStyle="#16260f"; ctx.fillRect(0,top+(bot-top)*0.12,w,(bot-top)*0.42);
+    // spongy mesophyll
+    ctx.fillStyle="#182a12"; ctx.fillRect(0,top+(bot-top)*0.54,w,(bot-top)*0.30);
+    // lower epidermis
+    ctx.fillStyle="#20361f"; ctx.fillRect(0,bot-(bot-top)*0.14,w,(bot-top)*0.14);
+    // labels
+    ctx.font="9px ui-sans-serif"; ctx.fillStyle="rgba(219,232,214,.35)"; ctx.textAlign="left";
+    ctx.fillText("upper epidermis", 6, top+11);
+    ctx.fillText("palisade mesophyll (chloroplasts)", 6, top+(bot-top)*0.30);
+    ctx.fillText("spongy mesophyll · air spaces", 6, top+(bot-top)*0.66);
+    ctx.fillText("stomata ↓", w*0.5, bot+2);
+
+    // vein / xylem on left bringing water up
+    ctx.strokeStyle="rgba(74,159,224,.5)"; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(w*0.1,h); ctx.lineTo(w*0.1,top+8); ctx.stroke();
+    // chloroplasts
+    const activeC = S.I>1 && S.canopy>0.1;
+    for(let gx=0;gx<6;gx++)for(let gy=0;gy<2;gy++){
+      const cx=w*(0.22+gx*0.11), cy=top+(bot-top)*(0.24+gy*0.20);
+      ctx.beginPath(); ctx.ellipse(cx,cy,10,6,0.5,0,TAU);
+      const g=activeC?smooth(0,30,S.A):0;
+      ctx.fillStyle=`rgb(${lerp(30,60,g)|0},${lerp(90,190,g)|0},${lerp(40,58,g)|0})`;
+      ctx.fill();
+      ctx.strokeStyle="rgba(120,220,120,.25)"; ctx.lineWidth=1; ctx.stroke();
+    }
+    // stomata (guard cells) with aperture from stomatal opening
+    const ap=clamp(S.stoma,0.05,1);
+    for(let sx=0;sx<3;sx++){
+      const x=w*(0.34+sx*0.2), y=bot-2;
+      ctx.fillStyle="#2c4a2a";
+      ctx.beginPath(); ctx.ellipse(x-6,y,6,9,0,0,TAU); ctx.fill();
+      ctx.beginPath(); ctx.ellipse(x+6,y,6,9,0,0,TAU); ctx.fill();
+      // pore opening
+      ctx.fillStyle="#05100a";
+      ctx.beginPath(); ctx.ellipse(x,y,3*ap+0.6,7,0,0,TAU); ctx.fill();
+    }
+    // particles
+    for(const p of parts){
+      const a=clamp(1-p.life/p.max,0,1);
+      if(p.type==="co2"){ ctx.fillStyle=`rgba(159,176,189,${0.85*a+0.15})`; ctx.beginPath(); ctx.arc(p.x,p.y,2.6,0,TAU); ctx.fill();
+        ctx.fillStyle=`rgba(159,176,189,${0.5*a})`; ctx.beginPath(); ctx.arc(p.x-4,p.y,1.6,0,TAU); ctx.arc(p.x+4,p.y,1.6,0,TAU); ctx.fill();
+      } else if(p.type==="h2o"){ ctx.fillStyle=`rgba(74,159,224,${0.8*a})`; ctx.beginPath(); ctx.arc(p.x,p.y,2.1,0,TAU); ctx.fill();
+      } else if(p.type==="photon"){ ctx.strokeStyle=`rgba(255,210,74,${0.7*a})`; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(p.x,p.y-5); ctx.lineTo(p.x,p.y+5); ctx.stroke();
+      } else if(p.type==="o2"){ ctx.fillStyle=`rgba(95,208,224,${0.9*a})`; ctx.beginPath(); ctx.arc(p.x,p.y,3,0,TAU); ctx.fill();
+        ctx.strokeStyle=`rgba(95,208,224,${0.5*a})`; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(p.x,p.y,5,0,TAU); ctx.stroke();
+      } else if(p.type==="sugar"){ ctx.fillStyle=`rgba(236,178,75,${0.95*a})`; hex(ctx,p.x,p.y,3.4); }
+    }
+  }
+  function hex(ctx,x,y,r){ctx.beginPath();for(let i=0;i<6;i++){const a=i/6*TAU+0.4;const px=x+Math.cos(a)*r,py=y+Math.sin(a)*r;i?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();ctx.fill();}
+
+  /* ---------- tree render ---------- */
+  function drawTree(){
+    const ctx=tree.ctx,w=tree.c._w,h=tree.c._h;
+    const e=env(S.simDay);
+    ctx.clearRect(0,0,w,h);
+    // sky by sun elevation
+    const el=e.elev, night=1-clamp(el*1.4,0,1);
+    const g=ctx.createLinearGradient(0,0,0,h);
+    g.addColorStop(0,`rgb(${lerp(96,6,night)|0},${lerp(150,10,night)|0},${lerp(210,26,night)|0})`);
+    g.addColorStop(0.6,`rgb(${lerp(150,10,night)|0},${lerp(185,16,night)|0},${lerp(210,34,night)|0})`);
+    g.addColorStop(1,`rgb(${lerp(200,14,night)|0},${lerp(200,20,night)|0},${lerp(190,26,night)|0})`);
+    ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+    // stars at night
+    if(night>0.4){ ctx.fillStyle=`rgba(255,255,255,${(night-0.4)*0.7})`;
+      const rng=mulberry32(99); for(let i=0;i<60;i++){ctx.fillRect(rng()*w,rng()*h*0.5,1.2,1.2);} }
+    // sun / moon arc
+    const daylen=e.daylen, prog=clamp((e.hour-e.sunrise)/Math.max(0.1,daylen),0,1);
+    if(e.hour>e.sunrise&&e.hour<e.sunset){
+      const sx=lerp(w*0.1,w*0.9,prog), sy=h*0.62-Math.sin(prog*Math.PI)*h*0.5;
+      const sg=ctx.createRadialGradient(sx,sy,2,sx,sy,26); sg.addColorStop(0,"#fff6cf"); sg.addColorStop(1,"rgba(255,210,74,0)");
+      ctx.fillStyle=sg; ctx.beginPath(); ctx.arc(sx,sy,26,0,TAU); ctx.fill();
+      ctx.fillStyle="#ffe07a"; ctx.beginPath(); ctx.arc(sx,sy,9,0,TAU); ctx.fill();
+    } else {
+      const mx=w*0.78,my=h*0.2; ctx.fillStyle="rgba(230,235,245,.8)"; ctx.beginPath(); ctx.arc(mx,my,8,0,TAU); ctx.fill();
+    }
+
+    // ground
+    const groundY=h*0.74;
+    const season=seasonIndex(e.doy);
+    const snow=e.T<0.5;
+    let gtop, gbot;
+    if(snow){gtop="#dfe8ee"; gbot="#b9c6cd";}
+    else if(season===0){gtop="#6a5f42"; gbot="#3a3325";}
+    else if(season===3){gtop="#8a6a3a"; gbot="#4a3820";}
+    else {gtop="#4a6a34"; gbot="#2a3d1e";}
+    const gg=ctx.createLinearGradient(0,groundY,0,h); gg.addColorStop(0,gtop); gg.addColorStop(1,gbot);
+    ctx.fillStyle=gg; ctx.fillRect(0,groundY,w,h-groundY);
+
+    // maturity metrics: use log(dry mass) so the tree keeps scaling across the whole 20g..1.5t range
+    const woodyC=S.stemC+S.branchC;
+    const dryG=totalC()/K.Cfrac;
+    const ceilG=params.species==="redwood"?4e8:params.species==="evergreen"?4e6:1.5e6;
+    const m=clamp((Math.log10(Math.max(dryG,20))-Math.log10(20))/(Math.log10(ceilG)-Math.log10(20)),0,1);
+    const trunkH=(groundY-h*0.06)*(0.12+0.72*m);
+    const trunkW=clamp(3+42*m,3,64);
+    const rootDepth=(h-groundY)*(0.28+0.62*m);
+    const depth=2+Math.floor(m*4.4);            // recursion depth 2..6
+
+    // roots (draw first, under ground)
+    ctx.strokeStyle="rgba(150,110,70,.55)"; ctx.lineCap="round";
+    const rrng=mulberry32(7);
+    (function root(x,y,ang,len,wdt,d){
+      if(d<=0||len<3)return;
+      const nx=x+Math.cos(ang)*len, ny=y+Math.sin(ang)*len;
+      ctx.lineWidth=wdt; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(nx,ny); ctx.stroke();
+      const branches=2+(rrng()<0.5?1:0);
+      for(let i=0;i<branches;i++){ root(nx,ny, ang+(rrng()-0.5)*1.3+0.15, len*(0.68+rrng()*0.16), wdt*0.62, d-1); }
+    })(w/2,groundY, Math.PI/2, rootDepth*0.5, trunkW*0.7, 3+Math.floor(m*2));
+
+    // trunk + canopy (draw above ground)
+    const leafDry=S.leafC/K.Cfrac;
+    const leafFullness=clamp(S.canopy,0,1)*clamp(leafDry/(leafDry+3),0,1);
+    // leaf color by season/senescence
+    const sen=S.senesceColor;
+    const brng=mulberry32(1337);
+    function leafColor(){
+      // green -> yellow/orange as senesceColor rises
+      const r=lerp(60,210,sen)+brng()*20-10;
+      const gc=lerp(150,150,sen)+brng()*30-15;
+      const b=lerp(50,40,sen);
+      return `rgba(${clamp(r,0,255)|0},${clamp(gc,0,255)|0},${clamp(b,0,255)|0},0.9)`;
+    }
+    // soft canopy backdrop so the crown reads as a full mass of foliage, not scattered dots
+    if(leafFullness>0.05){
+      const ccx=w/2, ccy=groundY-trunkH*0.95, crx=trunkH*(0.42+0.30*m), cry=trunkH*(0.40+0.16*m);
+      const cr2=lerp(66,205,sen)|0, cg2=150, cb2=lerp(52,45,sen)|0;
+      const grad=ctx.createRadialGradient(ccx,ccy-cry*0.15,cry*0.2,ccx,ccy,crx);
+      grad.addColorStop(0,`rgba(${cr2},${cg2},${cb2},${0.34*leafFullness})`);
+      grad.addColorStop(1,`rgba(${cr2},${cg2},${cb2},0)`);
+      ctx.fillStyle=grad; ctx.beginPath(); ctx.ellipse(ccx,ccy,crx,cry,0,0,TAU); ctx.fill();
+    }
+    ctx.lineCap="round";
+    (function branch(x,y,ang,len,wdt,d){
+      if(d<=0||len<2)return;
+      const nx=x+Math.cos(ang)*len, ny=y+Math.sin(ang)*len;
+      const woodCol = night>0.5 ? "#2a2018" : spInfo().wood;
+      ctx.strokeStyle=woodCol; ctx.lineWidth=Math.max(1,wdt); ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(nx,ny); ctx.stroke();
+      if(d<=1){
+        // draw leaves cluster at tips (if in leaf)
+        if(leafFullness>0.03){
+          const n=Math.round(5+leafFullness*16);
+          for(let i=0;i<n;i++){
+            const rx=nx+(brng()-0.5)*len*1.1, ry=ny+(brng()-0.5)*len*1.1-6;
+            ctx.fillStyle=leafColor();
+            ctx.beginPath(); ctx.ellipse(rx,ry,3.5+brng()*3.5,2.5+brng()*2.5,brng()*TAU,0,TAU); ctx.fill();
+          }
+        }
+        return;
+      }
+      const nb=2+(brng()<0.4?1:0);
+      const spread=lerp(0.9,0.5,m);
+      for(let i=0;i<nb;i++){
+        const a=ang-spread/2+spread*(i/(nb-1||1))+(brng()-0.5)*0.3;
+        branch(nx,ny, a, len*(0.72+brng()*0.12), wdt*0.66, d-1);
+      }
+    })(w/2,groundY, -Math.PI/2, trunkH*(0.42), trunkW, depth);
+
+    // falling leaves in autumn
+    if(params.decid && sen>0.2 && season===3){
+      const frng=mulberry32(Math.floor(S.simDay*3)%997);
+      ctx.globalAlpha=0.8;
+      for(let i=0;i<12;i++){ const fx=frng()*w, fy=(frng()*h+ (S.simDay*40))%(groundY); ctx.fillStyle=`rgba(200,140,50,.8)`; ctx.beginPath(); ctx.arc(fx,fy,2.2,0,TAU); ctx.fill(); }
+      ctx.globalAlpha=1;
+    }
+
+    // trunk cross-section inset (growth rings)
+    const insetR=30, ix=w-insetR-14, iy=groundY+ (h-groundY)*0.5;
+    if(iy+insetR<h){
+      ctx.fillStyle="rgba(8,13,9,.85)"; ctx.beginPath(); ctx.arc(ix,iy,insetR+5,0,TAU); ctx.fill();
+      const years=Math.floor(S.simDay/365);
+      const rings=Math.min(years,10);
+      for(let r=rings;r>=1;r--){
+        ctx.beginPath(); ctx.arc(ix,iy,insetR*(r/Math.max(rings,1)),0,TAU);
+        ctx.strokeStyle=r%2? "#7a5230":"#a9784a"; ctx.lineWidth=1.4; ctx.stroke();
+      }
+      ctx.fillStyle="#c99a5f"; ctx.beginPath(); ctx.arc(ix,iy,2.5,0,TAU); ctx.fill();
+      ctx.fillStyle="rgba(219,232,214,.5)"; ctx.font="8px ui-sans-serif"; ctx.textAlign="center";
+      ctx.fillText(rings+" rings", ix, iy+insetR+14);
+    }
+  }
+
+  /* ---------- growth chart ---------- */
+  function drawChart(){
+    const ctx=chart.ctx,w=chart.c._w,h=chart.c._h;
+    ctx.clearRect(0,0,w,h);
+    const pad={l:34,r:34,t:10,b:16};
+    const H=S.hist; if(H.length<2){return;}
+    const maxDay=H[H.length-1].day, minDay=H[0].day;
+    let maxMass=1,maxLA=0.01;
+    for(const p of H){ if(p.mass>maxMass)maxMass=p.mass; if(p.leaf>maxLA)maxLA=p.leaf; }
+    const X=d=>pad.l+(d-minDay)/Math.max(1,(maxDay-minDay))*(w-pad.l-pad.r);
+    const Ym=v=>h-pad.b-(v/maxMass)*(h-pad.t-pad.b);
+    const Yl=v=>h-pad.b-(v/maxLA)*(h-pad.t-pad.b);
+    // year gridlines
+    ctx.strokeStyle="rgba(255,255,255,.05)"; ctx.lineWidth=1; ctx.fillStyle="rgba(219,232,214,.3)"; ctx.font="9px ui-sans-serif"; ctx.textAlign="center";
+    const y0=Math.ceil(minDay/365), y1=Math.floor(maxDay/365);
+    for(let y=y0;y<=y1;y++){ const x=X(y*365); ctx.beginPath(); ctx.moveTo(x,pad.t); ctx.lineTo(x,h-pad.b); ctx.stroke(); ctx.fillText("Yr "+y,x,h-4); }
+    // leaf area (filled area)
+    ctx.beginPath(); ctx.moveTo(X(H[0].day),Yl(H[0].leaf));
+    for(const p of H)ctx.lineTo(X(p.day),Yl(p.leaf));
+    ctx.lineTo(X(H[H.length-1].day),h-pad.b); ctx.lineTo(X(H[0].day),h-pad.b); ctx.closePath();
+    ctx.fillStyle="rgba(78,168,58,.16)"; ctx.fill();
+    ctx.beginPath(); H.forEach((p,i)=>{const x=X(p.day),y=Yl(p.leaf); i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.strokeStyle="rgba(131,214,58,.7)"; ctx.lineWidth=1.4; ctx.stroke();
+    // biomass line
+    ctx.beginPath(); H.forEach((p,i)=>{const x=X(p.day),y=Ym(p.mass); i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.strokeStyle="#e8b04b"; ctx.lineWidth=2; ctx.stroke();
+    // axis labels
+    ctx.textAlign="left"; ctx.fillStyle="#e8b04b"; ctx.fillText("■ total biomass", pad.l, pad.t+2);
+    ctx.textAlign="right"; ctx.fillStyle="#83d63a"; ctx.fillText("leaf area ■", w-pad.r, pad.t+2);
+  }
+
+  /* ---------- formatting ---------- */
+  function fmtMass(g){ // grams -> nice
+    if(g>=1e6)return[(g/1e6).toFixed(g<1e7?1:0),"t"];
+    if(g>=1000)return[(g/1000).toFixed(g<1e4?1:0),"kg"];
+    if(g>=1)return[g.toFixed(g<10?1:0),"g"];
+    return[(g*1000).toFixed(0),"mg"];
+  }
+  function fmtG(g){const[v,u]=fmtMass(g);return v+" "+u;}
+  function fmtRate(gc){ // gC/s -> carbon per day, sign-aware
+    const perDay=gc*86400, a=Math.abs(perDay);
+    if(a>=1000)return(perDay/1000).toFixed(1)+" kgC/d";
+    if(a>=1)return perDay.toFixed(1)+" gC/d";
+    return(perDay*1000).toFixed(0)+" mgC/d";
+  }
+  function molesPerSec(gc){ // gC/s -> molecules/s of CO2
+    const mol=gc/12; const molecules=mol*6.022e23;
+    if(molecules>=1e15)return(molecules/1e15).toFixed(1)+"×10¹⁵";
+    if(molecules>=1e12)return(molecules/1e12).toFixed(1)+"×10¹²";
+    if(molecules>=1e9)return(molecules/1e9).toFixed(1)+"×10⁹";
+    return molecules.toExponential(1);
+  }
+
+  /* ---------- DOM update ---------- */
+  function updateDOM(){
+    const e=env(S.simDay);
+    const yr=Math.floor(S.simDay/365), day=Math.floor(S.simDay%365)+1;
+    const hh=Math.floor(e.hour), mm=Math.floor((e.hour%1)*60);
+    el.clkYear.textContent="Yr "+yr;
+    el.clkSeason.textContent=seasonName[seasonIndex(e.doy)];
+    el.clkTime.textContent=String(hh).padStart(2,"0")+":"+String(mm).padStart(2,"0");
+    el.clkDay.textContent="Day "+day;
+    el.clkTemp.textContent=e.T.toFixed(0)+"°C";
+
+    // fluxes (instant)
+    el.fxCO2.textContent=molesPerSec(S.gpp);
+    el.fxO2.textContent=molesPerSec(S.gpp);
+    el.fxSug.textContent=molesPerSec(S.gpp*(1-K.growthResp)/6); // ~glucose units, rough
+    const active=S.I>1&&S.canopy>0.1;
+    el.rxLight.classList.toggle("active",active);
+    el.rxCalvin.classList.toggle("active",active&&S.A>1);
+    el.leafHint.textContent = S.stoma<0.4?"stomata nearly closed (dry)":(active?"stomata open · fixing carbon":"dark · light reactions idle");
+
+    // pools
+    const [mv,mu]=fmtMass(totalC()/K.Cfrac);
+    el.statMass.textContent=mv; el.statMassU.textContent=mu;
+    const tot=totalC();
+    const stemP=S.stemC/tot*100, branchP=S.branchC/tot*100, leafP=S.leafC/tot*100, rootP=S.rootC/tot*100;
+    el.stack.children[0].style.width=leafP+"%";
+    el.stack.children[1].style.width=stemP+"%";
+    el.stack.children[2].style.width=branchP+"%";
+    el.stack.children[3].style.width=rootP+"%";
+    el.lgLeaf.textContent=fmtG(S.leafC/K.Cfrac);
+    el.lgStem.textContent=fmtG(S.stemC/K.Cfrac);
+    el.lgBranch.textContent=fmtG(S.branchC/K.Cfrac);
+    el.lgRoot.textContent=fmtG(S.rootC/K.Cfrac);
+    const massG=totalC()/K.Cfrac;
+    el.statMassSub.textContent = massG<50?"a seedling":massG<5000?"a sapling":massG<150000?"a young tree":"a mature tree";
+
+    // rates
+    el.rGPP.textContent=fmtRate(S.gpp);
+    el.rResp.textContent=fmtRate(S.resp);
+    el.rNPP.textContent=fmtRate(S.npp);
+    el.rNPP.style.color=S.npp>=0?"var(--green)":"var(--amber)";
+    // reserve (starch) tank, relative to the winter buffer the tree tries to hold
+    const woodyC=S.stemC+S.branchC;
+    const leafCap=K.Lmax*(1-Math.exp(-woodyC/K.wHalf));
+    const cap=Math.max(4, K.reserveBufK*leafCap*(1+K.growthResp)*1.6);
+    const pct=clamp(S.reserveC/cap,0,1)*100;
+    el.tankFill.style.width=pct+"%";
+    el.tankPct.textContent=fmtG(S.reserveC/K.Cfrac);
+
+    // cumulative
+    el.cumCO2.textContent=fmtG(S.co2GrossG);
+    el.cumO2.textContent=fmtG(Math.max(0,S.o2GrossG));
+    el.cumH2O.textContent=(S.waterKg>=1?S.waterKg.toFixed(S.waterKg<10?1:0)+" L":(S.waterKg*1000).toFixed(0)+" mL");
+    el.cumWood.textContent=fmtG(S.woodC); // grams carbon in wood
+
+    // air fraction factoid: carbon(50%)+ H,O partly air/water. Keep the well-known ~95% air+water.
+    el.airPct.textContent="≈95%";
+
+    // narration
+    narrate(e);
+    // season strip
+    const si=seasonIndex(e.doy);
+    for(const s of el.seasonStrip.children){ s.classList.toggle("on", +s.dataset.s===si); }
+    // tree hint
+    const yrs=Math.floor(S.simDay/365);
+    el.treeHint.textContent = massG<50?"seedling":massG<5000?"sapling · "+yrs+" yrs":massG<150000?"young tree · "+yrs+" yrs":"mature · "+yrs+" yrs";
+  }
+
+  let lastNar="";
+  function narrate(e){
+    let title,text,color="var(--green)";
+    const night = e.I<1;
+    const si=seasonIndex(e.doy);
+    if(totalC()/K.Cfrac<12){ title="Germination"; text="A seed unfurls its first leaves. With almost no wood yet, nearly everything it captures goes into more leaf area to catch more light."; }
+    else if(params.decid && si===0){ title="Winter dormancy"; color="#7fb0e0"; text="No leaves, no photosynthesis. The tree idles on stored starch, respiring very slowly in the cold. Growth is paused, not dead."; }
+    else if(params.decid && S.senesceColor>0.3){ title="Autumn senescence"; color="#e8a24b"; text="Daylength and temperature are falling. Chlorophyll is dismantled (the leaves turn), useful nitrogen and sugar are pulled back into the trunk, then the leaves are dropped."; }
+    else if(night){ title="Night · the tree exhales"; color="#e8a24b"; text="The sun is down, so photosynthesis stops — but the tree is still alive and respiring: burning sugar with O₂ and releasing CO₂. Right now it is a net carbon emitter."; }
+    else if(S.stoma<0.4){ title="Drought stress"; color="#e8a24b"; text="Dry soil forces the stomata to close to stop water loss. That also shuts the door on CO₂ — photosynthesis is throttled even in full sun."; }
+    else if(e.T>34){ title="Heat stress"; color="#e8a24b"; text="Leaves are hot. RuBisCO grabs O₂ instead of CO₂ (photorespiration), wasting energy, and the temperature bell pulls the carbon-fixing rate down."; }
+    else if(S.npp>0){ title="Daytime · net growth"; color="var(--green)"; text="Full engine: light splits water (O₂ out), the Calvin cycle fixes CO₂ into sugar, and the surplus over respiration is shipped down to build wood, branches and roots."; }
+    else { title="Low light"; color="#cbd08a"; text="Dim light: photosynthesis barely exceeds respiration, so little carbon is left over to build new tissue."; }
+    if(title!==lastNar){ lastNar=title; el.narTitle.textContent=title; el.narText.textContent=text; el.narPip.style.background=color; el.narPip.style.color=color; }
+  }
+
+  /* ================= MATH MODE RENDER ================= */
+  function num(x,d){
+    if(x===0||x==null)return "0";
+    if(!isFinite(x))return "∞";
+    const a=Math.abs(x);
+    if(a>=1e6||a<1e-3)return x.toExponential(d==null?2:d);
+    if(a>=100)return x.toFixed(1);
+    if(a>=1)return x.toFixed(2);
+    return x.toFixed(4);
+  }
+  function sub(x){ return '<span class="sub">'+num(x)+'</span>'; }
+
+  function mathHTML(L){
+    const NA=6.022e23, molls=(L.gpp/12)*NA;
+    const stage=(n,title,out,rows,cls)=>
+      `<div class="stage ${cls||''}"><h3><span class="st-n">${n}</span>${title}<span class="st-out">${out}</span></h3>${rows.join('')}</div>`;
+    const row=(lab,frm,res,cls)=>`<div class="eqline"><span class="lab">${lab}</span><span class="frm">${frm}</span><span class="res ${cls||''}">${res}</span></div>`;
+    const nc=L.night?'night':'';
+    return [
+      stage(1,'Time &amp; sun geometry', `day ${Math.floor(L.doy)+1}/365`, [
+        row('day of year','simDay mod 365', num(L.doy)+' d'),
+        row('season angle','s = 2π(doy−172)/365 = 2π('+sub(L.doy)+'−172)/365', num(L.s)+' rad'),
+        row('','cos s', num(L.cosS)),
+        row('day length','12 + 4·cos s = 12 + 4·'+sub(L.cosS), num(L.daylen)+' h'),
+        row('local hour','(simDay mod 1)·24', num(L.hour)+' h'),
+        row('sun up','sunrise '+num(L.sunrise)+' → sunset '+num(L.sunset)+' h', L.night?'below horizon':'above horizon')
+      ]),
+      stage(2,'Light &amp; leaf temperature', 'I = '+num(L.I), [
+        row('peak light','I_max = 2000(0.55+0.45·cos s)·sun', num(L.Imax)+' µmol'),
+        row('PAR now', L.night?'I = 0 (dark)':'I = I_max·sin(π·(hour−sunrise)/daylen)', num(L.I)+' µmol'),
+        row('seasonal mean','T_mean = 12 + 11·cos(seasonal) + tOff', num(L.Tmean)+' °C'),
+        row('leaf temp','T = T_mean + 7·sin(2π(hour−8.5)/24)', num(L.T)+' °C')
+      ], nc),
+      stage(3,'Stomata &amp; water', 'wf = '+num(L.wf), [
+        row('water factor','wf = min(1.05, soil/0.75)', num(L.wf)),
+        row('stomatal aperture','0.25 + 0.75·soil', num(L.stoma)),
+        row('atmos. CO₂','ppm', num(L.ppm)+' ppm')
+      ]),
+      stage(4,'Photosynthesis (per m² leaf)', 'A = '+num(L.A), [
+        row('light×quantum','αI = 0.05·'+sub(L.I), num(L.aI)),
+        row('hyperbola b','b = αI + P_max = '+sub(L.aI)+' + '+sub(L.Pmax), num(L.b)),
+        row('discriminant','b² − 4θ·αI·P_max', num(L.disc)),
+        row('light-limited','P = (b − √disc)/(2θ)', num(L.P)),
+        row('CO₂ factor','f_CO₂ = ppm/(ppm+280) = '+sub(L.ppm)+'/('+sub(L.ppm)+'+280)', num(L.fCO2)),
+        row('RuBisCO temp','f_T = exp(−½((T−27)/9)²)', num(L.fT)),
+        row('assimilation','A = P·f_CO₂·f_T·wf', num(L.A)+' µmol m⁻²s⁻¹')
+      ], nc),
+      stage(5,'Leaf area → gross photosynthesis (GPP)', num(L.gppStep)+' gC', [
+        row('leaf dry mass','leafC / 0.5', num(L.dmLeaf)+' g'),
+        row('leaf area','(dry/1000)·SLA(13)', num(L.leafArea)+' m²'),
+        row('GPP rate','A·area·12×10⁻⁶', num(L.gpp)+' gC/s'),
+        row('this Δt','GPP·Δt  (Δt = '+num(L.secs)+' s)', num(L.gppStep)+' gC'),
+        row('as molecules','GPP/12·N_A', num(molls)+' CO₂/s')
+      ], nc),
+      stage(6,'Respiration (the tree breathes)', num(L.rmaint)+' gC/s', [
+        row('living carbon','leaf + 0.4·root + 0.06·wood + reserve', num(L.livingC)+' gC'),
+        row('Q10 term','2^((T−20)/10)', num(L.q10)),
+        row('maintenance','R = rm·livingC·Q10', num(L.rmaint)+' gC/s'),
+        row('this Δt','R·Δt', num(L.respStepMaint)+' gC')
+      ]),
+      stage(7,'Reserve → leaves, wood &amp; roots', '+'+num(L.build)+' gC wood', [
+        row('reserve update','reserve += (GPP − R)·Δt', num(L.gppStep-L.respStepMaint)+' gC'),
+        row('leaf ceiling','L_cap = L_max(1 − e^(−wood/wHalf))', num(L.leafCap)+' gC'),
+        row('desired leaf','L_cap · canopy('+num(L.canopy)+')', num(L.desiredLeafC)+' gC'),
+        row(L.flush>0?'spring flush':'autumn shed', L.flush>0?'draw from reserve → leaves':'drop → litter (resorb 45%)', (L.flush>0?'+'+num(L.flush):(L.shed>0?'−'+num(L.shed):'0'))+' gC'),
+        row('reserve buffer','1.1·L_cap·1.25 (winter store)', num(L.reserveBuf)+' gC'),
+        row('surplus','max(0, reserve − buffer)', num(L.surplus)+' gC'),
+        row('build wood','surplus · growth-rate · warm', num(L.build)+' gC'),
+        row('allocate','stem +'+num(L.dStem)+' · branch +'+num(L.dBranch)+' · root +'+num(L.dRoot),'42/28/30 %')
+      ]),
+      stage(8,'Gas &amp; water bookkeeping (this Δt)', num(L.co2Step)+' g CO₂', [
+        row('O₂ gross','GPP·Δt / 12 · 32', num(L.o2gStep)+' g'),
+        row('O₂ net','(GPP·Δt − R·Δt) / 12 · 32', num(L.o2nStep)+' g', L.o2nStep<0?'neg':''),
+        row('CO₂ fixed','GPP·Δt / 12 · 44', num(L.co2Step)+' g'),
+        row('H₂O transpired','GPP·Δt / WUE · (0.6+0.4·stoma)', num(L.waterStep)+' kg')
+      ])
+    ].join('');
+  }
+  function constHTML(L){
+    const kv=(k,v)=>`<span class="k">${k}</span><span class="v">${v}</span>`;
+    return [
+      kv('species', L?L.sp:spInfo().label),
+      kv('P_max eff', num(L?L.Pmax:K.Pmax)+' µmol'),
+      kv('α · θ', K.alpha+' · '+K.theta),
+      kv('K_CO₂', K.Kco2+' ppm'),
+      kv('T_opt · σ', K.Topt+' · '+K.Tsig+'°C'),
+      kv('rm eff', (L?L.rmC:K.rm).toExponential(1)),
+      kv('Q10', K.Q10),
+      kv('growth resp', (K.growthResp*100)+'%'),
+      kv('SLA', K.SLA+' m²/kg'),
+      kv('C fraction', (K.Cfrac*100)+'%'),
+      kv('WUE', K.WUE+' gC/kg'),
+      kv('L_max eff', num(L?L.Lmax:K.Lmax)+' gC'),
+      kv('wHalf eff', num(L?L.wHalf:K.wHalf)+' gC')
+    ].join('');
+  }
+  function stateHTML(){
+    const kv=(k,v)=>`<span class="k">${k}</span><span class="v">${v}</span>`;
+    const tot=totalC();
+    return [
+      kv('leaf C', num(S.leafC)), kv('stem C', num(S.stemC)), kv('branch C', num(S.branchC)),
+      kv('root C', num(S.rootC)), kv('reserve C', num(S.reserveC)), kv('total C', num(tot)),
+      kv('dry mass', fmtG(tot/K.Cfrac)), kv('wood C (cum)', num(S.woodC)),
+      kv('CO₂ abs (cum)', fmtG(S.co2GrossG)), kv('O₂ rel (cum)', fmtG(S.o2GrossG))
+    ].join('');
+  }
+  function renderMath(){
+    const L=LAST;
+    el.mIter.textContent=S.iter;
+    el.mDay.textContent=S.simDay.toFixed(2);
+    el.mDt.textContent=(L?L.dt:0.02).toFixed(3);
+    const e=env(S.simDay), yr=Math.floor(S.simDay/365), day=Math.floor(S.simDay%365)+1;
+    el.mClock.textContent=`Yr ${yr} · ${seasonName[seasonIndex(e.doy)]} · Day ${day} · ${e.T.toFixed(0)}°C`;
+    el.mConst.innerHTML=constHTML(L);
+    el.mState.innerHTML=stateHTML();
+    if(L) el.cascade.innerHTML=mathHTML(L);
+  }
+
+  /* Baked-in, source-checked chemistry reference (refined by the research pass). */
+  const CHEM={
+    equations:[
+      {id:'photo', title:'Photosynthesis (the only door carbon enters)',
+       symbolic:'6 CO₂ + 6 H₂O + light → C₆H₁₂O₆ + 6 O₂',
+       worked:'264 g CO₂ + 108 g H₂O → 180 g glucose + 192 g O₂  (1 O₂ out per CO₂ in)',
+       note:'Every carbon atom in a redwood was CO₂ gas pulled from the air through the leaves.'},
+      {id:'cellulose', title:'Cellulose — the structural cable (condensation polymer)',
+       symbolic:'n C₆H₁₂O₆ → (C₆H₁₀O₅)ₙ + n H₂O',
+       worked:'180 g glucose → 162 g anhydroglucose unit + 18 g water. Cellulose is 44.4% carbon by mass.',
+       note:'~40–50% of wood dry mass; long glucose chains bundled into microfibrils give wood its tensile strength.'},
+      {id:'lignin', title:'Lignin — the rigid, waterproof glue (softwood = guaiacyl)',
+       symbolic:'coniferyl alcohol  C₁₀H₁₂O₃  →  (guaiacyl / G lignin)ₙ',
+       worked:'From phenylalanine via the phenylpropanoid pathway (PAL → C4H → 4CL …). Coniferyl alcohol is ≈67% carbon; the lignin polymer is ≈60–65% carbon — denser in carbon and energy than cellulose.',
+       note:'≈28–34% of conifer wood, and softwood lignin is ≈90–95% guaiacyl units. It stiffens the walls, waterproofs the xylem, and lets the trunk lift water ~100 m.'},
+      {id:'balance', title:'CO₂ → dry wood: the mass balance',
+       symbolic:'1 kg dry wood  ⇐  ≈1.83 kg CO₂ ;  releases ≈1.33 kg O₂',
+       worked:'Dry wood ≈ 50% carbon → 0.5 kg C/kg. Carbon is 12.011/44.01 = 27.3% of CO₂, so 0.5 × (44/12) = 1.83 kg CO₂. O₂ ≈ 0.5 × (32/12) = 1.33 kg.',
+       note:'Only ~1 water molecule per CO₂ is built into sugar, but ~200 are transpired to capture it. Scale up: General Sherman’s trunk holds ≈820 t of CO₂ (~1,000 t for the whole tree).'}
+    ],
+    redwoodTable:[
+      {metric:'Coast redwood wood density', value:'0.36–0.42', unit:'basic SG (~415 kg/m³)', note:'A light softwood — lighter than most conifers.'},
+      {metric:'Wood: cellulose', value:'40–45', unit:'%', note:'The tensile microfibril skeleton.'},
+      {metric:'Wood: hemicellulose', value:'~20–30', unit:'%'},
+      {metric:'Wood: lignin', value:'26–34', unit:'%', note:'Guaiacyl (softwood) lignin.'},
+      {metric:'Heartwood extractives', value:'15–30', unit:'% of dry wt', note:'Tannins/polyphenols → decay & fire resistance (up to 69% of decay resistance tracks them).'},
+      {metric:'Carbon fraction of dry wood', value:'~50–51', unit:'%', note:'Conifers run just above the 50% rule (Lamlom & Savidge 2003).'},
+      {metric:'Tallest tree — Hyperion', value:'~116.1', unit:'m', note:'Coast redwood; Guinness-certified 116.07 m in 2019.'},
+      {metric:'General Sherman trunk volume', value:'1,487', unit:'m³', note:'Largest single-stem tree by wood volume on Earth.'},
+      {metric:'General Sherman age', value:'~2,200–2,700', unit:'yr'},
+      {metric:'CO₂ locked in Sherman’s trunk', value:'≈820', unit:'t CO₂', note:'≈446 t dry wood → ≈223 t C; ~1,000 t CO₂ for the whole tree.'},
+      {metric:'Record forest carbon', value:'up to ~2,600', unit:'Mg C/ha', note:'Biomass up to 5,190 Mg/ha, LAI 19.4 — densest of any forest (Van Pelt 2016).'}
+    ],
+    paragraphs:[
+      {title:'Light wood, colossal carbon store', text:'Redwood wood is low-density, yet the trees are so tall, so massive, and so long-lived that a coast-redwood grove stores more carbon per hectare than any other forest measured.'},
+      {title:'Cellulose vs lignin', text:'Cellulose is the tensile cable (44% carbon); lignin is the compressive, waterproof concrete (~63% carbon). Conifers like redwood build guaiacyl-type lignin.'},
+      {title:'Why redwoods barely rot or burn', text:'Heartwood is loaded with tannins and polyphenols and contains no pitch/resin — deterring fungi and insects and charring instead of flaming, so individuals persist for millennia and keep stacking wood.'},
+      {title:'It came from the air, not the soil', text:'~Half the dry weight is carbon that was atmospheric CO₂. Van Helmont’s 17th-century willow proved the mass does not come from soil.'},
+      {title:'They never really stop', text:'Unlike most trees, ancient redwoods keep adding large wood volume as their crowns expand — so their carbon accrual can accelerate with age.'}
+    ],
+    citations:[
+      {label:'NPS · General Sherman', url:'https://www.nps.gov/places/000/general-sherman-tree.htm'},
+      {label:'Wikipedia · Hyperion', url:'https://en.wikipedia.org/wiki/Hyperion_(tree)'},
+      {label:'Van Pelt 2016 · redwood biomass', url:'https://www.sciencedirect.com/science/article/pii/S0378112716302584'},
+      {label:'Save the Redwoods League', url:'https://www.savetheredwoods.org/press-releases/research-confirms-significant-role-of-redwood-forests-in-californias-climate-fight/'},
+      {label:'USDA Forest Products Lab · wood chemistry', url:'https://www.fpl.fs.usda.gov/documnts/pdf2013/fpl_2013_rowell002.pdf'},
+      {label:'USDA PSW GTR-095 · redwood', url:'https://www.fs.usda.gov/psw/publications/documents/psw_gtr095/psw_gtr095_piirto.pdf'},
+      {label:'PSU Extension · CO₂↔timber math', url:'https://extension.psu.edu/conversions-commonly-used-when-comparing-timber-and-carbon-values'}
+    ]
+  };
+  function setChemistry(d){
+    if(!d){ return; }
+    let html='';
+    (d.equations||[]).forEach(eq=>{
+      html+=`<div class="ceq"><div class="ct">${eq.title}</div><div class="cf">${eq.symbolic}</div>`+
+            (eq.worked?`<div class="cw">${eq.worked}</div>`:'')+(eq.note?`<div class="cn">${eq.note}</div>`:'')+`</div>`;
+    });
+    if(d.redwoodTable&&d.redwoodTable.length){
+      html+='<h4 style="margin-top:4px">Redwood, by the numbers</h4><table class="rwtable">';
+      d.redwoodTable.forEach(r=>{
+        html+=`<tr><td>${r.metric}</td><td>${r.value}${r.unit?(' '+r.unit):''}</td></tr>`+
+              (r.note?`<tr><td colspan="2" class="note">${r.note}</td></tr>`:'');
+      });
+      html+='</table>';
+    }
+    if(d.paragraphs&&d.paragraphs.length){
+      html+='<div style="margin-top:8px">';
+      d.paragraphs.forEach(p=>{ html+=`<div class="chem-para"><b>${p.title}.</b> ${p.text}</div>`; });
+      html+='</div>';
+    }
+    if(d.citations&&d.citations.length){
+      html+='<div class="cites">Sources: '+d.citations.map(c=>`<a href="${c.url}" target="_blank" rel="noopener">${c.label}</a>`).join(' · ')+'</div>';
+    }
+    el.chemContent.innerHTML=html;
+    el.chemLoading.style.display='none';
+  }
+
+  /* ---------- main loop ---------- */
+  let last=performance.now();
+  let lastMathRender=0;
+  function frame(now){
+    const dtReal=Math.min(0.05,(now-last)/1000); last=now;
+    if(running){ advance(dtReal*params.speed); }
+    if(mathMode){
+      if(now-lastMathRender>90){ renderMath(); lastMathRender=now; }  // throttle to ~11fps
+      updateDOM();
+    } else {
+      spawnParticles(dtReal);
+      drawLeaf(); drawTree(); drawChart(); updateDOM();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- controls ---------- */
+  function syncLabels(){
+    el.vSpeed.textContent=SPD[+el.cSpeed.value]+" d/s";
+    el.vSun.textContent=el.cSun.value+"%";
+    el.vCO2.textContent=el.cCO2.value+" ppm";
+    el.vWater.textContent=el.cWater.value+"%";
+    el.vTemp.textContent=(el.cTemp.value>=0?"+":"")+el.cTemp.value+"°C";
+  }
+  function refreshParams(){ params=readParams(); syncLabels(); }
+  [el.cSpeed,el.cSun,el.cCO2,el.cWater,el.cTemp].forEach(c=>c.addEventListener("input",refreshParams));
+
+  function setRunning(v){
+    running=v;
+    el.btnPlay.textContent=running?"❚❚ Pause":"▶ Play"; el.btnPlay.classList.toggle("primary",!running);
+    el.mRun.textContent=running?"❚❚ Pause":"▶ Run"; el.mRun.classList.toggle("primary",!running);
+  }
+  el.btnPlay.addEventListener("click",()=>setRunning(!running));
+  el.mRun.addEventListener("click",()=>setRunning(!running));
+  el.btnReset.addEventListener("click",()=>{
+    S=fresh(); parts.length=0; lastNar=""; LAST=null;
+    updateDOM();
+    if(mathMode){ traceOn=true; step(0.02); renderMath(); } else { drawLeaf(); drawTree(); drawChart(); }
+  });
+
+  // species selection
+  const spBtns={deciduous:el.btnDecid, evergreen:el.btnEver, redwood:el.btnRedwood};
+  function setSpecies(name){
+    params.species=name; params.decid=(SPECIES[name]||SPECIES.deciduous).decid;
+    for(const k in spBtns){ spBtns[k].classList.toggle("on", k===name); }
+  }
+  el.btnDecid.addEventListener("click",()=>setSpecies("deciduous"));
+  el.btnEver.addEventListener("click",()=>setSpecies("evergreen"));
+  el.btnRedwood.addEventListener("click",()=>setSpecies("redwood"));
+
+  // simulate in years (disable the per-step trace during the heavy loop to stay snappy)
+  function doJump(y){
+    const wasTrace=traceOn; traceOn=false; jumpYears(y); traceOn=wasTrace;
+    updateDOM();                                   // repaint immediately (don't wait for rAF)
+    if(mathMode){ traceOn=true; step(0.02); renderMath(); }
+    else { drawLeaf(); drawTree(); drawChart(); }
+  }
+  el.jy1.addEventListener("click",()=>doJump(1));
+  el.jy10.addEventListener("click",()=>doJump(10));
+  el.jy100.addEventListener("click",()=>doJump(100));
+  el.jy1000.addEventListener("click",()=>doJump(1000));
+
+  // math mode
+  function stepOnce(){ traceOn=true; step(0.02); renderMath(); }
+  function setMathMode(on){
+    mathMode=on; traceOn=on;
+    document.body.classList.toggle("math", on);
+    el.btnMathMode.classList.toggle("on", on);
+    el.btnMathMode.textContent=on?"◧ Visual mode":"∑ Math mode";
+    if(on){ if(!LAST) stepOnce(); else renderMath(); }
+  }
+  el.btnMathMode.addEventListener("click",()=>setMathMode(!mathMode));
+  el.mStep.addEventListener("click",()=>{ setRunning(false); stepOnce(); });
+  el.mJumpYr.addEventListener("click",()=>doJump(1));
+
+  setChemistry(CHEM);
+
+  /* ---------- boot ---------- */
+  S=fresh(); refreshParams();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

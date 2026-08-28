@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #fafaf8;
+  --sidebar: #f4f4f1;
+  --card: #ffffff;
+  --ink: #1c1917;
+  --ink-soft: #57534e;
+  --ink-faint: #a8a29e;
+  --hairline: #e8e6e1;
+  --hairline-soft: #efede9;
+  --pill-dark: #191817;
+  --chip: #eceae5;
+  --accent-purple: #8b5cf6;
+  --accent-orange: #f59042;
+  --accent-rose: #f4536e;
+  --accent-green: #34d399;
+  --danger-bg: #fdf0ef;
+  --danger: #c2402f;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-sidebar: var(--sidebar);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-hairline: var(--hairline);
+  --color-hairline-soft: var(--hairline-soft);
+  --color-pill-dark: var(--pill-dark);
+  --color-chip: var(--chip);
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-rose: var(--accent-rose);
+  --color-accent-green: var(--accent-green);
+  --color-danger-bg: var(--danger-bg);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-poppins), Arial, Helvetica, sans-serif;
+}
+
+html {
+  background: var(--canvas);
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  letter-spacing: 0.005em;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: #d8d5ce;
+}
+
+/* thin quiet scrollbars, the app surface is calm */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d6d3cd transparent;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(25, 24, 23, 0.18); }
+  50% { transform: scale(1.06); box-shadow: 0 0 0 12px rgba(25, 24, 23, 0); }
+}
+
+.orb {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes caret-blink {
+  0%, 45% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.caret {
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rise-in {
+  animation: rise-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes bar-grow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.bar-grow {
+  transform-origin: bottom;
+  animation: bar-grow 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}

@@ -1,0 +1,31 @@
+import { Fluid, type Field } from './fluid';
+export type RenderOptions = { field: Field; arrows: boolean; streamlines: boolean; grid: boolean; surface: boolean; angle: number; probe: [number,number] };
+const mix=(a:number[],b:number[],t:number)=>a.map((v,i)=>Math.round(v+(b[i]-v)*Math.max(0,Math.min(1,t))));
+export function fieldColor(f:Fluid,k:number,field:Field,scale:number) {
+ if(!f.solid[k]) return [56,65,76];
+ if(field==='dye') return mix([239,244,248],[25,104,199],Math.min(1,f.dye[k]*1.6));
+ if(field==='speed') {const v=Math.hypot((f.u[k]+f.u[k+1])*.5,(f.v[k]+f.v[k+f.stride])*.5)/scale;return v<.5?mix([232,243,250],[31,158,190],v*2):mix([31,158,190],[19,56,122],(v-.5)*2);}
+ const v=field==='pressure'?f.p[k]:f.curl[k];return mix([239,243,247],v<0?[32,103,200]:[230,103,43],Math.sqrt(Math.min(1,Math.abs(v)/scale)));
+}
+export function fieldScale(f:Fluid,field:Field) {if(field==='speed')return Math.max(.2,f.peakSpeed);if(field==='dye')return 1;const values=field==='pressure'?f.p:f.curl;let max=0;for(let j=1;j<=f.ny;j++)for(let i=1;i<=f.nx;i++){const k=f.id(i,j);if(f.solid[k])max=Math.max(max,Math.abs(values[k]));}return Math.max(field==='pressure'?.05:1,max*.7);}
+export function drawFluid(canvas:HTMLCanvasElement,buffer:HTMLCanvasElement,f:Fluid,o:RenderOptions){
+ const ctx=canvas.getContext('2d');if(!ctx)return;const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(window.devicePixelRatio||1,2);
+ if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const scale=fieldScale(f,o.field);
+ if(o.surface){drawSurface(ctx,w,h,f,o,scale);return;}
+ const pad=28,fw=Math.min(w-pad*2,(h-pad*2)*f.width),fh=fw/f.width,ox=(w-fw)/2,oy=(h-fh)/2;
+ if(buffer.width!==f.nx||buffer.height!==f.ny){buffer.width=f.nx;buffer.height=f.ny;}
+ const bc=buffer.getContext('2d')!,im=bc.createImageData(f.nx,f.ny);
+ for(let j=1;j<=f.ny;j++)for(let i=1;i<=f.nx;i++){const k=f.id(i,j),idx=((f.ny-j)*f.nx+i-1)*4,c=fieldColor(f,k,o.field,scale);im.data[idx]=c[0];im.data[idx+1]=c[1];im.data[idx+2]=c[2];im.data[idx+3]=255;}
+ bc.putImageData(im,0,0);ctx.imageSmoothingEnabled=true;ctx.drawImage(buffer,ox,oy,fw,fh);const pt=(x:number,y:number)=>[ox+x/f.width*fw,oy+(1-y)*fh];
+ ctx.save();ctx.beginPath();ctx.rect(ox,oy,fw,fh);ctx.clip();
+ if(o.grid){ctx.strokeStyle='rgba(77,107,132,.13)';ctx.lineWidth=.6;ctx.beginPath();for(let i=0;i<=f.nx;i+=4){const x=ox+i/f.nx*fw;ctx.moveTo(x,oy);ctx.lineTo(x,oy+fh);}for(let j=0;j<=f.ny;j+=4){const y=oy+j/f.ny*fh;ctx.moveTo(ox,y);ctx.lineTo(ox+fw,y);}ctx.stroke();}
+ if(o.streamlines){ctx.lineWidth=.75;ctx.strokeStyle=o.field==='dye'?'rgba(34,96,156,.4)':'rgba(25,51,69,.38)';for(let line=0;line<23;line++){let x=.025,y=(line+.5)/23;if(!f.open){x=.15+(line%6)*.31;y=.1+Math.floor(line/6)*.25;}ctx.beginPath();let p=pt(x,y);ctx.moveTo(p[0],p[1]);for(let n=0;n<200;n++){const [u,v]=f.velocity(x,y),m=Math.hypot(u,v);if(m<.002)break;x+=u/m*.012;y+=v/m*.012;const i=Math.floor(x/f.h)+1,j=Math.floor(y/f.h)+1;if(x<0||x>f.width||y<0||y>1||!f.solid[f.id(i,j)])break;p=pt(x,y);ctx.lineTo(p[0],p[1]);}ctx.stroke();}}
+ if(o.arrows){ctx.strokeStyle='rgba(12,43,66,.65)';ctx.lineWidth=1;for(let j=5;j<f.ny;j+=8)for(let i=5;i<f.nx;i+=8){const k=f.id(i,j);if(!f.solid[k])continue;const [u,v]=f.velocity((i-.5)*f.h,(j-.5)*f.h),m=Math.hypot(u,v);if(m<.004)continue;const p=pt((i-.5)*f.h,(j-.5)*f.h),len=Math.min(18,m*18),dx=u/m*len,dy=-v/m*len;ctx.beginPath();ctx.moveTo(p[0]-dx/2,p[1]-dy/2);ctx.lineTo(p[0]+dx/2,p[1]+dy/2);ctx.lineTo(p[0]+dx/2-dx*.3-dy*.25,p[1]+dy/2-dy*.3+dx*.25);ctx.moveTo(p[0]+dx/2,p[1]+dy/2);ctx.lineTo(p[0]+dx/2-dx*.3+dy*.25,p[1]+dy/2-dy*.3-dx*.25);ctx.stroke();}}
+ const pp=pt(...o.probe);ctx.strokeStyle='#132e48';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(pp[0],pp[1],6,0,Math.PI*2);ctx.moveTo(pp[0]-11,pp[1]);ctx.lineTo(pp[0]+11,pp[1]);ctx.moveTo(pp[0],pp[1]-11);ctx.lineTo(pp[0],pp[1]+11);ctx.stroke();ctx.restore();
+ ctx.strokeStyle='#c9d2db';ctx.lineWidth=1;ctx.strokeRect(ox,oy,fw,fh);ctx.font='11px ui-monospace,monospace';ctx.fillStyle='#6b7e8d';ctx.textAlign='center';for(let i=0;i<=4;i++)ctx.fillText((i/4*f.width).toFixed(2),ox+i/4*fw,oy+fh+17);ctx.textAlign='right';ctx.fillText('1.0',ox-5,oy+5);ctx.fillText('0',ox-5,oy+fh);ctx.fillText('y/H',ox-5,oy+fh/2);ctx.fillText('x/H',ox+fw,oy+fh+30);
+}
+function drawSurface(ctx:CanvasRenderingContext2D,w:number,h:number,f:Fluid,o:RenderOptions,scale:number){const co=Math.cos(o.angle),si=Math.sin(o.angle),sz=Math.min(w/(f.width*1.15+1),h/1.6)*.91;const project=(x:number,y:number,z:number)=>{const xx=x-f.width/2,yy=y-.5;return [w/2+(xx*co-yy*si)*sz,h*.56+(xx*si+yy*co)*sz*.52-z*sz*.75];};const z=(raw:number)=>{const k=f.id(Math.min(f.nx,raw%f.stride),Math.min(f.ny,Math.floor(raw/f.stride)));if(!f.solid[k])return .19;const v=o.field==='pressure'?f.p[k]/scale:o.field==='vorticity'?f.curl[k]/scale:o.field==='dye'?f.dye[k]:Math.hypot((f.u[k]+f.u[k+1])*.5,(f.v[k]+f.v[k+f.stride])*.5)/scale;return Math.max(-1,Math.min(1,v))*.27;};const cells:{p:number[][];c:number[];depth:number}[]=[];
+ for(let j=1;j<f.ny;j+=2)for(let i=1;i<f.nx;i+=2){const x=(i-1)*f.h,y=(j-1)*f.h,k=f.id(i,j);cells.push({p:[project(x,y,z(k)),project(x+2*f.h,y,z(k+2)),project(x+2*f.h,y+2*f.h,z(k+2+2*f.stride)),project(x,y+2*f.h,z(k+2*f.stride))],c:fieldColor(f,k,o.field,scale),depth:(x-f.width/2)*si+(y-.5)*co});}
+ cells.sort((a,b)=>a.depth-b.depth);for(const cell of cells){ctx.beginPath();cell.p.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));ctx.closePath();ctx.fillStyle=`rgb(${cell.c.join(',')})`;ctx.fill();ctx.strokeStyle=o.grid?'rgba(34,72,105,.25)':ctx.fillStyle;ctx.lineWidth=.5;ctx.stroke();}ctx.font='12px ui-monospace,monospace';ctx.fillStyle='#63798d';ctx.textAlign='center';ctx.fillText('Height = selected field · 2D data',w/2,h-25);
+}
+export function pointerPosition(canvas:HTMLCanvasElement,f:Fluid,cx:number,cy:number):[number,number]|null{const r=canvas.getBoundingClientRect(),pad=28,fw=Math.min(r.width-pad*2,(r.height-pad*2)*f.width),fh=fw/f.width,ox=(r.width-fw)/2,oy=(r.height-fh)/2,x=(cx-r.left-ox)/fw*f.width,y=1-(cy-r.top-oy)/fh;return x>=0&&x<=f.width&&y>=0&&y<=1?[x,y]:null;}

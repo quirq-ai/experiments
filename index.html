@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ship Notes components · demo</title>
+<meta name="description" content="A runnable tour of aqualang89/shipnotes-components: three dependency-free Web Components and the attributes and events they trade with a page.">
+<link rel="stylesheet" href="demo.css">
+<script src="vendor/shipnotes/pull-lamp.js" defer></script>
+<script src="vendor/shipnotes/signal-orb.js" defer></script>
+<script src="vendor/shipnotes/project-stack.js" defer></script>
+<script src="demo.js" defer></script>
+</head>
+<body>
+<main>
+  <header class="top">
+    <span>SHIPNOTES-COMPONENTS / DEMO</span>
+    <span class="chip" id="mode">NIGHT MODE</span>
+  </header>
+
+  <section class="hero">
+    <h1>Three <span class="nowrap">drop-in</span> Web Components.</h1>
+    <p><a href="https://github.com/aqualang89/shipnotes-components">aqualang89/shipnotes-components</a> is a small catalog of UI pieces with moving parts, built with Codex for the <a href="https://x.com/shipnotesai">Ship Notes</a> build videos on X. Each one is a single JavaScript file that defines a custom element. No npm, no build, no dependencies. The page sets attributes; the component draws, and sometimes emits an event.</p>
+    <p class="meta">Vendored unmodified at <code>5930afd</code> (2026-09-26) · MIT · upstream tests Chromium only</p>
+  </section>
+
+  <section class="demo" id="lamp" aria-labelledby="lamp-title">
+    <div class="stage stage-lamp">
+      <pull-lamp></pull-lamp>
+    </div>
+    <div class="side">
+      <p class="eyebrow">01 · SVG and a spring</p>
+      <h2 id="lamp-title">Pull Lamp</h2>
+      <p>A theme switch. Drag the brass pull, tap it, or Tab to it and press Enter. The lamp only emits <code>themechange</code>; this page listens and repaints itself.</p>
+      <pre class="markup" data-markup="pull-lamp"></pre>
+      <div class="controls">
+        <button type="button" id="page-theme">Change theme from the page</button>
+      </div>
+      <div class="wire-head"><span>Traffic</span><span><b class="k-in">→</b> page sets <b class="k-out">←</b> element emits</span></div>
+      <ol class="wire fade" id="lamp-wire"></ol>
+      <p class="note">That button repaints the page first, then sets <code>on</code> on the lamp. Attributes set from code never emit <code>themechange</code>, so the two can't loop.</p>
+    </div>
+  </section>
+
+  <section class="demo" id="orb" aria-labelledby="orb-title">
+    <div class="stage stage-dark stage-orb">
+      <signal-orb state="listening" level="0.5"></signal-orb>
+      <div class="readout" aria-live="polite"><strong id="orb-label">Listening</strong><span id="orb-hint">Ready for input.</span></div>
+    </div>
+    <div class="side">
+      <p class="eyebrow">02 · WebGL particles</p>
+      <h2 id="orb-title">Signal Orb</h2>
+      <p>A status light for an AI app. It doesn't listen, think or search; your app sets <code>state</code>. Every particle has a spot in all four shapes, so a new state morphs from wherever the last one was, even mid-transition.</p>
+      <pre class="markup" data-markup="signal-orb"></pre>
+      <div class="seg" role="group" aria-label="Orb state">
+        <button type="button" data-state="listening" aria-pressed="true">Listening</button>
+        <button type="button" data-state="thinking" aria-pressed="false">Thinking</button>
+        <button type="button" data-state="searching" aria-pressed="false">Searching</button>
+        <button type="button" data-state="done" aria-pressed="false">Done</button>
+      </div>
+      <div class="row">
+        <label>level <input type="range" id="orb-level" min="0" max="1" step="0.01" value="0.5"></label>
+        <label>particles
+          <select id="orb-particles">
+            <option value="">auto</option>
+            <option value="1000">1,000</option>
+            <option value="4000">4,000</option>
+            <option value="12000">12,000</option>
+            <option value="20000">20,000</option>
+          </select>
+        </label>
+        <button type="button" id="orb-run" class="primary">Simulate an agent turn</button>
+      </div>
+      <p class="stats" id="orb-stats">&nbsp;</p>
+      <div class="wire-head"><span>Traffic</span><span><b class="k-in">→</b> page sets <b class="k-out">←</b> element emits</span></div>
+      <ol class="wire fade" id="orb-wire"></ol>
+      <p class="note">In a chat UI: user speaking → <code>listening</code> with mic volume as <code>level</code>, model streaming → <code>thinking</code>, tool call → <code>searching</code>, reply complete → <code>done</code>. It emits nothing back.</p>
+    </div>
+  </section>
+
+  <section class="demo" id="stack" aria-labelledby="stack-title">
+    <div class="stage stage-dark" id="stack-stage">
+      <project-stack><script type="application/json">[
+        {"title": "Coworker", "tag": "WORKSPACE", "description": "Runtime, memory, files and tools in one portable image.", "href": "https://xo.builders/#coworker", "accent": "#83d63a"},
+        {"title": "Swarm", "tag": "PLATFORM", "description": "Launches and manages many workspaces on any host.", "href": "https://xo.builders/#swarm"},
+        {"title": "Runtimes", "tag": "AGENTS", "description": "Claude Code, Codex or OpenClaw, inside the workspace.", "href": "https://xo.builders/#runtimes"}
+      ]</script></project-stack>
+    </div>
+    <div class="side">
+      <p class="eyebrow">03 · CSS 3D transforms</p>
+      <h2 id="stack-title">Project Stack</h2>
+      <p>Three portfolio cards. The data is a JSON script tag inside the element, read once when it connects. An optional <code>accent</code> recolors a card; Coworker uses XO lime here.</p>
+      <pre class="markup" data-markup="project-stack"></pre>
+      <label class="visually-hidden" for="stack-json">Project Stack JSON</label>
+      <textarea id="stack-json" spellcheck="false" rows="14"></textarea>
+      <div class="controls">
+        <button type="button" id="stack-apply" class="primary">Rebuild with this JSON</button>
+        <button type="button" id="stack-hostile">Try hostile input</button>
+        <button type="button" id="stack-reset">Reset</button>
+      </div>
+      <p class="stats" id="stack-stats">el.active = 0</p>
+      <div class="wire-head"><span>Last rebuild</span></div>
+      <ol class="wire" id="stack-wire"></ol>
+      <p class="note">It watches nothing, so new data means a new element. It emits no events either; the selected card only lives on <code>el.active</code>.</p>
+    </div>
+  </section>
+
+  <section class="anatomy" aria-labelledby="anatomy-title">
+    <p class="eyebrow">What they share</p>
+    <h2 id="anatomy-title">One pattern, three times.</h2>
+    <ol>
+      <li><strong>One file, one tag.</strong> An IIFE defines the element behind a <code>customElements.get()</code> guard, so loading the script twice is harmless.</li>
+      <li><strong>Shadow DOM.</strong> Styles live inside the element. Page CSS can't break it and its CSS can't leak out. Width comes from the parent.</li>
+      <li><strong>Attributes in, events out.</strong> The page owns state. Changes made from code don't echo back as events.</li>
+      <li><strong>Reduced motion.</strong> Each one honors <code>prefers-reduced-motion</code>: a static orb, an instant lamp, cards without transitions.</li>
+      <li><strong>Untrusted input.</strong> Text goes in through <code>textContent</code>, accents must be <code>#rrggbb</code> and links must be http(s).</li>
+      <li><strong>Made for video.</strong> A <code>recording</code> attribute on all three, plus <code>renderAt(time, weights)</code> on the orb, renders deterministic frames for the clips.</li>
+    </ol>
+  </section>
+
+  <footer>
+    <p>Components © 2026 Ship Notes, MIT, copied unmodified into <code>vendor/shipnotes</code>. The wiring on this page is ours.</p>
+    <p>Upstream releases one component per video. Its first commit held six more that were pulled back for later: a record player, a folding-letter send button, a throttle, a file dock, a contact card and a launch switch.</p>
+  </footer>
+</main>
+</body>
+</html>

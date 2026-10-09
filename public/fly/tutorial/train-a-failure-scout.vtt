@@ -1,0 +1,70 @@
+WEBVTT
+
+00:00:00.200 --> 00:00:02.736
+When workspace automations fail, evidence gets scattered.
+
+00:00:02.736 --> 00:00:08.170
+Train a small fly to find useful files and collect facts for a failure report.
+
+00:00:08.770 --> 00:00:11.910
+Open Report Scout and create a scout named Failure Scout.
+
+00:00:11.910 --> 00:00:15.050
+Its learned skill is choosing which file to read next.
+
+00:00:15.650 --> 00:00:18.733
+In Data, import the supplied space-failures dataset.
+
+00:00:18.733 --> 00:00:21.817
+Training, validation, and test workspaces are separate.
+
+00:00:21.817 --> 00:00:24.900
+Every incident in this collection is synthetic.
+
+00:00:25.500 --> 00:00:27.685
+In Teach, start a demonstration.
+
+00:00:27.685 --> 00:00:29.871
+Select current incident evidence files.
+
+00:00:29.871 --> 00:00:35.990
+Each click teaches a useful next read; the collection also supplies automatic teaching examples.
+
+00:00:36.590 --> 00:00:40.916
+Set sixty epochs, learning rate zero point zero five, and seed seventeen.
+
+00:00:40.916 --> 00:00:44.160
+Train the scout and watch its measured loss curve.
+
+00:00:44.760 --> 00:00:46.028
+Evaluate held-out cases.
+
+00:00:46.028 --> 00:00:51.942
+Compare useful-file coverage with filename matching and random reads, using the same four-read budget.
+
+00:00:51.942 --> 00:00:54.900
+These results apply to this synthetic collection.
+
+00:00:55.500 --> 00:00:57.912
+Run the nightly workspace sync test.
+
+00:00:57.912 --> 00:01:02.333
+Its cited records show two authentication-expired errors and one token-refresh failure.
+
+00:01:02.333 --> 00:01:05.950
+Eight files remain unread, so the report is partial.
+
+00:01:06.550 --> 00:01:09.256
+The shared credential suggests a connection problem.
+
+00:01:09.256 --> 00:01:15.440
+Check token expiry, refresh results, and which jobs share that credential before claiming a root cause.
+
+00:01:16.040 --> 00:01:18.387
+After evaluation, export the trained JSON.
+
+00:01:18.387 --> 00:01:20.734
+It contains the policy and provenance.
+
+00:01:20.734 --> 00:01:26.210
+Running this fly inside xo-space will require the adapter we plan to build next.

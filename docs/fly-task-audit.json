@@ -1,0 +1,202 @@
+{
+  "schemaVersion": 1,
+  "taskFamily": "report-scout-v1",
+  "scope": "Synthetic structured-file discovery curriculum. No claim about arbitrary real workspaces or general assistant ability.",
+  "datasetDigest": "c8e5a1a1f750e0806527c2e96ee4db66c1046e44c74d4bdd73e869fe26d5fe48",
+  "splits": {
+    "train": [
+      "scout-train-01",
+      "scout-train-02",
+      "scout-train-03",
+      "scout-train-04",
+      "scout-train-05",
+      "scout-train-06",
+      "scout-train-07",
+      "scout-train-08",
+      "scout-train-09",
+      "scout-train-10",
+      "scout-train-11",
+      "scout-train-12",
+      "scout-train-13",
+      "scout-train-14",
+      "scout-train-15",
+      "scout-train-16",
+      "scout-train-17",
+      "scout-train-18",
+      "scout-train-19",
+      "scout-train-20",
+      "scout-train-21",
+      "scout-train-22",
+      "scout-train-23",
+      "scout-train-24"
+    ],
+    "validation": [
+      "scout-validation-102",
+      "scout-validation-103",
+      "scout-validation-104",
+      "scout-validation-105",
+      "scout-validation-106",
+      "scout-validation-107",
+      "scout-validation-108",
+      "scout-validation-109"
+    ],
+    "test": [
+      "scout-test-212",
+      "scout-test-213",
+      "scout-test-214",
+      "scout-test-215",
+      "scout-test-216",
+      "scout-test-217",
+      "scout-test-218",
+      "scout-test-219",
+      "scout-test-220",
+      "scout-test-221",
+      "scout-test-222",
+      "scout-test-223",
+      "scout-test-224",
+      "scout-test-225",
+      "scout-test-226",
+      "scout-test-227"
+    ]
+  },
+  "epochs": 60,
+  "learningRate": 0.05,
+  "examples": 72,
+  "models": [
+    {
+      "seed": 17,
+      "initialLoss": 2.3951290051934713,
+      "finalTraining": {
+        "loss": 0.5964339160702387,
+        "accuracy": 0.6666666666666666,
+        "count": 72
+      },
+      "validation": {
+        "loss": 0.596464894489901,
+        "accuracy": 0.6666666666666666,
+        "count": 24
+      },
+      "policyHash": "804b089b22a2ba91017b7302c9516c2cfd65a103f4d9f9281af994b4853319a2",
+      "evaluation": {
+        "learned": {
+          "count": 16,
+          "coverage": 1,
+          "precision": 0.75,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 1,
+          "meanErrors": 0
+        },
+        "filename": {
+          "count": 16,
+          "coverage": 0.33333333333333326,
+          "precision": 0.25,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 0,
+          "meanErrors": 0
+        },
+        "random": {
+          "count": 16,
+          "coverage": 0.33333333333333337,
+          "precision": 0.25,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 0,
+          "meanErrors": 0
+        }
+      },
+      "artifactBytes": 2518
+    },
+    {
+      "seed": 29,
+      "initialLoss": 2.3951290051934713,
+      "finalTraining": {
+        "loss": 0.5953489812705002,
+        "accuracy": 0.6666666666666666,
+        "count": 72
+      },
+      "validation": {
+        "loss": 0.5953394568159472,
+        "accuracy": 0.6666666666666666,
+        "count": 24
+      },
+      "policyHash": "d1ae61f778c799e609d44abeeb25fac54e8ae66f54385f384d07ecbfa3b2cded",
+      "evaluation": {
+        "learned": {
+          "count": 16,
+          "coverage": 1,
+          "precision": 0.75,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 1,
+          "meanErrors": 0
+        },
+        "filename": {
+          "count": 16,
+          "coverage": 0.33333333333333326,
+          "precision": 0.25,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 0,
+          "meanErrors": 0
+        },
+        "random": {
+          "count": 16,
+          "coverage": 0.33333333333333337,
+          "precision": 0.25,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 0,
+          "meanErrors": 0
+        }
+      },
+      "artifactBytes": 2517
+    },
+    {
+      "seed": 47,
+      "initialLoss": 2.3951290051934713,
+      "finalTraining": {
+        "loss": 0.5948682376630077,
+        "accuracy": 0.6666666666666666,
+        "count": 72
+      },
+      "validation": {
+        "loss": 0.5948680330035285,
+        "accuracy": 0.6666666666666666,
+        "count": 24
+      },
+      "policyHash": "4bcfa3049722e555819d09dcbf9a306e63efff1bc930691c1c7d4be922d77407",
+      "evaluation": {
+        "learned": {
+          "count": 16,
+          "coverage": 1,
+          "precision": 0.75,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 1,
+          "meanErrors": 0
+        },
+        "filename": {
+          "count": 16,
+          "coverage": 0.33333333333333326,
+          "precision": 0.25,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 0,
+          "meanErrors": 0
+        },
+        "random": {
+          "count": 16,
+          "coverage": 0.33333333333333337,
+          "precision": 0.25,
+          "meanReads": 4,
+          "completeRate": 0,
+          "allRelevantFoundRate": 0,
+          "meanErrors": 0
+        }
+      },
+      "artifactBytes": 2523
+    }
+  ]
+}

@@ -1,0 +1,347 @@
+/* Fly Expedition Lab: scoped instrument interface; the habitat remains the canvas. */
+#fly-panel {
+  --fly-ink: #ece8da;
+  --fly-muted: #999e90;
+  --fly-faint: #646e63;
+  --fly-sage: #bacba2;
+  --fly-amber: #cda978;
+  --fly-hairline: rgba(194, 207, 173, .14);
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-height: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  color: var(--fly-ink);
+  pointer-events: none;
+  z-index: 12;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+#fly-panel *, #fly-panel *::before, #fly-panel *::after { box-sizing: border-box; }
+#fly-panel button, #fly-panel input, #fly-panel select, #fly-panel summary, #fly-panel a { -webkit-tap-highlight-color: transparent; }
+#fly-panel button, #fly-panel input, #fly-panel select { font: inherit; }
+#fly-panel button { cursor: pointer; color: inherit; }
+#fly-panel button:disabled { opacity: .35; cursor: not-allowed; }
+#fly-panel button, #fly-panel input, #fly-panel select, #fly-panel a, #fly-panel summary { outline-offset: 4px; }
+#fly-panel :focus-visible { outline: 1px solid #d7e3be; }
+#fly-panel [hidden] { display: none !important; }
+#fly-panel .fly-steps {
+  pointer-events: auto;
+  position: absolute;
+  left: 342px;
+  top: 76px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--fly-hairline);
+  background: linear-gradient(90deg, rgba(9, 17, 14, .5), transparent);
+}
+#fly-panel .fly-steps button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 0;
+  background: none;
+  color: #929c8d;
+  font-size: 11px;
+  padding: 12px 17px 13px 0;
+  margin-right: 18px;
+  letter-spacing: .02em;
+  transition: color .2s;
+}
+#fly-panel .fly-steps button:last-child { margin-right: 0; padding-right: 4px; }
+#fly-panel .fly-step-index { font-size: 9px; font-variant-numeric: tabular-nums; opacity: .55; }
+#fly-panel .fly-steps button.is-active { color: #e6edda; }
+#fly-panel .fly-step-line { position: absolute; bottom: -1px; left: 0; right: 17px; height: 1px; background: transparent; }
+#fly-panel .fly-steps button.is-active .fly-step-line { background: var(--fly-sage); }
+#fly-panel .fly-heading { position: absolute; left: 346px; top: 145px; width: 450px; max-width: calc(100vw - 595px); text-shadow: 0 3px 22px rgba(0, 0, 0, .65); }
+#fly-panel .fly-eyebrow { font-size: 9px; font-weight: 500; letter-spacing: .2em; color: #afbda5; margin-bottom: 14px; }
+#fly-panel .fly-heading h1 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: clamp(33px, 3.7vw, 53px); letter-spacing: -.045em; line-height: 1.05; white-space: pre-line; }
+#fly-panel .fly-heading p { color: #a4af9f; font-size: 11px; line-height: 1.7; width: 280px; max-width: 100%; margin-top: 15px; }
+#fly-panel .fly-console {
+  position: absolute;
+  top: 82px;
+  left: 20px;
+  width: 291px;
+  max-height: calc(100dvh - 128px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #435040 transparent;
+  pointer-events: auto;
+  background: linear-gradient(155deg, rgba(24, 33, 28, .9), rgba(10, 19, 16, .91));
+  border: 1px solid rgba(195, 211, 171, .18);
+  border-radius: 5px;
+  box-shadow: 0 12px 60px rgba(0, 0, 0, .24);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+#fly-panel .fly-console-brand { display: flex; align-items: center; gap: 9px; padding: 19px 20px 17px; font-size: 9px; font-weight: 600; letter-spacing: .145em; border-bottom: 1px solid var(--fly-hairline); }
+#fly-panel .fly-lab-mark { width: 18px; height: 15px; display: flex; align-items: center; gap: 3px; }
+#fly-panel .fly-lab-mark i { width: 2px; height: 8px; background: #bfcdad; border-radius: 1px; transform: rotate(30deg); }
+#fly-panel .fly-lab-mark i:nth-child(2) { height: 15px; }
+#fly-panel .fly-version { color: var(--fly-faint); margin-left: auto; font-size: 9px; }
+#fly-panel .fly-workspace-entry { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 15px 20px; background: linear-gradient(110deg, rgba(176, 201, 139, .09), transparent); border: 0; border-bottom: 1px solid var(--fly-hairline); }
+#fly-panel .fly-workspace-entry:hover { background-color: rgba(176, 201, 139, .08); }
+#fly-panel .fly-workspace-entry small { display: block; color: #b4c696; font-size: 8px; letter-spacing: .12em; }
+#fly-panel .fly-workspace-entry strong { display: block; font-family: Georgia, serif; font-size: 19px; font-weight: 400; margin: 4px 0; }
+#fly-panel .fly-workspace-entry em { display: block; font-size: 9px; font-style: normal; color: #a4af99; }
+#fly-panel .fly-workspace-entry b { color: #c0d2a5; font-size: 23px; font-weight: 400; }
+#fly-panel .fly-specimen-select { padding: 16px 20px 15px; border-bottom: 1px solid var(--fly-hairline); }
+#fly-panel .fly-specimen-select > label { font-size: 8px; letter-spacing: .15em; color: #929e88; }
+#fly-panel .fly-roster-row { display: flex; align-items: center; gap: 9px; margin-top: 6px; }
+#fly-panel .fly-roster-row select { border: 0; padding: 0 24px 0 0; height: 30px; font-family: Georgia, 'Times New Roman', serif; font-size: 22px; background-color: transparent; }
+#fly-panel .fly-icon-button { width: 28px; height: 28px; flex: none; padding: 0; font-size: 20px; border: 1px solid var(--fly-hairline); border-radius: 3px; background: rgba(190, 207, 171, .035); line-height: 1; color: #acb9a3; }
+#fly-panel .fly-specimen-meta { display: flex; justify-content: space-between; gap: 7px; margin-top: 7px; font-size: 8px; color: #8c9a83; letter-spacing: .03em; }
+#fly-panel .fly-specimen-meta > span:last-child { color: #b4c39c; }
+#fly-panel .fly-stage-content { padding: 19px 20px 13px; }
+#fly-panel .fly-section-heading { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
+#fly-panel .fly-section-heading h2 { font-family: Georgia, 'Times New Roman', serif; font-weight: 400; font-size: 20px; letter-spacing: -.025em; width: 100%; }
+#fly-panel .fly-section-heading h3 { font-size: 11px; font-weight: 500; }
+#fly-panel .fly-section-heading > span { color: #829177; font-size: 7px; letter-spacing: .12em; }
+#fly-panel .fly-section-note { font-size: 10px; line-height: 1.7; color: #9ba592; margin: 9px 0 16px; }
+#fly-panel .fly-field-label { display: block; font-size: 9px; color: #acb5a2; margin-bottom: 7px; }
+#fly-panel input[type="text"], #fly-panel input[type="number"], #fly-panel select { width: 100%; height: 35px; border-radius: 3px; border: 1px solid rgba(197, 211, 177, .16); color: #e2e6d6; background-color: rgba(4, 11, 8, .25); padding: 0 10px; }
+#fly-panel select { cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 25px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='m1 1 4 4 4-4' fill='none' stroke='%2398a68b' stroke-width='1'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 9px center; }
+#fly-panel select option { color: #eeeede; background: #17221a; }
+#fly-panel input::placeholder { color: #62705d; font-size: 10px; }
+#fly-panel input[type="number"] { font-variant-numeric: tabular-nums; }
+#fly-panel .fly-trait { margin-top: 15px; }
+#fly-panel .fly-trait > div:first-child { display: flex; align-items: baseline; justify-content: space-between; font-size: 10px; }
+#fly-panel .fly-trait label { color: #b8c0ae; }
+#fly-panel .fly-trait output { color: #d2debb; font-size: 10px; font-variant-numeric: tabular-nums; }
+#fly-panel input[type="range"] { --range-fill: 50%; width: 100%; display: block; height: 14px; padding: 0; margin: 5px 0 0; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; accent-color: var(--fly-sage); }
+#fly-panel input[type="range"]::-webkit-slider-runnable-track { height: 2px; background: linear-gradient(to right, #a9bd91 var(--range-fill), rgba(185, 205, 158, .17) var(--range-fill)); border-radius: 1px; }
+#fly-panel input[type="range"]::-moz-range-track { height: 2px; background: rgba(185, 205, 158, .17); }
+#fly-panel input[type="range"]::-moz-range-progress { height: 2px; background: #a9bd91; }
+#fly-panel input[type="range"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 7px; height: 7px; margin-top: -2.5px; border: 1px solid #e3ead0; border-radius: 50%; background: #bdccab; box-shadow: 0 0 0 3px rgba(185, 205, 158, .04); }
+#fly-panel input[type="range"]::-moz-range-thumb { width: 6px; height: 6px; border: 1px solid #e3ead0; border-radius: 50%; background: #bdccab; }
+#fly-panel .fly-trait-scale { display: flex; justify-content: space-between; color: #607159; font-size: 7px; margin-top: 1px; }
+#fly-panel .fly-primary, #fly-panel .fly-secondary { display: flex; align-items: center; justify-content: space-between; gap: 8px; border-radius: 3px; padding: 0 12px; height: 37px; font-size: 10px; letter-spacing: .015em; font-weight: 500; transition: background .15s; }
+#fly-panel .fly-primary { width: 100%; background: #bdcca7; color: #182316; border: 1px solid #c3d0ad; margin-top: 18px; }
+#fly-panel .fly-primary:hover:not(:disabled) { background: #d0ddbd; }
+#fly-panel .fly-primary svg, #fly-panel .fly-secondary svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1; }
+#fly-panel .fly-secondary { background: transparent; border: 1px solid var(--fly-hairline); color: #b8c5aa; margin-top: 9px; }
+#fly-panel .fly-secondary:hover:not(:disabled) { background: rgba(192, 214, 167, .06); }
+#fly-panel .fly-full { width: 100%; }
+#fly-panel .fly-fine-print { margin-top: 12px; color: #7e8c74; line-height: 1.6; font-size: 8px; }
+#fly-panel .fly-curricula { display: grid; gap: 7px; margin: 13px 0 17px; }
+#fly-panel .fly-curriculum { display: flex; align-items: center; gap: 10px; text-align: left; padding: 11px 10px; background: transparent; border: 1px solid var(--fly-hairline); border-radius: 3px; }
+#fly-panel .fly-curriculum.is-selected { border-color: #6c805d; background: rgba(170, 194, 139, .065); }
+#fly-panel .fly-curriculum-symbol { font-size: 25px; line-height: 1; font-family: Georgia, serif; width: 25px; color: #9fb887; }
+#fly-panel .fly-curriculum strong { display: block; font-size: 10px; font-weight: 500; }
+#fly-panel .fly-curriculum small { display: block; font-size: 8px; color: #8b9a7d; margin-top: 3px; }
+#fly-panel .fly-curriculum i { width: 7px; height: 7px; border: 1px solid #68795d; border-radius: 50%; margin-left: auto; }
+#fly-panel .fly-curriculum.is-selected i { background: #c0cfac; border-color: #c0cfac; box-shadow: 0 0 0 3px rgba(179, 201, 149, .08); }
+#fly-panel .fly-chart-section { border-top: 1px solid var(--fly-hairline); margin-top: 20px; padding-top: 16px; }
+#fly-panel .fly-learning-chart { width: 100%; height: 106px; margin-top: 11px; }
+#fly-panel .fly-learning-chart svg { display: block; width: 100%; height: 100%; overflow: visible; }
+#fly-panel .fly-learning-chart text { fill: #718067; font-size: 7px; font-family: inherit; }
+#fly-panel .fly-chart-empty { height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; background: repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(200, 216, 176, .05) 30px, transparent 31px); }
+#fly-panel .fly-chart-empty span { font-family: Georgia, serif; font-style: italic; font-size: 15px; color: #909e81; }
+#fly-panel .fly-chart-empty small { color: #66755c; font-size: 8px; margin-top: 5px; }
+#fly-panel .fly-chart-legend { display: flex; justify-content: space-between; color: #829474; font-size: 7px; margin-top: 3px; margin-bottom: 19px; }
+#fly-panel .fly-chart-legend b { color: #b9c8a3; font-size: 9px; font-weight: 400; }
+#fly-panel .fly-chart-legend i { display: inline-block; width: 10px; height: 1px; vertical-align: middle; background: var(--fly-sage); margin-right: 4px; }
+#fly-panel .fly-field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+#fly-panel .fly-mission-map { height: 102px; margin-top: 15px; padding: 2px 0 8px; border: 1px solid var(--fly-hairline); background: rgba(116, 147, 94, .025); border-radius: 3px; }
+#fly-panel .fly-mission-map svg { width: 100%; height: 75px; display: block; }
+#fly-panel .fly-mission-map > span { display: block; text-align: center; font-size: 7px; color: #7c8e70; letter-spacing: .03em; }
+#fly-panel .fly-checkbox { display: flex; align-items: center; gap: 9px; cursor: pointer; margin: 18px 0; }
+#fly-panel .fly-checkbox input { width: 12px; height: 12px; accent-color: #b3c79a; cursor: pointer; }
+#fly-panel .fly-checkbox strong { display: block; font-size: 9px; font-weight: 400; color: #b4c3a5; }
+#fly-panel .fly-checkbox small { display: block; font-size: 8px; color: #7f8f72; margin-top: 2px; }
+#fly-panel .fly-mission-rules { display: grid; gap: 10px; border-top: 1px solid var(--fly-hairline); margin-top: 21px; padding-top: 16px; }
+#fly-panel .fly-mission-rules > div { display: flex; justify-content: space-between; gap: 5px; }
+#fly-panel .fly-mission-rules span { font-size: 6px; letter-spacing: .08em; color: #758669; }
+#fly-panel .fly-mission-rules b { font-size: 8px; color: #a3b294; font-weight: 400; }
+#fly-panel .fly-job { margin: 0 20px 17px; padding-top: 16px; border-top: 1px solid var(--fly-hairline); }
+#fly-panel .fly-job-heading { display: flex; justify-content: space-between; font-size: 9px; color: #c1cea9; }
+#fly-panel progress { appearance: none; width: 100%; height: 3px; border: 0; background: rgba(182, 200, 160, .1); margin: 12px 0 10px; display: block; color: #b8c9a0; }
+#fly-panel progress::-webkit-progress-bar { background: rgba(182, 200, 160, .1); }
+#fly-panel progress::-webkit-progress-value { background: #b8c9a0; }
+#fly-panel progress::-moz-progress-bar { background: #b8c9a0; }
+#fly-panel .fly-job-actions { display: flex; justify-content: space-between; }
+#fly-panel .fly-text-button { border: none; padding: 0; background: none; font-size: 9px; color: #c0cea9; }
+#fly-panel .fly-text-button:hover { color: #f1f4e7; }
+#fly-panel .fly-muted { color: #839476; }
+#fly-panel .fly-message { margin: 0 20px 15px; font-size: 9px; line-height: 1.6; color: #b3c499; }
+#fly-panel .fly-message.fly-is-error { color: #dcad8c; }
+#fly-panel .fly-console-footer { padding: 13px 20px; border-top: 1px solid var(--fly-hairline); display: flex; align-items: center; gap: 12px; }
+#fly-panel .fly-console-footer > span { display: flex; align-items: center; gap: 5px; margin-right: auto; font-size: 6px; letter-spacing: .07em; color: #849576; }
+#fly-panel .fly-console-footer button { font-size: 8px; color: #899a7c; }
+#fly-panel .fly-status-dot { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: #b8c89b; }
+#fly-panel .fly-telemetry { position: absolute; right: 27px; top: 154px; width: 166px; padding: 0 0 15px 16px; border-left: 1px solid rgba(185, 207, 158, .16); text-shadow: 0 1px 12px #061006; }
+#fly-panel .fly-instrument-title { display: flex; align-items: center; gap: 6px; font-size: 6px; letter-spacing: .1em; color: #8f9e80; }
+#fly-panel .fly-specimen-name { margin-top: 15px; font-family: Georgia, serif; font-size: 24px; letter-spacing: -.02em; line-height: 1.2; overflow-wrap: anywhere; }
+#fly-panel .fly-latin { font-family: Georgia, serif; font-size: 9px; font-style: italic; color: #a6b293; margin-top: 5px; }
+#fly-panel .fly-sensor-group { margin-top: 25px; }
+#fly-panel .fly-readout-label { display: flex; justify-content: space-between; font-size: 8px; color: #a5b194; }
+#fly-panel .fly-readout-label b { color: #c9d2b5; font-size: 8px; font-weight: 400; font-variant-numeric: tabular-nums; }
+#fly-panel .fly-sensor-track { width: 100%; height: 2px; margin-top: 6px; margin-bottom: 16px; background: rgba(184, 201, 160, .12); }
+#fly-panel .fly-sensor-track span { display: block; height: 100%; width: 0; background: #b5c99a; transition: width .12s; }
+#fly-panel .fly-sensor-track.fly-amber span { background: #bd9a66; }
+#fly-panel .fly-live-values { display: grid; gap: 12px; border-top: 1px solid var(--fly-hairline); padding-top: 18px; margin-top: 22px; }
+#fly-panel .fly-live-values > div { display: flex; justify-content: space-between; gap: 6px; }
+#fly-panel .fly-live-values dt { font-size: 8px; color: #849676; }
+#fly-panel .fly-live-values dd { font-size: 8px; color: #c0cbae; font-variant-numeric: tabular-nums; }
+#fly-panel .fly-sensor-footnote { font-size: 7px; line-height: 1.7; color: #697e5d; margin-top: 19px; }
+#fly-panel .fly-world-caption { position: absolute; left: 347px; bottom: 119px; display: flex; align-items: center; gap: 10px; color: #8e9e7e; font-size: 7px; letter-spacing: .17em; text-shadow: 0 1px 8px #071208; }
+#fly-panel .fly-crosshair { font-size: 17px; color: #c9d4b7; font-weight: 200; }
+#fly-panel .fly-bottom { position: absolute; bottom: 49px; left: 342px; right: 28px; display: flex; flex-direction: column; align-items: center; gap: 17px; }
+#fly-panel .fly-viewport-toolbar { pointer-events: auto; display: flex; align-items: center; gap: 0; padding: 4px 6px; border: 1px solid rgba(193, 211, 169, .14); border-radius: 4px; background: rgba(12, 24, 16, .76); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+#fly-panel .fly-viewport-toolbar button { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border: 0; background: none; color: #94a583; font-size: 9px; white-space: nowrap; transition: color .15s; }
+#fly-panel .fly-viewport-toolbar button:hover { color: #e0e8cf; }
+#fly-panel .fly-viewport-toolbar button[aria-pressed="true"] { color: #d0dcbd; }
+#fly-panel .fly-viewport-toolbar svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1; }
+#fly-panel .fly-provenance { position: absolute; left: 22px; bottom: 17px; width: 286px; pointer-events: auto; z-index: 2; }
+#fly-panel .fly-provenance summary { list-style: none; cursor: pointer; font-size: 7px; color: #7b8e6d; letter-spacing: .025em; display: flex; align-items: center; justify-content: space-between; }
+#fly-panel .fly-provenance summary::-webkit-details-marker { display: none; }
+#fly-panel .fly-provenance summary:hover { color: #becdae; }
+#fly-panel .fly-provenance summary span { font-size: 12px; }
+#fly-panel .fly-provenance > div { position: absolute; bottom: 28px; left: 0; width: 300px; padding: 20px; border: 1px solid rgba(193, 211, 169, .22); border-radius: 4px; background: rgba(16, 27, 19, .97); box-shadow: 0 8px 40px rgba(0, 0, 0, .5); }
+#fly-panel .fly-provenance strong { display: block; font-family: Georgia, serif; font-size: 17px; font-weight: 400; }
+#fly-panel .fly-provenance p { font-size: 10px; line-height: 1.8; color: #98a98a; margin: 10px 0 14px; }
+#fly-panel .fly-provenance a { display: block; font-size: 9px; color: #becea9; margin-top: 9px; text-decoration: none; }
+#fly-panel .fly-provenance a:hover { text-decoration: underline; }
+#fly-panel .fly-empty-report { text-align: center; padding: 24px 5px 31px; }
+#fly-panel .fly-empty-report h3 { font-family: Georgia, serif; font-size: 19px; font-weight: 400; margin: 18px 0 7px; }
+#fly-panel .fly-empty-report p { font-size: 9px; color: #92a180; line-height: 1.8; }
+#fly-panel .fly-empty-orbit { display: block; position: relative; margin: 6px auto; width: 61px; height: 61px; border: 1px solid rgba(197, 214, 167, .19); border-radius: 50%; }
+#fly-panel .fly-empty-orbit::before { content: ''; position: absolute; inset: 12px; border: 1px solid rgba(197, 214, 167, .11); border-radius: 50%; }
+#fly-panel .fly-empty-orbit::after { content: ''; position: absolute; top: 8px; right: 7px; width: 5px; height: 5px; background: #bfcca4; border-radius: 50%; }
+#fly-panel .fly-result-hero { display: flex; align-items: center; gap: 15px; margin: 22px 0 16px; }
+#fly-panel .fly-result-value { font-family: Georgia, serif; font-size: 48px; line-height: 1; letter-spacing: -.06em; color: #dce7c6; }
+#fly-panel .fly-result-hero strong { display: block; font-size: 10px; font-weight: 400; color: #c4d1af; }
+#fly-panel .fly-result-hero div > span { display: block; font-size: 8px; margin-top: 5px; color: #819474; }
+#fly-panel .fly-outcome-bar { width: 100%; height: 4px; background: rgba(195, 160, 111, .17); border-radius: 2px; overflow: hidden; }
+#fly-panel .fly-outcome-bar > span { display: block; height: 100%; background: #b8cba0; }
+#fly-panel .fly-outcome-key { display: flex; justify-content: space-between; font-size: 8px; color: #8c9f7b; margin-top: 9px; }
+#fly-panel .fly-outcome-key span:last-child { color: #ab906c; }
+#fly-panel .fly-outcome-key i { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: #bdd0a4; margin-right: 5px; vertical-align: middle; }
+#fly-panel .fly-result-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 19px 9px; padding: 22px 0; margin-top: 18px; border-top: 1px solid var(--fly-hairline); border-bottom: 1px solid var(--fly-hairline); }
+#fly-panel .fly-result-metrics dt { color: #8e9e7e; font-size: 8px; }
+#fly-panel .fly-result-metrics dd { margin-top: 4px; font-size: 18px; font-variant-numeric: tabular-nums; font-weight: 300; color: #d4dfbf; }
+#fly-panel .fly-result-metrics small { font-size: 9px; font-weight: 400; color: #8ea079; }
+#fly-panel .fly-comparisons { margin-top: 20px; }
+#fly-panel .fly-comparison { margin-top: 13px; }
+#fly-panel .fly-comparison > div:first-child { display: flex; justify-content: space-between; gap: 5px; font-size: 9px; color: #9caf89; }
+#fly-panel .fly-comparison b { font-size: 9px; font-weight: 400; color: #c1d0a6; }
+#fly-panel .fly-comparison-track { height: 3px; background: rgba(185, 205, 158, .09); margin-top: 6px; }
+#fly-panel .fly-comparison-track > span { display: block; height: 100%; background: #a2b98b; }
+#fly-panel .fly-comparison:nth-child(3) .fly-comparison-track > span { background: #8e9473; }
+#fly-panel .fly-comparison:nth-child(4) .fly-comparison-track > span { background: #bca375; }
+#fly-panel .fly-flight-dots { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 20px; }
+#fly-panel .fly-flight-dots > span { width: 6px; height: 6px; border: 1px solid #7e6e51; border-radius: 50%; }
+#fly-panel .fly-flight-dots > span.is-success { background: #a9c18f; border-color: #a9c18f; }
+#fly-panel .fly-export-result { display: block; margin: 16px auto 0; }
+#fly-panel .fly-replay { pointer-events: auto; width: min(460px, 100%); padding: 14px 19px 12px; background: rgba(12, 24, 16, .8); border: 1px solid var(--fly-hairline); border-radius: 4px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+#fly-panel .fly-replay-label { display: flex; justify-content: space-between; color: #98ac82; font-size: 7px; letter-spacing: .12em; }
+#fly-panel .fly-replay-label > span:last-child { letter-spacing: 0; font-variant-numeric: tabular-nums; }
+#fly-panel .fly-replay input { margin-top: 13px; }
+#fly-panel .fly-replay-controls { display: flex; justify-content: space-between; font-size: 7px; color: #69865a; margin-top: 9px; }
+#fly-panel .fly-replay-controls button { font-size: 8px; }
+#fly-panel[data-stage="compare"] .fly-world-caption { bottom: 222px; }
+@media (max-height: 820px) and (min-width: 901px) {
+  #fly-panel .fly-console { top: 74px; max-height: calc(100dvh - 113px); }
+  #fly-panel .fly-console-brand { padding-top: 13px; padding-bottom: 13px; }
+  #fly-panel .fly-specimen-select { padding-top: 11px; padding-bottom: 11px; }
+  #fly-panel .fly-stage-content { padding-top: 14px; }
+  #fly-panel .fly-trait { margin-top: 10px; }
+  #fly-panel .fly-section-note { margin-top: 6px; margin-bottom: 12px; }
+  #fly-panel .fly-trait-scale { display: none; }
+  #fly-panel .fly-heading { top: 137px; }
+}
+@media (max-width: 1100px) {
+  #fly-panel .fly-telemetry { right: 18px; width: 141px; }
+  #fly-panel .fly-heading { max-width: calc(100vw - 520px); }
+  #fly-panel .fly-steps button { margin-right: 10px; padding-right: 10px; gap: 6px; }
+  #fly-panel .fly-steps { left: 335px; }
+}
+@media (max-width: 900px) {
+  #fly-panel .fly-console { left: 14px; width: 264px; top: 125px; max-height: calc(100dvh - 164px); }
+  #fly-panel .fly-steps { left: 17px; top: 75px; right: 17px; justify-content: space-between; }
+  #fly-panel .fly-steps button { margin-right: 0; padding-right: 14px; }
+  #fly-panel .fly-heading { left: 307px; top: 143px; max-width: calc(100vw - 330px); }
+  #fly-panel .fly-heading h1 { font-size: 37px; }
+  #fly-panel .fly-heading p { width: 245px; }
+  #fly-panel .fly-telemetry { display: none; }
+  #fly-panel .fly-bottom { left: 301px; right: 18px; bottom: 44px; }
+  #fly-panel .fly-viewport-toolbar button { padding: 10px; }
+  #fly-panel .fly-viewport-toolbar button span { display: none; }
+  #fly-panel .fly-world-caption { left: 307px; bottom: 107px; max-width: calc(100vw - 325px); font-size: 6px; }
+  #fly-panel .fly-provenance { left: 16px; width: 261px; }
+}
+@media (max-width: 620px) {
+  #fly-panel .fly-console { width: calc(100% - 20px); left: 10px; top: auto; bottom: 10px; max-height: 42dvh; overscroll-behavior: contain; border-radius: 8px; background: linear-gradient(145deg, rgba(23, 32, 26, .96), rgba(9, 20, 13, .97)); }
+  #fly-panel .fly-console-brand, #fly-panel .fly-specimen-select, #fly-panel .fly-console-footer { padding-left: 18px; padding-right: 18px; }
+  #fly-panel .fly-console-brand { font-size: 8px; gap: 7px; padding-top: 12px; padding-bottom: 11px; }
+  #fly-panel .fly-specimen-select { padding-top: 10px; padding-bottom: 10px; }
+  #fly-panel .fly-roster-row select { font-size: 20px; }
+  #fly-panel .fly-stage-content { padding: 15px 18px; }
+  #fly-panel .fly-specimen-meta { font-size: 8px; }
+  #fly-panel .fly-heading { display: none; }
+  #fly-panel .fly-steps { top: 69px; left: 12px; right: 12px; }
+  #fly-panel .fly-steps button { font-size: 10px; padding-right: 5px; gap: 5px; }
+  #fly-panel .fly-step-index { font-size: 7px; }
+  #fly-panel .fly-step-line { right: 0; }
+  #fly-panel .fly-bottom { left: 16px; right: 16px; bottom: calc(42dvh + 23px); align-items: center; max-width: none; gap: 10px; }
+  #fly-panel .fly-viewport-toolbar { flex-direction: row; gap: 12px; padding: 3px 10px; }
+  #fly-panel .fly-viewport-toolbar button { padding: 11px; }
+  #fly-panel .fly-world-caption { display: none; }
+  #fly-panel .fly-provenance { left: 16px; right: 16px; width: auto; top: 112px; bottom: auto; }
+  #fly-panel .fly-provenance summary { font-size: 7px; min-height: 22px; justify-content: flex-start; gap: 8px; }
+  #fly-panel .fly-provenance > div { top: 28px; bottom: auto; width: min(330px, calc(100vw - 32px)); }
+  #fly-panel .fly-replay { position: static; width: 100%; padding: 10px 13px; }
+  #fly-panel .fly-replay-label { display: flex; font-size: 7px; }
+  #fly-panel .fly-replay-controls > span { display: none; }
+  #fly-panel .fly-section-heading h2 { font-size: 22px; }
+  #fly-panel .fly-section-note { font-size: 11px; }
+  #fly-panel .fly-field-label, #fly-panel .fly-trait > div:first-child { font-size: 11px; }
+  #fly-panel .fly-primary, #fly-panel .fly-secondary { height: 42px; font-size: 11px; }
+  #fly-panel input[type="text"], #fly-panel input[type="number"], #fly-panel select { font-size: 12px; }
+  #fly-panel input[type="range"] { height: 23px; }
+  #fly-panel input[type="range"]::-webkit-slider-thumb { width: 11px; height: 11px; margin-top: -4.5px; }
+  #fly-panel .fly-fine-print { font-size: 9px; }
+  #fly-panel .fly-curriculum { padding: 13px; }
+  #fly-panel .fly-curriculum strong { font-size: 12px; }
+  #fly-panel .fly-curriculum small { font-size: 9px; }
+}
+@media (prefers-reduced-motion: reduce) { #fly-panel * { transition: none !important; } }
+#fly-panel .fly-checkpoint { margin-top: 13px; }
+#fly-panel .fly-checkpoint label { font-size: 7px; letter-spacing: .12em; color: #80916e; }
+#fly-panel .fly-checkpoint select { height: 29px; font-size: 8px; margin-top: 5px; }
+#fly-panel .fly-saved-jobs { margin: 0 20px 15px; border-top: 1px solid var(--fly-hairline); padding-top: 12px; }
+#fly-panel .fly-saved-jobs > div { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 9px; color: #8a9c78; }
+#fly-panel .fly-run-picker { margin: 18px 0 14px; }
+#fly-panel .fly-run-picker select { font-size: 9px; }
+#fly-panel .fly-result-hero .fly-confidence { font-size: 7px; color: #8fa678; }
+body[data-mode="fly"] #tab-switch a:not(#tab-fly):not(#tab-solar) { display: none; }
+body[data-mode="fly"] #tab-switch #tab-solar { font-size: 10px; color: #99a989; }
+body[data-mode="fly"] #tab-switch #tab-fly { background: rgba(156, 186, 117, .12); color: #d7e1c6; }
+body[data-mode="fly"] #topbar { background: linear-gradient(rgba(4, 12, 8, .75), transparent); }
+#fly-panel .fly-comparison-caption { font-size: 7px; color: #798d6c; margin-top: 3px; }
+#fly-panel .fly-flight-record-label { font-size: 6px; letter-spacing: .1em; color: #798e6a; margin-top: 18px; }
+#fly-panel .fly-flight-record-label + .fly-flight-dots { margin-top: 8px; }
+body[data-mode="fly"] .top-actions > #btn-bodies { display: none !important; }
+@media (max-width: 900px) {
+  body[data-mode="fly"] #tab-switch { display: inline-flex !important; margin-left: 6px; }
+  body[data-mode="fly"] #tab-switch #tab-solar,
+  body[data-mode="fly"] #tab-switch #tab-fly { display: inline-flex !important; padding: 7px 9px; font-size: 9px; white-space: nowrap; }
+  body[data-mode="fly"] #sim-date { display: none; }
+  body[data-mode="fly"] #topbar { justify-content: space-between; }
+}
+@media (max-width: 480px) {
+  body[data-mode="fly"] .brand-name { display: none; }
+}
+#fly-panel .fly-report-source { font-size: 8px; color: #9db18a; margin-top: 13px; overflow-wrap: anywhere; }
+
+body[data-mode="fly"] #attribution { display: none !important; }

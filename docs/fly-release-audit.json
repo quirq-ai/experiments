@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "suite": "release-audit-v1",
+  "auditSeed": 9000000,
+  "trainingSeeds": [
+    11,
+    29,
+    47
+  ],
+  "count": 50,
+  "episodes": 200,
+  "target": "Mean held-out success improvement ≥25 percentage points over untrained across three independent training seeds.",
+  "conditions": [
+    {
+      "condition": "untrained",
+      "count": 50,
+      "successes": 1,
+      "successRate": 0.02,
+      "confidence95": [
+        0.0035391680889764604,
+        0.10495686471836953
+      ],
+      "timeouts": 49,
+      "meanDuration": 28.744799999999973,
+      "meanTimeToSource": 26.04,
+      "meanReward": -13.191500000000017,
+      "meanPathLength": 0.552205653070544,
+      "meanEnergyUsed": 0.7186199999999997,
+      "meanCollisions": 81.32,
+      "meanWrongSourceVisits": 0.24
+    },
+    {
+      "condition": "reactive",
+      "count": 50,
+      "successes": 50,
+      "successRate": 1,
+      "confidence95": [
+        0.9286499658256813,
+        1
+      ],
+      "timeouts": 0,
+      "meanDuration": 15.9576,
+      "meanTimeToSource": 15.9576,
+      "meanReward": 6.005300000000005,
+      "meanPathLength": 0.3590757227829134,
+      "meanEnergyUsed": 0.39894000000000035,
+      "meanCollisions": 0,
+      "meanWrongSourceVisits": 0
+    },
+    {
+      "condition": "steady",
+      "trainingSeed": 11,
+      "policyHash": "66587c1c",
+      "trainingSuccessRate": 0.935,
+      "count": 50,
+      "successes": 50,
+      "successRate": 1,
+      "confidence95": [
+        0.9286499658256813,
+        1
+      ],
+      "timeouts": 0,
+      "meanDuration": 14.988,
+      "meanTimeToSource": 14.988,
+      "meanReward": 6.126500000000002,
+      "meanPathLength": 0.33675321888959403,
+      "meanEnergyUsed": 0.37470000000000037,
+      "meanCollisions": 0,
+      "meanWrongSourceVisits": 0
+    },
+    {
+      "condition": "steady",
+      "trainingSeed": 29,
+      "policyHash": "85d0fc7c",
+      "trainingSuccessRate": 0.955,
+      "count": 50,
+      "successes": 49,
+      "successRate": 0.98,
+      "confidence95": [
+        0.8950431352816304,
+        0.9964608319110235
+      ],
+      "timeouts": 1,
+      "meanDuration": 16.694399999999995,
+      "meanTimeToSource": 16.447346938775507,
+      "meanReward": 5.753200000000004,
+      "meanPathLength": 0.3760084610485702,
+      "meanEnergyUsed": 0.41736000000000045,
+      "meanCollisions": 0,
+      "meanWrongSourceVisits": 0
+    },
+    {
+      "condition": "steady",
+      "trainingSeed": 47,
+      "policyHash": "b5d2cd3d",
+      "trainingSuccessRate": 0.94,
+      "count": 50,
+      "successes": 50,
+      "successRate": 1,
+      "confidence95": [
+        0.9286499658256813,
+        1
+      ],
+      "timeouts": 0,
+      "meanDuration": 16.509599999999995,
+      "meanTimeToSource": 16.509599999999995,
+      "meanReward": 5.9363000000000055,
+      "meanPathLength": 0.371750176896993,
+      "meanEnergyUsed": 0.4127400000000004,
+      "meanCollisions": 0,
+      "meanWrongSourceVisits": 0
+    },
+    {
+      "condition": "varied",
+      "trainingSeed": 11,
+      "policyHash": "6bd85ac5",
+      "trainingSuccessRate": 0.95,
+      "count": 50,
+      "successes": 50,
+      "successRate": 1,
+      "confidence95": [
+        0.9286499658256813,
+        1
+      ],
+      "timeouts": 0,
+      "meanDuration": 15.1104,
+      "meanTimeToSource": 15.1104,
+      "meanReward": 6.075200000000006,
+      "meanPathLength": 0.3390854111953038,
+      "meanEnergyUsed": 0.3777600000000003,
+      "meanCollisions": 0.3,
+      "meanWrongSourceVisits": 0
+    },
+    {
+      "condition": "varied",
+      "trainingSeed": 29,
+      "policyHash": "229a7e39",
+      "trainingSuccessRate": 0.525,
+      "count": 50,
+      "successes": 27,
+      "successRate": 0.54,
+      "confidence95": [
+        0.40398634328388083,
+        0.6703056539821737
+      ],
+      "timeouts": 23,
+      "meanDuration": 22.099199999999993,
+      "meanTimeToSource": 16.391111111111105,
+      "meanReward": 1.4351999999999974,
+      "meanPathLength": 0.49867769488409863,
+      "meanEnergyUsed": 0.5524800000000003,
+      "meanCollisions": 1.02,
+      "meanWrongSourceVisits": 0.36
+    },
+    {
+      "condition": "varied",
+      "trainingSeed": 47,
+      "policyHash": "d6eb4811",
+      "trainingSuccessRate": 0.935,
+      "count": 50,
+      "successes": 50,
+      "successRate": 1,
+      "confidence95": [
+        0.9286499658256813,
+        1
+      ],
+      "timeouts": 0,
+      "meanDuration": 14.090399999999999,
+      "meanTimeToSource": 14.090399999999999,
+      "meanReward": 6.238700000000003,
+      "meanPathLength": 0.316067753052941,
+      "meanEnergyUsed": 0.3522600000000003,
+      "meanCollisions": 0,
+      "meanWrongSourceVisits": 0
+    }
+  ],
+  "model": "Reduced kinematic fly with filtered local odor/wind encoder and tile-coded SARSA(λ).",
+  "caveats": [
+    "Training uses privileged distance-progress shaping; evaluation is frozen with no shaping.",
+    "Reactive comparator shares the hand-engineered local odor/wind heading encoder.",
+    "Performance concerns this synthetic plume task, not biological flies or whole-brain emulation.",
+    "Success CIs are Wilson intervals per matched 50-world condition; failures remain in mean duration."
+  ],
+  "meanVariedSuccess": 0.8466666666666667,
+  "observedImprovement": 0.8266666666666667,
+  "passesTarget": true,
+  "wallTimeMs": 1856.4993330000002
+}

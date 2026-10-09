@@ -1,0 +1,65 @@
+{
+  "durationSeconds": 86.61,
+  "width": 1280,
+  "height": 720,
+  "fps": 24,
+  "voice": "Samantha",
+  "narration": "synthetic",
+  "datasetDigest": "6608b36452817bd1f8b9b740beccb8beceb2f15935ed11584507e7d004ef3d8c",
+  "scenes": [
+    {
+      "start": 0.0,
+      "end": 8.57,
+      "label": "WHY / FAILURE TRIAGE",
+      "capture": null
+    },
+    {
+      "start": 8.57,
+      "end": 15.45,
+      "label": "01 / CREATE",
+      "capture": "01-create.jpg"
+    },
+    {
+      "start": 15.45,
+      "end": 25.3,
+      "label": "02 / DATA",
+      "capture": "02-data.jpg"
+    },
+    {
+      "start": 25.3,
+      "end": 36.39,
+      "label": "03 / TEACH",
+      "capture": "03-teach.jpg"
+    },
+    {
+      "start": 36.39,
+      "end": 44.56,
+      "label": "04 / TRAIN",
+      "capture": "04-train.jpg"
+    },
+    {
+      "start": 44.56,
+      "end": 55.3,
+      "label": "05 / TEST",
+      "capture": "05-test.jpg"
+    },
+    {
+      "start": 55.3,
+      "end": 66.35,
+      "label": "06 / INSPECT",
+      "capture": "06-report.jpg"
+    },
+    {
+      "start": 66.35,
+      "end": 75.84,
+      "label": "USE CASE / UNDERSTAND A FAILURE",
+      "capture": null
+    },
+    {
+      "start": 75.84,
+      "end": 86.61,
+      "label": "07 / EXPORT",
+      "capture": "07-export.jpg"
+    }
+  ]
+}

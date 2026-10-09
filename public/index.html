@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Messages</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2334c759'/%3E%3Cpath d='M32 14c-11 0-20 7.2-20 16.2 0 5.2 3 9.8 7.7 12.8-.4 2.6-1.8 5.2-4.2 7 4.6 0 8.3-1.7 10.6-3.9 1.9.4 3.9.6 5.9.6 11 0 20-7.2 20-16.5S43 14 32 14z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, monospace;
+    --bg: #ffffff;
+    --side: #f6f6f8;
+    --side-line: #e2e2e6;
+    --text: #000000;
+    --muted: #8e8e93;
+    --sep: #e5e5ea;
+    --blue: #0a7cff;
+    --select: #0a84ff;
+    --gray: #e9e9eb;
+    --field: #ffffff;
+    --field-line: #d1d1d6;
+    --search: #e3e3e8;
+    --code: rgba(0, 0, 0, 0.06);
+    --red: #ff3b30;
+    --avatar-top: #a8adb9;
+    --avatar-bottom: #868b97;
+    color-scheme: light dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --side: #1c1c1e;
+      --side-line: #2c2c2e;
+      --text: #ffffff;
+      --sep: #2c2c2e;
+      --blue: #0a84ff;
+      --gray: #262628;
+      --field: #1c1c1e;
+      --field-line: #3a3a3c;
+      --search: #2c2c2e;
+      --code: rgba(255, 255, 255, 0.1);
+      --avatar-top: #6e7380;
+      --avatar-bottom: #50545e;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 14px/1.35 var(--font); -webkit-font-smoothing: antialiased; }
+  button, input, select, textarea { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+
+  .app { display: grid; grid-template-columns: 320px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); height: 100vh; height: 100dvh; overflow: hidden; }
+
+  /* sidebar */
+  .side { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--side); border-right: 1px solid var(--side-line); }
+  .side-top { display: flex; align-items: center; gap: 8px; padding: 14px 12px 10px; }
+  .search { flex: 1; display: flex; align-items: center; gap: 6px; height: 30px; padding: 0 9px; border-radius: 9px; background: var(--search); color: var(--muted); }
+  .search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 14px; color: var(--text); }
+  .search input::placeholder { color: var(--muted); }
+  .icon-btn { width: 32px; height: 32px; display: grid; place-items: center; flex: none; border: 0; border-radius: 8px; background: transparent; color: var(--muted); }
+  .icon-btn:hover { background: var(--search); color: var(--text); }
+  .list { flex: 1; min-height: 0; overflow-y: auto; margin: 0; padding: 0 8px 10px; list-style: none; }
+  .row { display: grid; grid-template-columns: 10px 44px minmax(0, 1fr); align-items: center; gap: 0 8px; padding: 9px 10px 9px 4px; border-radius: 10px; cursor: default; }
+  .row:hover { background: color-mix(in srgb, var(--search) 60%, transparent); }
+  .row .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--select); visibility: hidden; }
+  .row.unread .dot { visibility: visible; }
+  .row .meta { min-width: 0; }
+  .row .top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .row .name { overflow: hidden; font-weight: 600; font-size: 14px; white-space: nowrap; text-overflow: ellipsis; }
+  .row .time { flex: none; color: var(--muted); font-size: 12px; }
+  .row .prev { display: -webkit-box; overflow: hidden; color: var(--muted); font-size: 13px; line-height: 1.3; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+  .row.sel { background: var(--select); }
+  .row.sel .name, .row.sel .time, .row.sel .prev { color: #fff; }
+  .row.sel .dot { background: #fff; }
+  .row.sel .mini span { background: #fff; }
+  .none { padding: 40px 16px; color: var(--muted); text-align: center; }
+
+  .avatar { position: relative; width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: linear-gradient(180deg, var(--avatar-top), var(--avatar-bottom)); color: #fff; font-weight: 600; font-size: 16px; letter-spacing: 0.02em; }
+  .avatar.sm { width: 34px; height: 34px; font-size: 13px; }
+  .avatar .here { position: absolute; right: -1px; bottom: -1px; width: 13px; height: 13px; border: 2px solid var(--side); border-radius: 50%; background: #34c759; }
+  .row.sel .avatar .here { border-color: var(--select); }
+
+  .mini { display: inline-flex; gap: 3px; align-items: center; height: 12px; }
+  .mini span { width: 4px; height: 4px; border-radius: 50%; background: var(--muted); animation: blink 1.4s infinite; }
+  .mini span:nth-child(2), .typing span:nth-child(2) { animation-delay: 0.2s; }
+  .mini span:nth-child(3), .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* thread */
+  .thread { position: relative; display: flex; flex-direction: column; min-width: 0; min-height: 0; background: var(--bg); }
+  .head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 66px; padding: 6px 14px; border-bottom: 1px solid var(--sep); }
+  .head .who { display: flex; flex-direction: column; align-items: center; gap: 3px; min-width: 0; }
+  .head .title { max-width: 46vw; overflow: hidden; font-size: 12.5px; font-weight: 600; white-space: nowrap; text-overflow: ellipsis; }
+  .head .sub { max-width: 46vw; overflow: hidden; color: var(--muted); font-size: 11px; white-space: nowrap; text-overflow: ellipsis; }
+  .head .actions { justify-self: end; display: flex; gap: 6px; }
+  .pill { padding: 4px 12px; border: 0; border-radius: 14px; background: var(--search); font-size: 12.5px; font-weight: 500; }
+  .pill.danger { color: var(--red); }
+  .back { visibility: hidden; justify-self: start; border: 0; background: transparent; color: var(--blue); font-size: 28px; line-height: 1; padding: 0 6px; }
+
+  .scroll { flex: 1; min-height: 0; overflow-x: hidden; overflow-y: auto; padding: 10px 16px 6px; }
+  .msgs { display: flex; flex-direction: column; max-width: 820px; min-height: 100%; margin: 0 auto; }
+  .msgs > :first-child { margin-top: auto; }
+  .stamp { margin: 16px 0 6px; color: var(--muted); font-size: 11px; text-align: center; }
+  .stamp b { font-weight: 600; }
+  .note { margin: 6px 0; color: var(--muted); font-size: 11.5px; text-align: center; }
+  .note.warn { color: var(--red); }
+  .label { margin: 8px 0 2px 14px; color: var(--muted); font-size: 11px; }
+  .bubble-row { display: flex; margin-top: 2px; }
+  .bubble-row.gap { margin-top: 9px; }
+  .bubble-row.me { justify-content: flex-end; }
+  .bubble { position: relative; max-width: min(72%, 600px); padding: 7px 12px 8px; border-radius: 18px; font-size: 15px; line-height: 1.34; overflow-wrap: anywhere; }
+  .me .bubble { background: var(--blue); color: #fff; }
+  .them .bubble { background: var(--gray); color: var(--text); }
+  .bubble.tail::before, .bubble.tail::after { content: ""; position: absolute; bottom: 0; height: 20px; }
+  .me .bubble.tail::before { right: -7px; width: 20px; background: var(--blue); border-bottom-left-radius: 16px 14px; }
+  .me .bubble.tail::after { right: -26px; width: 26px; background: var(--bg); border-bottom-left-radius: 10px; }
+  .them .bubble.tail::before { left: -7px; width: 20px; background: var(--gray); border-bottom-right-radius: 16px 14px; }
+  .them .bubble.tail::after { left: -26px; width: 26px; background: var(--bg); border-bottom-right-radius: 10px; }
+  .bubble pre { margin: 6px 0 2px; padding: 8px 10px; overflow-x: auto; border-radius: 9px; background: var(--code); font: 12.5px/1.45 var(--mono); white-space: pre; }
+  .me .bubble pre, .me .bubble code { background: rgba(255, 255, 255, 0.18); }
+  .bubble code { padding: 0 4px; border-radius: 5px; background: var(--code); font: 13px var(--mono); }
+  .bubble pre code { padding: 0; background: none !important; font: inherit; }
+  .bubble a { color: inherit; text-decoration: underline; }
+  .receipt { margin: 3px 6px 0 0; color: var(--muted); font-size: 11px; font-weight: 500; text-align: right; }
+  .receipt.err { color: var(--red); }
+  .bubble.sending { opacity: 0.6; }
+  .typing .bubble { display: flex; gap: 4px; padding: 11px 13px; }
+  .typing span { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); animation: blink 1.4s infinite; }
+  @keyframes blink { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 0.95; transform: translateY(-2px); } }
+  .perm .bubble { max-width: min(80%, 600px); }
+  .perm .ask { font-size: 13px; color: var(--muted); }
+  .perm .actions { display: flex; gap: 8px; margin-top: 8px; }
+  .perm button { padding: 5px 16px; border: 0; border-radius: 14px; font-size: 13px; font-weight: 600; }
+  .perm .allow { background: var(--blue); color: #fff; }
+  .perm .deny { background: var(--code); }
+
+  .composer { padding: 8px 16px 14px; }
+  .field { display: flex; align-items: flex-end; max-width: 820px; margin: 0 auto; padding: 3px 3px 3px 14px; border: 1px solid var(--field-line); border-radius: 19px; background: var(--field); }
+  .field textarea { flex: 1; max-height: 180px; padding: 6px 0; border: 0; outline: 0; resize: none; background: transparent; font-size: 15px; line-height: 1.35; }
+  .field textarea::placeholder { color: var(--muted); }
+  .send { width: 30px; height: 30px; display: grid; place-items: center; flex: none; border: 0; border-radius: 50%; background: var(--blue); color: #fff; transition: transform 0.12s, opacity 0.12s; }
+  .send:disabled { opacity: 0; transform: scale(0.6); pointer-events: none; }
+  .composer.off .field { opacity: 0.5; }
+
+  .newform { padding: 10px 16px 12px; border-bottom: 1px solid var(--sep); }
+  .newform .to { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; }
+  .newform .to .lbl { color: var(--muted); }
+  .chip { padding: 2px 10px; border-radius: 12px; background: color-mix(in srgb, var(--blue) 16%, transparent); color: var(--blue); font-weight: 500; }
+  .newform .grid { display: grid; grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr); gap: 8px 10px; align-items: center; max-width: 820px; }
+  .newform label { color: var(--muted); font-size: 12.5px; }
+  .newform input, .newform select { width: 100%; height: 30px; padding: 0 9px; border: 1px solid var(--field-line); border-radius: 8px; background: var(--field); font-size: 13px; }
+  .newform input#nf-cwd { font-family: var(--mono); font-size: 12px; }
+  .newform .wide { grid-column: 2 / -1; }
+
+  .empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; color: var(--muted); text-align: center; }
+  .empty h2 { margin: 0 0 6px; color: var(--text); font-size: 17px; font-weight: 600; }
+  .empty button { margin-top: 14px; padding: 7px 16px; border: 0; border-radius: 16px; background: var(--blue); color: #fff; font-weight: 600; }
+  .banner { position: absolute; top: 74px; left: 50%; z-index: 2; padding: 5px 12px; border-radius: 14px; background: var(--red); color: #fff; font-size: 12px; transform: translateX(-50%); }
+  [hidden] { display: none !important; }
+
+  @media (max-width: 720px) {
+    .app { grid-template-columns: minmax(0, 1fr); }
+    .app.open .side { display: none; }
+    .app:not(.open) .thread { display: none; }
+    .back { visibility: visible; }
+    .bubble { max-width: 84%; }
+    .newform .grid { grid-template-columns: auto minmax(0, 1fr); }
+    .newform .wide { grid-column: 2; }
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="side">
+    <div class="side-top">
+      <label class="search">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.6 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="search" type="search" placeholder="Search" autocomplete="off" aria-label="Search sessions">
+      </label>
+      <button class="icon-btn" id="compose" title="New Claude session" aria-label="New Claude session">
+        <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M8.5 3.5H5A1.5 1.5 0 0 0 3.5 5v10A1.5 1.5 0 0 0 5 16.5h10a1.5 1.5 0 0 0 1.5-1.5v-3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M14.8 2.9a1.6 1.6 0 0 1 2.3 2.3L10.3 12l-3 .7.7-3z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+    <ul class="list" id="list"></ul>
+  </aside>
+
+  <main class="thread">
+    <header class="head" id="head" hidden>
+      <button class="back" id="back" aria-label="Back to sessions">&#8249;</button>
+      <div class="who" id="who"></div>
+      <div class="actions" id="actions"></div>
+    </header>
+    <div class="newform" id="newform" hidden>
+      <div class="to"><span class="lbl">To:</span><span class="chip">New Claude session</span></div>
+      <div class="grid">
+        <label for="nf-cwd">Folder</label><input id="nf-cwd" class="wide" spellcheck="false" autocomplete="off">
+        <label for="nf-name">Name</label><input id="nf-name" placeholder="Optional" autocomplete="off">
+        <label for="nf-model">Model</label>
+        <select id="nf-model"><option value="">Default</option><option value="opus">Opus</option><option value="sonnet">Sonnet</option><option value="haiku">Haiku</option></select>
+        <label for="nf-mode">Tools</label>
+        <select id="nf-mode" class="wide"><option value="default">Ask me before using tools</option><option value="acceptEdits">Accept file edits, ask for the rest</option><option value="plan">Plan only, change nothing</option></select>
+      </div>
+    </div>
+    <div class="scroll" id="scroll" hidden><div class="msgs" id="msgs"></div></div>
+    <div class="composer" id="composer" hidden>
+      <div class="field">
+        <textarea id="input" rows="1" placeholder="Message" aria-label="Message"></textarea>
+        <button class="send" id="send" disabled aria-label="Send">
+          <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 12V2M2.5 6.5L7 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="empty" id="empty">
+      <div>
+        <h2>Claude Messages</h2>
+        <div>Every Claude Code session running on this machine shows up on the left.<br>Pick one to chat, or start a new one.</div>
+        <button id="emptyNew">New session</button>
+      </div>
+    </div>
+    <div class="banner" id="banner" hidden></div>
+  </main>
+</div>
+
+<script>
+const CONFIG = __CONFIG__;
+const $ = id => document.getElementById(id);
+const el = {
+  app: $('app'), list: $('list'), search: $('search'), head: $('head'), who: $('who'), actions: $('actions'),
+  newform: $('newform'), scroll: $('scroll'), msgs: $('msgs'), composer: $('composer'), input: $('input'),
+  send: $('send'), empty: $('empty'), banner: $('banner'),
+  cwd: $('nf-cwd'), name: $('nf-name'), model: $('nf-model'), mode: $('nf-mode'),
+};
+const state = {
+  sessions: [], sel: null, composing: false, q: '',
+  threads: new Map(),  // sessionId -> { messages, ids, loading }
+  pending: new Map(),  // sessionId -> [{ text, status, error }]
+  sent: new Map(),     // sessionId -> Set of texts sent from this page
+};
+
+// ---------------------------------------------------------------- helpers
+
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const norm = s => String(s || '').replace(/\s+/g, ' ').trim();
+const current = () => state.sessions.find(s => s.id === state.sel) || null;
+const listOf = (map, key, make) => map.get(key) || (map.set(key, make()), map.get(key));
+
+function initials(name) {
+  const w = String(name).match(/[A-Za-z0-9]+/g) || ['C'];
+  return (w[0][0] + (w[1] ? w[1][0] : '')).toUpperCase();
+}
+
+function avatar(s, small) {
+  return `<div class="avatar${small ? ' sm' : ''}">${esc(initials(s.name))}${s.owned && !small ? '<span class="here" title="Started here"></span>' : ''}</div>`;
+}
+
+function daysAgo(ts) {
+  const a = new Date(ts), b = new Date();
+  a.setHours(0, 0, 0, 0); b.setHours(0, 0, 0, 0);
+  return Math.round((b - a) / 864e5);
+}
+const clock = ts => new Date(ts).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+function listTime(ts) {
+  if (!ts) return '';
+  const d = daysAgo(ts);
+  if (d === 0) return clock(ts);
+  if (d === 1) return 'Yesterday';
+  if (d < 7) return new Date(ts).toLocaleDateString([], { weekday: 'long' });
+  return new Date(ts).toLocaleDateString([], { month: 'numeric', day: 'numeric', year: '2-digit' });
+}
+function stampTime(ts) {
+  const d = daysAgo(ts);
+  const day = d === 0 ? 'Today' : d === 1 ? 'Yesterday' : d < 7
+    ? new Date(ts).toLocaleDateString([], { weekday: 'long' })
+    : new Date(ts).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+  return `<b>${day}</b> ${clock(ts)}`;
+}
+
+// A small Markdown subset: fenced code, inline code, bold, headings and links.
+function md(src) {
+  return String(src).split('```').map((part, i) => i % 2
+    ? `<pre><code>${esc(part.replace(/^[^\n]*\n/, ''))}</code></pre>`
+    : inline(part)).join('');
+}
+function inline(t) {
+  let h = esc(t.replace(/^\n+|\n+$/g, ''));
+  h = h.replace(/`([^`\n]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>')
+    .replace(/^#{1,6} (.+)$/gm, '<b>$1</b>')
+    .replace(/\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/(^|[\s(])(https?:\/\/[^\s<]+[^\s<.,;:!?)])/g, '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
+  return h.replace(/\n/g, '<br>');
+}
+
+function toolSummary(tools) {
+  const counts = new Map();
+  for (const raw of tools) {
+    const t = raw.startsWith('mcp__') ? raw.split('__').pop() : raw; // mcp__server__tool -> tool
+    counts.set(t, (counts.get(t) || 0) + 1);
+  }
+  return [...counts].map(([t, n]) => esc(t) + (n > 1 ? ` &times;${n}` : '')).join(', ');
+}
+
+function seen(s) {
+  try { return Number(localStorage.getItem('seen:' + s.sessionId)) || 0; } catch { return 0; }
+}
+function markSeen(s) {
+  if (!s || document.hidden) return;
+  try { localStorage.setItem('seen:' + s.sessionId, String(s.lastTs || Date.now())); } catch {}
+}
+const unread = s => s.id !== state.sel && s.lastTs > seen(s) && seen(s) > 0;
+
+async function api(path, body) {
+  const res = await fetch(path, {
+    method: body ? 'POST' : 'GET',
+    headers: { 'x-token': CONFIG.token, ...(body ? { 'content-type': 'application/json' } : {}) },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || res.statusText);
+  return data;
+}
+
+// ---------------------------------------------------------------- list
+
+function renderList() {
+  const q = state.q.toLowerCase();
+  const items = state.sessions.filter(s => !q || `${s.name} ${s.folder} ${s.preview}`.toLowerCase().includes(q));
+  el.list.innerHTML = items.map(s => {
+    const time = s.status === 'busy' ? '<span class="mini"><span></span><span></span><span></span></span>' : esc(listTime(s.lastTs));
+    const prev = s.status === 'waiting' ? 'Waiting for approval' : s.status === 'ended' ? 'Session ended' : s.preview || s.folder;
+    return `<li class="row${s.id === state.sel ? ' sel' : ''}${unread(s) ? ' unread' : ''}" data-id="${esc(s.id)}">
+      <span class="dot"></span>${avatar(s)}
+      <div class="meta"><div class="top"><span class="name">${esc(s.name)}</span><span class="time">${time}</span></div>
+      <div class="prev">${esc(prev)}</div></div></li>`;
+  }).join('') || `<li class="none">${state.sessions.length ? 'No matches' : 'No Claude Code sessions are running.'}</li>`;
+  const n = state.sessions.filter(unread).length;
+  document.title = n ? `Claude Messages (${n})` : 'Claude Messages';
+}
+
+// ---------------------------------------------------------------- thread
+
+function entries(s) {
+  const msgs = state.threads.get(s.sessionId)?.messages || [];
+  const out = [];
+  let lastTs = 0;
+  for (let i = 0; i < msgs.length; i++) {
+    const m = msgs[i];
+    if (m.ts - lastTs > 15 * 60e3) out.push({ type: 'stamp', ts: m.ts });
+    lastTs = m.ts;
+    if (m.kind === 'tool') {
+      const tools = [m.text];
+      while (msgs[i + 1]?.kind === 'tool') tools.push(msgs[++i].text);
+      out.push({ type: 'note', html: `Used ${toolSummary(tools)}` });
+    } else if (m.kind === 'note') {
+      out.push({ type: 'note', html: esc(m.text), warn: true });
+    } else {
+      const who = m.kind === 'peer' ? 'peer:' + m.from : m.to ? 'to:' + m.to : m.kind;
+      out.push({ type: 'bubble', side: m.kind === 'me' ? 'me' : 'them', who, text: m.text,
+        label: m.kind === 'peer' ? m.from : m.to ? `to ${m.to}` : '', html: md(m.text) });
+    }
+  }
+  return out;
+}
+
+function renderThread(toBottom) {
+  const s = current();
+  const composing = state.composing;
+  el.app.classList.toggle('open', !!(s || composing));
+  el.empty.hidden = !!(s || composing);
+  el.head.hidden = el.scroll.hidden = el.composer.hidden = !(s || composing);
+  el.newform.hidden = !composing;
+  if (!s && !composing) return;
+
+  if (composing) {
+    el.who.innerHTML = `<div class="title">New Session</div>`;
+    el.actions.innerHTML = `<button class="pill" data-act="cancel">Cancel</button>`;
+    el.msgs.innerHTML = `<div class="note">Type a first message to start a Claude session in that folder.</div>`;
+    el.input.placeholder = 'First message';
+    el.composer.classList.remove('off');
+    el.input.disabled = false;
+    return;
+  }
+
+  const kind = s.owned ? 'started here' : s.desktop ? 'Claude Desktop' : 'Claude Code';
+  el.who.innerHTML = `${avatar(s, true)}<div class="title">${esc(s.name)}</div><div class="sub">${esc(s.folder)} &middot; ${kind}</div>`;
+  el.actions.innerHTML = s.owned ? `<button class="pill danger" data-act="end">${s.status === 'ended' ? 'Remove' : 'End'}</button>` : '';
+  el.input.placeholder = s.canSend ? 'Message' : 'This session cannot receive messages';
+  el.input.disabled = !s.canSend;
+  el.composer.classList.toggle('off', !s.canSend);
+
+  const thread = state.threads.get(s.sessionId);
+  const list = entries(s);
+  for (const p of state.pending.get(s.sessionId) || []) {
+    list.push({ type: 'bubble', side: 'me', who: 'me', text: p.text, html: md(p.text), pending: p });
+  }
+  if (s.status === 'busy') list.push({ type: 'typing', side: 'them', who: 'claude' });
+  for (const p of s.permissions) list.push({ type: 'perm', side: 'them', who: 'claude', perm: p });
+
+  const isMsg = e => e && (e.type === 'bubble' || e.type === 'typing' || e.type === 'perm');
+  let lastMine = -1, lastAny = -1;
+  list.forEach((e, i) => { if (e.type === 'bubble') { lastAny = i; if (e.side === 'me') lastMine = i; } });
+  const html = list.map((e, i) => {
+    if (e.type === 'stamp') return `<div class="stamp">${stampTime(e.ts)}</div>`;
+    if (e.type === 'note') return `<div class="note${e.warn ? ' warn' : ''}">${e.html}</div>`;
+    const prev = list[i - 1], next = list[i + 1];
+    const first = !(isMsg(prev) && prev.who === e.who);
+    const tail = !(isMsg(next) && next.who === e.who) ? ' tail' : '';
+    const label = first && e.label ? `<div class="label">${esc(e.label)}</div>` : '';
+    const row = cls => `${label}<div class="bubble-row ${e.side}${first ? ' gap' : ''} ${cls || ''}">`;
+    if (e.type === 'typing') return `${row('typing')}<div class="bubble${tail}"><span></span><span></span><span></span></div></div>`;
+    if (e.type === 'perm') {
+      return `${row('perm')}<div class="bubble${tail}"><div class="ask">Claude wants to use <b>${esc(e.perm.tool)}</b></div>
+        <pre><code>${esc(e.perm.summary)}</code></pre>
+        <div class="actions"><button class="deny" data-perm="${esc(e.perm.requestId)}" data-allow="0">Deny</button>
+        <button class="allow" data-perm="${esc(e.perm.requestId)}" data-allow="1">Allow</button></div></div></div>`;
+    }
+    let receipt = '';
+    if (e.pending) {
+      const p = e.pending;
+      const late = p.status === 'sent' && Date.now() - p.at > 20_000;
+      receipt = p.status === 'failed' ? `<div class="receipt err">Not Delivered${p.error ? ': ' + esc(p.error) : ''}</div>`
+        : late ? '<div class="receipt">Sent, not picked up yet. The session may be holding it for approval.</div>'
+        : `<div class="receipt">${p.status === 'sending' ? 'Sending&hellip;' : p.status === 'delivered' ? 'Delivered' : 'Sent'}</div>`;
+    } else if (i === lastMine && lastMine === lastAny && state.sent.get(s.sessionId)?.has(norm(e.text))) {
+      receipt = '<div class="receipt">Delivered</div>';
+    }
+    return `${row()}<div class="bubble${tail}${e.pending?.status === 'sending' ? ' sending' : ''}">${e.html}</div></div>${receipt}`;
+  });
+
+  if (thread?.loading && !list.length) html.push('<div class="note">Loading&hellip;</div>');
+  else if (!list.length) html.push(`<div class="note">${s.owned ? 'Say hello to start.' : 'No messages yet.'}</div>`);
+  if (s.status === 'waiting' && !s.owned) html.push('<div class="note">Waiting for approval in that session&rsquo;s own window.</div>');
+  if (s.status === 'ended') html.push('<div class="note">This session has ended.</div>');
+  if (s.error) html.push(`<div class="note warn">${esc(s.error)}</div>`);
+
+  const sc = el.scroll;
+  const atBottom = sc.scrollHeight - sc.scrollTop - sc.clientHeight < 90;
+  el.msgs.innerHTML = html.join('');
+  if (toBottom || atBottom) sc.scrollTop = sc.scrollHeight;
+}
+
+// ---------------------------------------------------------------- data flow
+
+function reconcile(sessionId, m) {
+  const pend = state.pending.get(sessionId);
+  if (!pend) return;
+  const i = pend.findIndex(p => norm(p.text) === norm(m.text) && p.status !== 'failed');
+  if (i < 0) return;
+  if (m.kind === 'queued') pend[i].status = 'delivered';
+  else pend.splice(i, 1);
+}
+
+function setThread(sessionId, messages) {
+  const t = listOf(state.threads, sessionId, () => ({}));
+  t.messages = messages;
+  t.ids = new Set(messages.map(m => m.id));
+  t.loading = false;
+  for (const m of messages) if (m.kind === 'me') reconcile(sessionId, m);
+}
+
+function addMessages(sessionId, messages) {
+  const t = state.threads.get(sessionId);
+  for (const m of messages) {
+    if (m.kind === 'me' || m.kind === 'queued') reconcile(sessionId, m);
+    if (m.kind === 'queued' || !t || t.ids.has(m.id)) continue;
+    t.ids.add(m.id);
+    t.messages.push(m);
+  }
+}
+
+async function loadThread(s) {
+  if (!s?.sessionId) return;
+  const t = listOf(state.threads, s.sessionId, () => ({ messages: [], ids: new Set() }));
+  t.loading = true;
+  try {
+    const data = await api(`/api/sessions/${s.id}/messages`);
+    setThread(data.sessionId || s.sessionId, data.messages);
+  } catch (e) {
+    t.loading = false;
+  }
+  renderThread(true);
+}
+
+function select(id) {
+  state.sel = id;
+  state.composing = false;
+  const s = current();
+  history.replaceState(null, '', id ? '#' + id : location.pathname);
+  renderList();
+  renderThread(true);
+  if (s && !state.threads.get(s.sessionId)?.ids) loadThread(s);
+  markSeen(s);
+  if (s?.canSend && matchMedia('(min-width: 721px)').matches) el.input.focus();
+}
+
+function compose() {
+  state.sel = null;
+  state.composing = true;
+  history.replaceState(null, '', location.pathname);
+  if (!el.cwd.value) el.cwd.value = CONFIG.cwd;
+  renderList();
+  renderThread();
+  el.input.focus();
+}
+
+async function send() {
+  const text = el.input.value.trim();
+  if (!text) return;
+  if (state.composing) return startSession(text);
+  const s = current();
+  if (!s?.canSend) return;
+  el.input.value = '';
+  sizeInput();
+  const p = { text, status: 'sending', at: Date.now() };
+  listOf(state.pending, s.sessionId, () => []).push(p);
+  listOf(state.sent, s.sessionId, () => new Set()).add(norm(text));
+  renderThread(true);
+  try {
+    await api(`/api/sessions/${s.id}/send`, { text });
+    if (p.status === 'sending') p.status = 'sent';
+  } catch (e) {
+    p.status = 'failed';
+    p.error = e.message;
+  }
+  renderThread();
+}
+
+async function startSession(text) {
+  el.send.disabled = true;
+  el.input.disabled = true;
+  try {
+    const body = { text, cwd: el.cwd.value.trim(), name: el.name.value.trim(), model: el.model.value, mode: el.mode.value };
+    const { id, sessionId } = await api('/api/sessions', body);
+    listOf(state.pending, sessionId, () => []).push({ text, status: 'sent', at: Date.now() });
+    listOf(state.sent, sessionId, () => new Set()).add(norm(text));
+    state.threads.set(sessionId, { messages: [], ids: new Set(), loading: false });
+    el.input.value = '';
+    el.name.value = '';
+    if (!current() || current().id !== id) state.sessions = await api('/api/sessions');
+    el.input.disabled = false;
+    select(id);
+  } catch (e) {
+    el.input.disabled = false;
+    showBanner(e.message, 5000);
+  }
+  sizeInput();
+}
+
+let bannerTimer;
+function showBanner(text, ms) {
+  el.banner.textContent = text;
+  el.banner.hidden = !text;
+  clearTimeout(bannerTimer);
+  if (ms) bannerTimer = setTimeout(() => { el.banner.hidden = true; }, ms);
+}
+
+function connect() {
+  let down = false;
+  const es = new EventSource(`/api/events?token=${CONFIG.token}`);
+  es.addEventListener('sessions', e => {
+    const before = current();
+    state.sessions = JSON.parse(e.data);
+    for (const s of state.sessions) if (!seen(s)) markSeenQuiet(s);
+    const now = current();
+    if (state.sel && !now) state.sel = null;
+    if (now && before && now.sessionId !== before.sessionId) loadThread(now);
+    if (now) markSeen(now);
+    renderList();
+    renderThread();
+  });
+  es.addEventListener('messages', e => {
+    const { sessionId, messages } = JSON.parse(e.data);
+    addMessages(sessionId, messages);
+    if (current()?.sessionId === sessionId) renderThread();
+  });
+  es.addEventListener('thread', e => {
+    const { sessionId, messages } = JSON.parse(e.data);
+    if (state.threads.has(sessionId)) setThread(sessionId, messages);
+    if (current()?.sessionId === sessionId) renderThread();
+  });
+  es.onopen = () => {
+    showBanner('');
+    if (down && current()) loadThread(current());
+    down = false;
+  };
+  es.onerror = () => {
+    down = true;
+    showBanner(es.readyState === EventSource.CLOSED ? 'Disconnected. Reload the page.' : 'Reconnecting…');
+  };
+}
+
+// ---------------------------------------------------------------- events
+
+function sizeInput() {
+  el.input.style.height = 'auto';
+  el.input.style.height = Math.min(el.input.scrollHeight, 180) + 'px';
+  el.send.disabled = !el.input.value.trim() || el.input.disabled;
+}
+
+el.list.addEventListener('click', e => {
+  const row = e.target.closest('.row');
+  if (row) select(row.dataset.id);
+});
+el.search.addEventListener('input', () => { state.q = el.search.value; renderList(); });
+$('compose').addEventListener('click', compose);
+$('emptyNew').addEventListener('click', compose);
+$('back').addEventListener('click', () => { state.composing = false; select(null); });
+el.input.addEventListener('input', sizeInput);
+el.input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); }
+  if (e.key === 'Escape' && state.composing) { state.composing = false; select(null); }
+});
+el.send.addEventListener('click', send);
+el.actions.addEventListener('click', async e => {
+  const act = e.target.closest('[data-act]')?.dataset.act;
+  if (act === 'cancel') { state.composing = false; select(null); }
+  if (act === 'end') {
+    const s = current();
+    if (s.status !== 'ended' && !confirm(`End "${s.name}"? The Claude process stops; its transcript stays on disk.`)) return;
+    try { await api(`/api/sessions/${s.id}/end`, {}); } catch (err) { showBanner(err.message, 4000); }
+    if (s.status === 'ended') select(null);
+  }
+});
+el.msgs.addEventListener('click', async e => {
+  const b = e.target.closest('[data-perm]');
+  if (!b) return;
+  const s = current();
+  b.parentElement.querySelectorAll('button').forEach(x => { x.disabled = true; });
+  try { await api(`/api/sessions/${s.id}/permission`, { requestId: b.dataset.perm, allow: b.dataset.allow === '1' }); }
+  catch (err) { showBanner(err.message, 4000); }
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { markSeen(current()); renderList(); } });
+setInterval(() => { if (state.pending.get(current()?.sessionId)?.length) renderThread(); }, 5000);
+
+(async () => {
+  try { state.sessions = await api('/api/sessions'); } catch (e) { showBanner(e.message); }
+  const id = location.hash.slice(1);
+  if (id && state.sessions.some(s => s.id === id)) select(id);
+  else renderList();
+  for (const s of state.sessions) if (!seen(s)) markSeenQuiet(s);
+  connect();
+})();
+
+// The first time a session is seen, count everything already in it as read.
+function markSeenQuiet(s) {
+  try { localStorage.setItem('seen:' + s.sessionId, String(s.lastTs || 1)); } catch {}
+}
+</script>
+</body>
+</html>

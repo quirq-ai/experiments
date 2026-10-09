@@ -1,0 +1,9 @@
+{
+  "name": "claude-messages",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An iMessage-style window onto the Claude Code sessions running on this machine.",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "scripts": { "start": "node server.mjs" }
+}

@@ -30,11 +30,6 @@
       "stack": "Node.js",
       "updated": "2026-10-09"
     },
-    "computing-age": {
-      "description": "Video essay: computing as one accelerating project, from counting stones to thinking machines.",
-      "stack": "HyperFrames",
-      "updated": "2026-09-30"
-    },
     "experiment-20260612": {
       "description": "Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants.",
       "stack": "Python",
@@ -186,6 +181,12 @@
     }
   },
   "archived": {
+    "computing-age": {
+      "description": "Video essay: computing as one accelerating project, from counting stones to thinking machines.",
+      "stack": "HyperFrames",
+      "updated": "2026-09-30",
+      "archived": "2026-10-16"
+    },
     "innernet": {
       "description": "A personal internet made from your folders: search them like the web, read your projects like an encyclopedia.",
       "stack": "Next.js",

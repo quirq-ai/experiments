@@ -41,7 +41,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-33 experiments, most recently changed first.
+32 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
@@ -50,7 +50,6 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [claude-messages](https://github.com/quirq-ai/experiments/tree/claude-messages) | An iMessage-style window onto every Claude Code session running on the machine. | Node.js |  | 2026-10-09 |
 | [solar-claude](https://github.com/quirq-ai/experiments/tree/solar-claude) | Observatory: pose a question, run it in real physics and keep the trace. Began as a real-ephemeris solar system. | Vite, Three.js | [sharmasuraj0123/solar-claude](https://github.com/sharmasuraj0123/solar-claude) | 2026-10-09 |
 | [brand-dna-visualization](https://github.com/quirq-ai/experiments/tree/brand-dna-visualization) | Brand DNA: explore the colors, stories, voice and visual world behind a brand. | Next.js |  | 2026-10-03 |
-| [computing-age](https://github.com/quirq-ai/experiments/tree/computing-age) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | HyperFrames |  | 2026-09-30 |
 | [jev-hello](https://github.com/quirq-ai/experiments/tree/jev-hello) | Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out. | Python |  | 2026-09-28 |
 | [shipnotes-demo](https://github.com/quirq-ai/experiments/tree/shipnotes-demo) | Runnable tour of the shipnotes web components, vendored unmodified. | HTML |  | 2026-09-26 |
 | [hello-simulator](https://github.com/quirq-ai/experiments/tree/hello-simulator) | Hello Sim, a one-screen SwiftUI app where each card shows one thing Claude can do in the iOS Simulator, plus XO Space. | Swift |  | 2026-09-25 |
@@ -85,5 +84,6 @@ Finished experiments, kept as folders in the [`archive`](https://github.com/quir
 
 | Experiment | What it was | Archived |
 | --- | --- | --- |
+| [computing-age](https://github.com/quirq-ai/experiments/tree/archive/computing-age) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | 2026-10-16 |
 | [innernet](https://github.com/quirq-ai/experiments/tree/archive/innernet) | A personal internet made from your folders: search them like the web, read your projects like an encyclopedia. | 2026-10-16 |
 <!-- index:end -->

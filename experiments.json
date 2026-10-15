@@ -173,11 +173,6 @@
       "description": "Codex-style desktop app with two engines behind one UI: the Codex app-server and Claude through the Agent SDK.",
       "stack": "Electron",
       "updated": "2026-10-13"
-    },
-    "zombie-survival": {
-      "description": "Zombie Survival, a single-file browser game.",
-      "stack": "HTML",
-      "updated": "2026-07-24"
     }
   },
   "archived": {
@@ -195,6 +190,13 @@
       "updated": "2026-09-30",
       "archived": "2026-10-16",
       "commit": "e3caeedc48a478f2ba5dd53486aef48ea8b7b679"
+    },
+    "zombie-survival": {
+      "description": "Zombie Survival, a single-file browser game.",
+      "stack": "HTML",
+      "updated": "2026-07-24",
+      "archived": "2026-10-16",
+      "commit": "5cf8fd183d56360c894c710097f0ac846f57037e"
     }
   }
 }

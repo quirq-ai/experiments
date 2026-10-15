@@ -48,7 +48,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-32 experiments, most recently changed first.
+31 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
@@ -67,7 +67,6 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [autospawn-clone](https://github.com/quirq-ai/experiments/tree/autospawn-clone) | Mock-data clone of autospawn.com, an AI outbound sales platform, built to study its UX. | Next.js |  | 2026-08-29 |
 | [linear-clone](https://github.com/quirq-ai/experiments/tree/linear-clone) | Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write. | Next.js |  | 2026-08-16 |
 | [assets](https://github.com/quirq-ai/experiments/tree/assets) | Shared quirq brand assets: the mark, favicon, Möbius artwork and OG image. | Images |  | 2026-07-24 |
-| [zombie-survival](https://github.com/quirq-ai/experiments/tree/zombie-survival) | Zombie Survival, a single-file browser game. | HTML |  | 2026-07-24 |
 | [experiment-space-smoke](https://github.com/quirq-ai/experiments/tree/experiment-space-smoke) | Generated content for smoke-testing one-click sandbox launch, the sandbox-local Space URL and Agents API turns. | Markdown |  | 2026-07-19 |
 | [os-taxonomy](https://github.com/quirq-ai/experiments/tree/os-taxonomy) | Marble's open taxonomy of what children learn (1,590 micro-topics in a prerequisite graph), plus a local viewer. | Vite, React | [withmarbleapp/os-taxonomy](https://github.com/withmarbleapp/os-taxonomy) | 2026-07-12 |
 | [trees](https://github.com/quirq-ai/experiments/tree/trees) | How a Tree Eats Air: a single-page carbon simulation. | HTML |  | 2026-07-12 |
@@ -91,6 +90,7 @@ Each finished experiment is one commit on the [`archive`](https://github.com/qui
 
 | Experiment | What it was | Archived |
 | --- | --- | --- |
+| [zombie-survival](https://github.com/quirq-ai/experiments/tree/5cf8fd183d56360c894c710097f0ac846f57037e) | Zombie Survival, a single-file browser game. | 2026-10-16 |
 | [computing-age](https://github.com/quirq-ai/experiments/tree/e3caeedc48a478f2ba5dd53486aef48ea8b7b679) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | 2026-10-16 |
 | [innernet](https://github.com/quirq-ai/experiments/tree/8b2aa8246f6ba3e92ec0eed7429212b8aecc0886) | A personal internet made from your folders: search them like the web, read your projects like an encyclopedia. | 2026-10-16 |
 <!-- index:end -->

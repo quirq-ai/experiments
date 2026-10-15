@@ -48,7 +48,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-29 experiments, most recently changed first.
+28 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
@@ -63,7 +63,6 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [makepad](https://github.com/quirq-ai/experiments/tree/makepad) | Makepad, the AI-accelerated Rust app and game environment, studied for its file explorer and treemap. | Rust | [makepad/makepad](https://github.com/makepad/makepad) (pointer) | 2026-09-18 |
 | [navier-stokes](https://github.com/quirq-ai/experiments/tree/navier-stokes) | Flow Lab: an interactive Navier-Stokes fluid lab with four experiments and synchronized measurements. | Vite, React | [sharmasuraj0123/navier-stokes](https://github.com/sharmasuraj0123/navier-stokes) | 2026-09-10 |
 | [autospawn-clone](https://github.com/quirq-ai/experiments/tree/autospawn-clone) | Mock-data clone of autospawn.com, an AI outbound sales platform, built to study its UX. | Next.js |  | 2026-08-29 |
-| [linear-clone](https://github.com/quirq-ai/experiments/tree/linear-clone) | Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write. | Next.js |  | 2026-08-16 |
 | [assets](https://github.com/quirq-ai/experiments/tree/assets) | Shared quirq brand assets: the mark, favicon, Möbius artwork and OG image. | Images |  | 2026-07-24 |
 | [experiment-space-smoke](https://github.com/quirq-ai/experiments/tree/experiment-space-smoke) | Generated content for smoke-testing one-click sandbox launch, the sandbox-local Space URL and Agents API turns. | Markdown |  | 2026-07-19 |
 | [os-taxonomy](https://github.com/quirq-ai/experiments/tree/os-taxonomy) | Marble's open taxonomy of what children learn (1,590 micro-topics in a prerequisite graph), plus a local viewer. | Vite, React | [withmarbleapp/os-taxonomy](https://github.com/withmarbleapp/os-taxonomy) | 2026-07-12 |
@@ -88,6 +87,7 @@ Each finished experiment is one commit on the [`archive`](https://github.com/qui
 
 | Experiment | What it was | Archived |
 | --- | --- | --- |
+| [linear-clone](https://github.com/quirq-ai/experiments/tree/1fe9d9c94c2b123d799a8ed368dfdd4b0332c3c7) | Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write. | 2026-10-16 |
 | [laya](https://github.com/quirq-ai/experiments/tree/59dfde9cbc646d98bd15b57744872da8d67a8d1f) | Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes. | 2026-10-16 |
 | [jev-hello](https://github.com/quirq-ai/experiments/tree/bdf18fcb72cf01630658496094412324de57bd17) | Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out. | 2026-10-16 |
 | [zombie-survival](https://github.com/quirq-ai/experiments/tree/5cf8fd183d56360c894c710097f0ac846f57037e) | Zombie Survival, a single-file browser game. | 2026-10-16 |

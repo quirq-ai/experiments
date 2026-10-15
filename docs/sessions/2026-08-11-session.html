@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>linear-clone, session summary, 2026-08-11</title>
+<style>
+  :root {
+    --bg: #0f1011;
+    --panel: #17181a;
+    --panel-2: #1d1e21;
+    --border: #26282c;
+    --text: #e6e6e8;
+    --muted: #9b9ca3;
+    --faint: #6b6c74;
+    --accent: #5e6ad2;
+    --green: #4cb782;
+    --yellow: #d2a53a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 14px/1.6 -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+    padding: 48px 24px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .kicker { color: var(--accent); font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  h1 { font-size: 24px; font-weight: 600; margin: 8px 0 4px; }
+  .sub { color: var(--muted); margin-bottom: 32px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .card.full { grid-column: 1 / -1; }
+  .card h2 { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .card p { color: var(--text); margin-bottom: 8px; }
+  .card p:last-child { margin-bottom: 0; }
+  ul { list-style: none; }
+  li { padding: 5px 0 5px 18px; position: relative; color: var(--text); }
+  li::before { content: ""; position: absolute; left: 2px; top: 13px; width: 6px; height: 6px; border-radius: 2px; background: var(--accent); }
+  li .dim { color: var(--muted); }
+  code {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font: 12px "SF Mono", ui-monospace, Menlo, monospace;
+    color: #c8c9d4;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .status { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+  .timeline { border-left: 2px solid var(--border); margin-left: 4px; padding-left: 16px; }
+  .t-item { padding: 6px 0; }
+  .t-item .when { font-size: 12px; color: var(--faint); }
+  footer { margin-top: 28px; color: var(--faint); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Visual summary</div>
+  <h1>linear-clone</h1>
+  <div class="sub">Session of Aug 11, 2026. Project adopted as the active workspace: <code>experiments/linear-clone</code></div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>What it is</h2>
+      <p>A Linear-style project tracker: issues, OKRs, sprints, calendar, members, and an internal wiki, with Linear's dark, dense, keyboard-driven UI.</p>
+      <p class="status"><span class="dot"></span>v0 is UI-first: seeded zustand store persisted to localStorage. Store actions are the future API contract.</p>
+    </div>
+    <div class="card">
+      <h2>Stack</h2>
+      <div class="chips">
+        <span class="chip">Next.js 16</span>
+        <span class="chip">React 19</span>
+        <span class="chip">TypeScript</span>
+        <span class="chip">Tailwind v4</span>
+        <span class="chip">shadcn/ui + radix</span>
+        <span class="chip">zustand</span>
+        <span class="chip">Clerk (optional)</span>
+        <span class="chip">pnpm</span>
+      </div>
+      <p style="margin-top:12px"><code>pnpm dev</code> then localhost:3000. Demo mode without Clerk keys.</p>
+    </div>
+    <div class="card full">
+      <h2>House rules (from AGENTS.md and docs/)</h2>
+      <ul>
+        <li>Types in <code>lib/types.ts</code>, mutations only via <code>lib/store.ts</code> actions, ephemeral UI in <code>lib/ui-store.ts</code></li>
+        <li>Routes thin; feature UI in <code>features/&lt;name&gt;/</code>. Dependency direction: app to features to components to lib</li>
+        <li>Design tokens and recipes from <code>docs/DESIGN.md</code>; no raw hex outside globals, seed, icons</li>
+        <li>Global dialogs and palette mount once in <code>app/(app)/layout.tsx</code>, driven via ui-store</li>
+        <li>No em or en dashes anywhere. Sentence case UI copy. Named exports, kebab-case files</li>
+      </ul>
+    </div>
+    <div class="card full">
+      <h2>Decisions</h2>
+      <ul>
+        <li>Backend = the <code>.xo</code> files themselves. No database; the app is a <span class="dim">read-only mirror</span> of todos.json and work-items.json</li>
+        <li>Seed demo data replaced entirely by real XO data; zustand action contract kept (write-back is the later seam)</li>
+        <li>XO root is one variable: Setup dialog override, then <code>XO_ROOT</code> env, then topmost ancestor with <code>.xo</code></li>
+        <li>Clerk-to-member mapping deferred</li>
+      </ul>
+    </div>
+    <div class="card full">
+      <h2>Shipped this session</h2>
+      <ul>
+        <li><code>lib/xo-reader.ts</code>: scans the root + selected project folders, maps todos to issues (Agent todo label), work items to issues (Work item label), owners to members, folders to projects</li>
+        <li><code>/api/xo/snapshot</code> and <code>/api/xo/folders</code> route handlers</li>
+        <li>Store split into mirror slices (not persisted, resync every load) and local slices (sprints, OKRs, wiki, config)</li>
+        <li><span class="dim">Setup</span> in the sidebar: edit the root, pick folders as projects, save and sync</li>
+        <li><span class="dim">Refresh from XO</span> replaces Reset demo data in the menu and command palette</li>
+        <li>Wiki doc "XO data flow" seeded with ASCII diagrams of the pipeline</li>
+        <li>Verified: lint clean, production build passes, snapshot API returns real workspace + experiments data (10 issues, 2 sources)</li>
+      </ul>
+    </div>
+    <div class="card full">
+      <h2>Discussion timeline</h2>
+      <div class="timeline">
+        <div class="t-item"><div class="when">Turn 1</div>Project located and adopted. Read README, AGENTS.md, docs. Session summary started.</div>
+        <div class="t-item"><div class="when">Turn 2</div>Direction picked: real backend = load directly from .xo todo data, read-only first, replacing seed data. Built the whole XO mirror layer plus Setup dialog plus wiki data-flow doc; build and lint green; changes committed back to the repo.</div>
+        <div class="t-item"><div class="when">Turn 3</div>Round 2: Projects section in the sidebar with per-project pages (Issues + Sprints tabs), mermaid rendering in the wiki replacing ASCII diagrams, new "Anatomy of .xo and xo.json" wiki doc, versioned system-doc seeding. Verified in a real browser (5 diagrams render, project page shows live data). Commit was delayed by a stale desktop sign-in, then landed: 13 files.</div>
+        <div class="t-item"><div class="when">Turn 4</div>Correction applied: projects live as a tree in the sidebar itself, each expanding into Work items and Sprints entries with their own routes; the tabbed page is gone. Goal stated: a very simple dashboard over xo project data plus a simple work-item tracker with progress over time; feature list stays short and tight.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>Maintained by Claude across this session. Updated as the discussion evolves.</footer>
+</div>
+</body>
+</html>

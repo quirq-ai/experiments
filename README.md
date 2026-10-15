@@ -41,7 +41,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-34 experiments, most recently changed first.
+33 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
@@ -49,7 +49,6 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [workbench](https://github.com/quirq-ai/experiments/tree/workbench) | Codex-style desktop app with two engines behind one UI: the Codex app-server and Claude through the Agent SDK. | Electron |  | 2026-10-13 |
 | [claude-messages](https://github.com/quirq-ai/experiments/tree/claude-messages) | An iMessage-style window onto every Claude Code session running on the machine. | Node.js |  | 2026-10-09 |
 | [solar-claude](https://github.com/quirq-ai/experiments/tree/solar-claude) | Observatory: pose a question, run it in real physics and keep the trace. Began as a real-ephemeris solar system. | Vite, Three.js | [sharmasuraj0123/solar-claude](https://github.com/sharmasuraj0123/solar-claude) | 2026-10-09 |
-| [innernet](https://github.com/quirq-ai/experiments/tree/innernet) | A personal internet made from your folders: search them like the web, read your projects like an encyclopedia. | Next.js | [quirq-ai/innernet](https://github.com/quirq-ai/innernet) | 2026-10-04 |
 | [brand-dna-visualization](https://github.com/quirq-ai/experiments/tree/brand-dna-visualization) | Brand DNA: explore the colors, stories, voice and visual world behind a brand. | Next.js |  | 2026-10-03 |
 | [computing-age](https://github.com/quirq-ai/experiments/tree/computing-age) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | HyperFrames |  | 2026-09-30 |
 | [jev-hello](https://github.com/quirq-ai/experiments/tree/jev-hello) | Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out. | Python |  | 2026-09-28 |
@@ -79,4 +78,12 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [paperclip](https://github.com/quirq-ai/experiments/tree/paperclip) | Paperclip, open-source orchestration for zero-human companies, with two local patches. | Node.js | [paperclipai/paperclip](https://github.com/paperclipai/paperclip) | 2026-04-08 |
 | [my-video](https://github.com/quirq-ai/experiments/tree/my-video) | Remotion project with the XO main video plus Clawdbot and XO Agency videos. | Remotion |  | 2026-01-30 |
 | [remotion-studio](https://github.com/quirq-ai/experiments/tree/remotion-studio) | Bare Remotion starter project. | Remotion |  | 2026-01-25 |
+
+### Archived
+
+Finished experiments, kept as folders in the [`archive`](https://github.com/quirq-ai/experiments/tree/archive) branch, most recently archived first.
+
+| Experiment | What it was | Archived |
+| --- | --- | --- |
+| [innernet](https://github.com/quirq-ai/experiments/tree/archive/innernet) | A personal internet made from your folders: search them like the web, read your projects like an encyclopedia. | 2026-10-16 |
 <!-- index:end -->

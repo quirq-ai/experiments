@@ -60,12 +60,6 @@
       "stack": "Swift",
       "updated": "2026-09-25"
     },
-    "innernet": {
-      "description": "A personal internet made from your folders: search them like the web, read your projects like an encyclopedia.",
-      "stack": "Next.js",
-      "source": "https://github.com/quirq-ai/innernet",
-      "updated": "2026-10-04"
-    },
     "jev-hello": {
       "description": "Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out.",
       "stack": "Python",
@@ -191,5 +185,13 @@
       "updated": "2026-07-24"
     }
   },
-  "archived": {}
+  "archived": {
+    "innernet": {
+      "description": "A personal internet made from your folders: search them like the web, read your projects like an encyclopedia.",
+      "stack": "Next.js",
+      "source": "https://github.com/quirq-ai/innernet",
+      "updated": "2026-10-04",
+      "archived": "2026-10-16"
+    }
+  }
 }

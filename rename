@@ -1,0 +1,120 @@
+#!/usr/bin/env node
+// Rename an experiment: its local folder, its branch and its index entry move together.
+// The new name can be a path. Missing parent folders are created, and a folder that
+// holds experiments is a group, never a branch of its own.
+//
+//   ./rename autospawn-clone agentic-ai/autoquirq
+//   ./rename --dry-run autospawn-clone agentic-ai/autoquirq
+'use strict'
+
+const fs = require('node:fs')
+const path = require('node:path')
+const { ROOT, RESERVED, git, run, die, nameArg, loadManifest, remoteBranches, syncMain, saveIndex } = require('./publish')
+
+const isDir = (dir) => fs.existsSync(dir) && fs.statSync(dir).isDirectory()
+const onlyJunk = (dir) => fs.readdirSync(dir).every((f) => f === '.DS_Store')
+
+// Drop folders a move left empty, like a group whose last experiment moved out.
+function removeEmptyParents(name) {
+  for (let parent = path.dirname(name); parent !== '.'; parent = path.dirname(parent)) {
+    const dir = path.join(ROOT, parent)
+    if (!isDir(dir) || !onlyJunk(dir)) return
+    fs.rmSync(dir, { recursive: true })
+  }
+}
+
+function main() {
+  const argv = process.argv.slice(2)
+  const dryRun = argv.includes('--dry-run')
+  const args = argv.filter((a) => !a.startsWith('--')).map(nameArg)
+  if (args.length !== 2) die('Usage: ./rename <old> <new>, for example: ./rename autospawn-clone agentic-ai/autoquirq')
+  const [from, to] = args
+
+  const manifest = loadManifest()
+  const remote = remoteBranches()
+  const fromDir = path.join(ROOT, from)
+  const toDir = path.join(ROOT, to)
+  const hasBranch = remote.has(from)
+  const hasFolder = isDir(fromDir)
+  const known = new Set([...Object.keys(manifest.experiments), ...Object.keys(manifest.archived), ...remote.keys()])
+  known.delete(from)
+
+  if (RESERVED.has(from)) die(`"${from}" is not an experiment.`)
+  if (manifest.archived[from]) die(`${from} is archived; only live experiments can be renamed.`)
+  if ([...known].some((k) => k.startsWith(`${from}/`))) die(`${from}/ is a group of experiments; rename the experiments in it one at a time.`)
+  if (!hasBranch && !hasFolder) die(`There is no "${from}" experiment: no branch on origin and no folder here.`)
+  if (from === to) die('The old and new names are the same.')
+  if (to.startsWith(`${from}/`)) die(`${from} can't move inside itself.`)
+  if (git(['check-ref-format', '--branch', to], { ok: true }) === null) die(`"${to}" can't be a branch name.`)
+  if (RESERVED.has(to.split('/')[0])) die(`"${to}" collides with the ${to.split('/')[0]} branch.`)
+  if (known.has(to) || fs.existsSync(toDir)) die(`"${to}" already exists.`)
+  const clash = [...known].find((k) => k.startsWith(`${to}/`) || to.startsWith(`${k}/`))
+  if (clash) die(`"${to}" can't sit beside "${clash}": a name is either an experiment or a group of experiments, not both.`)
+
+  // Parent folders that already exist must be groups or empty; anything else is an
+  // experiment folder of its own, and moving into it would turn it into a group.
+  const parts = to.split('/')
+  const created = []
+  for (let i = 1; i < parts.length; i++) {
+    const parent = parts.slice(0, i).join('/')
+    const dir = path.join(ROOT, parent)
+    if (!fs.existsSync(dir)) {
+      created.push(`${parent}/`)
+      continue
+    }
+    if (!isDir(dir)) die(`${parent} is a file, so it can't hold ${to}.`)
+    const group = [...known].some((k) => k.startsWith(`${parent}/`))
+    if (!group && !onlyJunk(dir)) {
+      die(`${parent}/ would be published as an experiment of its own; moving ${to} into it would turn it into a group. Pick another path, or empty it first.`)
+    }
+  }
+
+  const plan = [
+    hasBranch ? `  branch  ${from} -> ${to}` : `  branch  none on origin yet; ${to} gets one on its next publish`,
+    hasFolder ? `  folder  ${from}/ -> ${to}/${created.length ? ` (creates ${created.join(', ')})` : ''}` : '  folder  none here; only the branch moves',
+  ].join('\n')
+  if (dryRun) return console.log(`${plan}\n\nDry run: nothing was written or pushed.`)
+  syncMain(remote)
+
+  // The folder moves first: it is local, so it can go back if the push fails.
+  if (hasFolder) {
+    fs.mkdirSync(path.dirname(toDir), { recursive: true })
+    fs.renameSync(fromDir, toDir)
+  }
+
+  // One atomic push creates the new branch and deletes the old one. The leases make
+  // sure the new name is still free and the old branch didn't move since we read it.
+  if (hasBranch) {
+    const sha = remote.get(from)
+    const leases = [`--force-with-lease=refs/heads/${to}:`, `--force-with-lease=refs/heads/${from}:${sha}`]
+    const push = run(['push', '--atomic', '-q', ...leases, 'origin', `${sha}:refs/heads/${to}`, `:refs/heads/${from}`])
+    if (push.status !== 0) {
+      if (hasFolder) {
+        fs.renameSync(toDir, fromDir)
+        removeEmptyParents(to)
+      }
+      die(`Push failed, so nothing was renamed:\n${push.stderr.toString().trim()}`)
+    }
+    for (const prefix of ['refs/heads/', 'refs/remotes/origin/']) {
+      const local = git(['rev-parse', '-q', '--verify', `${prefix}${from}`], { ok: true })?.trim()
+      if (!local) continue
+      git(['update-ref', `${prefix}${to}`, local], { ok: true })
+      git(['update-ref', '-d', `${prefix}${from}`], { ok: true })
+    }
+  }
+  if (hasFolder) removeEmptyParents(from)
+  console.log(plan)
+
+  // The index entry keeps its description and dates under the new name.
+  if (manifest.experiments[from]) {
+    manifest.experiments[to] = manifest.experiments[from]
+    delete manifest.experiments[from]
+  }
+  manifest.skip = manifest.skip.map((name) => (name === from ? to : name))
+  const live = new Set([...remote.keys()].filter((branch) => branch !== from))
+  if (hasBranch) live.add(to)
+  saveIndex(manifest, live, `Rename ${from} to ${to}`)
+  console.log(`\nRenamed ${from} to ${to}.`)
+}
+
+main()

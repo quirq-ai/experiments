@@ -8,6 +8,7 @@ Every experiment starts as a folder. [`./publish`](publish) turns each folder in
 
 - **Branch name = folder name.** The `innernet/` folder is the [`innernet`](https://github.com/quirq-ai/experiments/tree/innernet) branch.
 - **Branch root = folder contents.** Clone a branch and you have the folder back.
+- **Names can be paths.** The `agentic-ai/autoquirq/` folder is the `agentic-ai/autoquirq` branch. A folder that holds experiments, like `agentic-ai/`, is just a group and never a branch of its own.
 - **Branches are orphans.** They share no history with each other or with `main`.
 - **One commit per change.** Publishing adds a snapshot commit only when the folder changed, so a branch's log is that experiment's history. The author date is when the folder last changed.
 - **Ignored files stay home.** The folder's own `.gitignore` applies, and [`.publishignore`](.publishignore) always wins on top of it: dependencies, build caches, `.env` files, local state. Files over GitHub's 100 MB limit are left out and named in the commit message.
@@ -27,7 +28,7 @@ git clone --single-branch -b archive https://github.com/quirq-ai/experiments.git
 git -C archive checkout HEAD~1   # one experiment further back each time
 ```
 
-## Publish and archive
+## Publish, archive and rename
 
 Clone `main`, keep experiment folders inside it, then:
 
@@ -37,7 +38,11 @@ Clone `main`, keep experiment folders inside it, then:
 ./publish --dry-run      # show what would happen; write and push nothing
 ./archive trees          # compress a finished experiment into the archive branch
 ./archive --dry-run trees
+./rename autospawn-clone agentic-ai/autoquirq
+./rename --dry-run autospawn-clone agentic-ai/autoquirq
 ```
+
+Renaming moves the folder, the branch and the index entry together, and the branch keeps its history. The new name can be a path: missing folders like `agentic-ai/` are created, and a group left empty is removed.
 
 Archiving leaves the local folder alone, and `./publish` skips archived names from then on. It refuses when the folder has changes that were never published (publish first, or `--force` to archive the published version). To revive an experiment, move its entry from `archived` back to `experiments` and publish it: it starts a fresh branch, and its archived commit stays where it is.
 

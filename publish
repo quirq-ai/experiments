@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Publish every experiment folder as its own orphan branch (branch name = folder
 // name, branch root = folder contents), then rebuild the index in README.md on main.
-// ./archive builds on the helpers exported at the bottom.
+// ./archive and ./rename build on the helpers exported at the bottom.
 //
 //   ./publish                 every folder; pushes what changed, then the index
 //   ./publish innernet rea    only these folders
@@ -226,6 +226,29 @@ function remoteBranches() {
   return branches
 }
 
+// An experiment named on the command line, as tab completion types it: ./name/ is name.
+const nameArg = (arg) => arg.replace(/^\.\//, '').replace(/\/+$/, '')
+
+// Experiment folders under ROOT. Names can be paths: a folder that holds a known
+// experiment (agentic-ai/ for agentic-ai/autoquirq) is a group, and every folder in a
+// group is an experiment or a group itself. Git can't have a branch named like a group
+// anyway, since agentic-ai and agentic-ai/autoquirq can't both exist.
+function discover(manifest, remote) {
+  const known = [...Object.keys(manifest.experiments), ...Object.keys(manifest.archived), ...remote.keys()]
+  const found = []
+  const walk = (rel) => {
+    for (const d of fs.readdirSync(path.join(ROOT, rel), { withFileTypes: true })) {
+      if (!d.isDirectory() || d.name.startsWith('.')) continue
+      const name = rel + d.name
+      if (manifest.skip.includes(name)) continue
+      if (known.some((k) => k.startsWith(`${name}/`))) walk(`${name}/`)
+      else found.push(name)
+    }
+  }
+  walk('')
+  return found.sort()
+}
+
 // main has to fast-forward to origin before the index changes, or pushing it fails.
 function syncMain(remote) {
   if (!remote.has('main')) return
@@ -386,18 +409,13 @@ function main() {
   const argv = process.argv.slice(2)
   const dryRun = argv.includes('--dry-run')
   const force = argv.includes('--force')
-  const only = argv.filter((a) => !a.startsWith('--'))
+  const only = argv.filter((a) => !a.startsWith('--')).map(nameArg)
   if (!isRepo(ROOT)) die('Run ./publish from a checkout of the experiments repo.')
   const manifest = loadManifest()
-
-  const folders = fs
-    .readdirSync(ROOT, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && !d.name.startsWith('.') && !manifest.skip.includes(d.name))
-    .map((d) => d.name)
-    .sort()
-  for (const name of only) if (!folders.includes(name)) die(`No folder named "${name}" here, or it is listed under "skip".`)
-
   const remote = remoteBranches()
+
+  const folders = discover(manifest, remote)
+  for (const name of only) if (!folders.includes(name)) die(`No experiment folder named "${name}" here, or it is listed under "skip".`)
   if (!dryRun) syncMain(remote)
 
   const results = []
@@ -431,6 +449,7 @@ module.exports = {
   die,
   count,
   day,
+  nameArg,
   loadManifest,
   remoteBranches,
   syncMain,

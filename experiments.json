@@ -113,7 +113,7 @@
       "stack": "Next.js, Three.js",
       "updated": "2026-06-19"
     },
-    "space-walk": {
+    "space/space-walk": {
       "description": "Replays coding-agent sessions on a 3D map of the codebase. A fork of cosmtrek/mindwalk.",
       "stack": "Go",
       "source": "https://github.com/sharmasuraj0123/space-walk",

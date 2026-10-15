@@ -87,10 +87,10 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 
 ### Archived
 
-Finished experiments, kept as folders in the [`archive`](https://github.com/quirq-ai/experiments/tree/archive) branch, most recently archived first.
+Each finished experiment is one commit on the [`archive`](https://github.com/quirq-ai/experiments/commits/archive) branch, newest first: the tip holds the last one archived, and each commit back holds the one before.
 
 | Experiment | What it was | Archived |
 | --- | --- | --- |
-| [computing-age](https://github.com/quirq-ai/experiments/tree/archive/computing-age) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | 2026-10-16 |
-| [innernet](https://github.com/quirq-ai/experiments/tree/archive/innernet) | A personal internet made from your folders: search them like the web, read your projects like an encyclopedia. | 2026-10-16 |
+| [computing-age](https://github.com/quirq-ai/experiments/tree/e3caeedc48a478f2ba5dd53486aef48ea8b7b679) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | 2026-10-16 |
+| [innernet](https://github.com/quirq-ai/experiments/tree/8b2aa8246f6ba3e92ec0eed7429212b8aecc0886) | A personal internet made from your folders: search them like the web, read your projects like an encyclopedia. | 2026-10-16 |
 <!-- index:end -->

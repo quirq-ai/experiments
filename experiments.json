@@ -181,18 +181,20 @@
     }
   },
   "archived": {
-    "computing-age": {
-      "description": "Video essay: computing as one accelerating project, from counting stones to thinking machines.",
-      "stack": "HyperFrames",
-      "updated": "2026-09-30",
-      "archived": "2026-10-16"
-    },
     "innernet": {
       "description": "A personal internet made from your folders: search them like the web, read your projects like an encyclopedia.",
       "stack": "Next.js",
       "source": "https://github.com/quirq-ai/innernet",
       "updated": "2026-10-04",
-      "archived": "2026-10-16"
+      "archived": "2026-10-16",
+      "commit": "8b2aa8246f6ba3e92ec0eed7429212b8aecc0886"
+    },
+    "computing-age": {
+      "description": "Video essay: computing as one accelerating project, from counting stones to thinking machines.",
+      "stack": "HyperFrames",
+      "updated": "2026-09-30",
+      "archived": "2026-10-16",
+      "commit": "e3caeedc48a478f2ba5dd53486aef48ea8b7b679"
     }
   }
 }

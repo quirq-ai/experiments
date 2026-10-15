@@ -55,11 +55,6 @@
       "stack": "Swift",
       "updated": "2026-09-25"
     },
-    "jev-hello": {
-      "description": "Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out.",
-      "stack": "Python",
-      "updated": "2026-09-28"
-    },
     "laya": {
       "description": "Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes.",
       "stack": "Python",
@@ -197,6 +192,13 @@
       "updated": "2026-07-24",
       "archived": "2026-10-16",
       "commit": "5cf8fd183d56360c894c710097f0ac846f57037e"
+    },
+    "jev-hello": {
+      "description": "Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out.",
+      "stack": "Python",
+      "updated": "2026-09-28",
+      "archived": "2026-10-16",
+      "commit": "bdf18fcb72cf01630658496094412324de57bd17"
     }
   }
 }

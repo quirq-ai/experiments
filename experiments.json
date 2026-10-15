@@ -55,12 +55,6 @@
       "stack": "Swift",
       "updated": "2026-09-25"
     },
-    "laya": {
-      "description": "Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes.",
-      "stack": "Python",
-      "source": "https://github.com/NandhaKishorM/laya",
-      "updated": "2026-09-23"
-    },
     "linear-clone": {
       "description": "Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write.",
       "stack": "Next.js",
@@ -199,6 +193,14 @@
       "updated": "2026-09-28",
       "archived": "2026-10-16",
       "commit": "bdf18fcb72cf01630658496094412324de57bd17"
+    },
+    "laya": {
+      "description": "Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes.",
+      "stack": "Python",
+      "source": "https://github.com/NandhaKishorM/laya",
+      "updated": "2026-09-23",
+      "archived": "2026-10-16",
+      "commit": "59dfde9cbc646d98bd15b57744872da8d67a8d1f"
     }
   }
 }

@@ -48,7 +48,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-30 experiments, most recently changed first.
+29 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
@@ -59,7 +59,6 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [brand-dna-visualization](https://github.com/quirq-ai/experiments/tree/brand-dna-visualization) | Brand DNA: explore the colors, stories, voice and visual world behind a brand. | Next.js |  | 2026-10-03 |
 | [shipnotes-demo](https://github.com/quirq-ai/experiments/tree/shipnotes-demo) | Runnable tour of the shipnotes web components, vendored unmodified. | HTML |  | 2026-09-26 |
 | [hello-simulator](https://github.com/quirq-ai/experiments/tree/hello-simulator) | Hello Sim, a one-screen SwiftUI app where each card shows one thing Claude can do in the iOS Simulator, plus XO Space. | Swift |  | 2026-09-25 |
-| [laya](https://github.com/quirq-ai/experiments/tree/laya) | Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes. | Python | [NandhaKishorM/laya](https://github.com/NandhaKishorM/laya) | 2026-09-23 |
 | [space-walk](https://github.com/quirq-ai/experiments/tree/space-walk) | Replays coding-agent sessions on a 3D map of the codebase. A fork of cosmtrek/mindwalk. | Go | [sharmasuraj0123/space-walk](https://github.com/sharmasuraj0123/space-walk) | 2026-09-23 |
 | [makepad](https://github.com/quirq-ai/experiments/tree/makepad) | Makepad, the AI-accelerated Rust app and game environment, studied for its file explorer and treemap. | Rust | [makepad/makepad](https://github.com/makepad/makepad) (pointer) | 2026-09-18 |
 | [navier-stokes](https://github.com/quirq-ai/experiments/tree/navier-stokes) | Flow Lab: an interactive Navier-Stokes fluid lab with four experiments and synchronized measurements. | Vite, React | [sharmasuraj0123/navier-stokes](https://github.com/sharmasuraj0123/navier-stokes) | 2026-09-10 |
@@ -89,6 +88,7 @@ Each finished experiment is one commit on the [`archive`](https://github.com/qui
 
 | Experiment | What it was | Archived |
 | --- | --- | --- |
+| [laya](https://github.com/quirq-ai/experiments/tree/59dfde9cbc646d98bd15b57744872da8d67a8d1f) | Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes. | 2026-10-16 |
 | [jev-hello](https://github.com/quirq-ai/experiments/tree/bdf18fcb72cf01630658496094412324de57bd17) | Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out. | 2026-10-16 |
 | [zombie-survival](https://github.com/quirq-ai/experiments/tree/5cf8fd183d56360c894c710097f0ac846f57037e) | Zombie Survival, a single-file browser game. | 2026-10-16 |
 | [computing-age](https://github.com/quirq-ai/experiments/tree/e3caeedc48a478f2ba5dd53486aef48ea8b7b679) | Video essay: computing as one accelerating project, from counting stones to thinking machines. | 2026-10-16 |

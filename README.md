@@ -18,6 +18,21 @@ Every experiment starts as a folder. [`./publish`](publish) turns each folder in
 ```bash
 git clone --single-branch -b <name> https://github.com/quirq-ai/experiments.git <name>
 ```
+## Publish
+
+Clone `main`, keep experiment folders inside it, then:
+
+```bash
+./publish                # every folder; pushes what changed, then this index
+./publish innernet rea   # only these folders
+./publish --dry-run      # show what would happen; write and push nothing
+```
+
+Descriptions and stack labels live in [`experiments.json`](experiments.json): edit them there and the next publish rewrites the table. Folders listed under `skip` never get a branch. Clones of repos owned by an account under `owners` are always copied, never turned into pointers.
+
+`./publish` only builds on commits it made itself. If a branch gets commits from anywhere else, it stops rather than snapshot over them; `--force` overrides that.
+
+
 
 ## Index
 
@@ -62,16 +77,4 @@ git clone --single-branch -b <name> https://github.com/quirq-ai/experiments.git 
 | [remotion-studio](https://github.com/quirq-ai/experiments/tree/remotion-studio) | Bare Remotion starter project. | Remotion |  | 2026-01-25 |
 <!-- index:end -->
 
-## Publish
 
-Clone `main`, keep experiment folders inside it, then:
-
-```bash
-./publish                # every folder; pushes what changed, then this index
-./publish innernet rea   # only these folders
-./publish --dry-run      # show what would happen; write and push nothing
-```
-
-Descriptions and stack labels live in [`experiments.json`](experiments.json): edit them there and the next publish rewrites the table. Folders listed under `skip` never get a branch. Clones of repos owned by an account under `owners` are always copied, never turned into pointers.
-
-`./publish` only builds on commits it made itself. If a branch gets commits from anywhere else, it stops rather than snapshot over them; `--force` overrides that.

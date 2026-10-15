@@ -1,0 +1,44 @@
+schema_version: "1"
+task_id: T09
+title: "Fix N+1 query in usage sync"
+category: bugfix
+difficulty: hard
+max_seconds: 3600
+estimated_tokens_baseline: null
+
+prompt: |
+  There is likely an N+1 query pattern in the usage sync logic in this codebase.
+  Find services/usage_sync.py (or similar) and any related DB access patterns.
+
+  Task:
+  1. Read and understand the current usage sync implementation
+  2. Identify any N+1 query patterns (queries inside loops, repeated single-row fetches)
+  3. Refactor to use bulk queries or batch fetches (single query fetching N rows instead of N queries)
+  4. Do not change the public interface or data semantics
+  5. Add a comment explaining what the N+1 was and how it was resolved
+
+  If you cannot find an N+1 pattern, document your investigation in a code comment
+  and improve the existing query structure in at least one demonstrable way.
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "python3 -c \"import ast; ast.parse(open('services/usage_sync.py').read()); print('ok')\" 2>/dev/null || echo 'missing_or_error'"
+      pass_condition: "stdout.strip() == 'ok'"
+    - id: AC2
+      type: shell
+      command: "git diff HEAD -- services/ | grep '^+' | grep -v '^+++' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+  human:
+    - id: AC3
+      description: "A genuine query optimization was made or a clear investigation comment was added"
+      rubric: "0-3"
+
+reference_files:
+  - services/usage_sync.py
+  - routers/cowork_agent/usage.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

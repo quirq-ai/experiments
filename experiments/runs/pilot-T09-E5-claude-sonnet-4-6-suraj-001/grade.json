@@ -1,0 +1,17 @@
+{
+  "run_id": "pilot-T09-E5-claude-sonnet-4-6-suraj-001",
+  "task_id": "T09",
+  "ac_results": {
+    "AC1": {
+      "passed": true,
+      "output": "ok"
+    },
+    "AC2": {
+      "passed": false,
+      "output": "0"
+    }
+  },
+  "score_automated": 0.5,
+  "score_human": null,
+  "terminal_state": "partial"
+}

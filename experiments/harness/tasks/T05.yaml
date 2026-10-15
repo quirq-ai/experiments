@@ -1,0 +1,41 @@
+schema_version: "1"
+task_id: T05
+title: "Write pytest suite for workspace_memory.py"
+category: test
+difficulty: medium
+max_seconds: 2400
+estimated_tokens_baseline: null
+
+prompt: |
+  Write a comprehensive pytest test suite for routers/cowork_agent/workspace_memory.py.
+
+  Requirements:
+  - Read and understand the current implementation of workspace_memory.py
+  - Write tests covering: all route handlers, happy path + error cases
+  - Use pytest with httpx.AsyncClient or FastAPI TestClient (match existing test patterns)
+  - Mock external dependencies (filesystem, any DB calls) appropriately
+  - Achieve at least 3 distinct test functions that each test a different code path
+  - Place tests in tests/test_workspace_memory.py
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "test -f tests/test_workspace_memory.py && echo 'exists'"
+      pass_condition: "stdout.strip() == 'exists'"
+    - id: AC2
+      type: shell
+      command: "grep -c 'def test_' tests/test_workspace_memory.py 2>/dev/null || echo 0"
+      pass_condition: "int(stdout.strip()) >= 3"
+    - id: AC3
+      type: shell
+      command: "python3 -c \"import ast; ast.parse(open('tests/test_workspace_memory.py').read()); print('ok')\" 2>/dev/null || echo 'parse_error'"
+      pass_condition: "stdout.strip() == 'ok'"
+
+reference_files:
+  - routers/cowork_agent/workspace_memory.py
+  - tests/
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

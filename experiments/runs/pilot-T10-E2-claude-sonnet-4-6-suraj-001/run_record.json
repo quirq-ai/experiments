@@ -1,0 +1,299 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T10-E2-claude-sonnet-4-6-suraj-001",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 1,
+    "timestamp_start": "2026-06-19T22:04:38Z",
+    "timestamp_end": "2026-06-20T05:12:10Z"
+  },
+  "condition": {
+    "task_id": "T10",
+    "env_id": "E2",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:c1a34db4c6ebeedac24dfafb3e1c7395d5b850c71e0c58b37c03983487b23f30"
+  },
+  "outcome": {
+    "terminal_state": "partial",
+    "score_automated": 0.6666666666666666,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC2": {
+        "passed": true,
+        "output": "ok"
+      },
+      "AC3": {
+        "passed": true,
+        "output": "29"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 50,
+    "total_output": 31153,
+    "cache_read": 3335926,
+    "cache_write": 443999,
+    "total_effective": -2971130,
+    "context_acquisition": 48,
+    "phase_orientation_input": 47,
+    "phase_implementation_input": 2,
+    "phase_verification_input": 1
+  },
+  "timing": {
+    "wall_clock_seconds": 25651.148,
+    "time_to_first_edit_seconds": 18374.623,
+    "phase_orientation_seconds": 85.604,
+    "phase_implementation_seconds": 3.893,
+    "phase_verification_seconds": 7272.531
+  },
+  "navigation": {
+    "file_reads_total": 29,
+    "file_reads_unique": 29,
+    "nav_entropy": 4.857980995127572,
+    "nav_entropy_pre_edit": 4.857980995127572,
+    "files_read_sequence": [
+      "routers/auth/auth.py",
+      "routers/auth/claude_setup_token.py",
+      "routers/auth/codex_setup.py",
+      "routers/status/channels.py",
+      "routers/status/models.py",
+      "routers/status/providers.py",
+      "routers/cowork_agent/agents.py",
+      "routers/cowork_agent/channels.py",
+      "routers/cowork_agent/chat.py",
+      "routers/cowork_agent/config.py",
+      "routers/cowork_agent/files.py",
+      "routers/cowork_agent/fts.py",
+      "routers/cowork_agent/misc.py",
+      "routers/cowork_agent/onboarding.py",
+      "routers/cowork_agent/secrets.py",
+      "routers/cowork_agent/sessions.py",
+      "routers/cowork_agent/usage.py",
+      "routers/cowork_agent/workspace_memory.py",
+      "routers/cowork_agent/xo_projects_sync.py",
+      "routers/cowork_agent/legacy/openclaw_usage.py",
+      "routers/cowork_agent/bff/secrets.py",
+      "routers/cowork_agent/bff/visualizer.py",
+      "routers/cowork_agent/bff/workspace_visualizer.py",
+      "routers/cowork_agent/bff/xo_projects.py",
+      "routers/cowork_agent/connectors/gdrive.py",
+      "routers/cowork_agent/connectors/github.py",
+      "routers/cowork_agent/connectors/manus.py",
+      "routers/cowork_agent/connectors/onedrive.py",
+      "routers/cowork_agent/connectors/vercel.py"
+    ],
+    "files_edited": [
+      "routers/cowork_agent/agents.py"
+    ],
+    "memory_reads": 0,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 32,
+    "bash_calls": 1,
+    "search_calls": 1,
+    "git_calls": 0,
+    "web_searches": 0,
+    "agent_spawns": 0,
+    "replanning_events": 0,
+    "message_count": 78
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      7,
+      11
+    ],
+    [
+      9,
+      12
+    ],
+    [
+      11,
+      13
+    ],
+    [
+      12,
+      14
+    ],
+    [
+      13,
+      15
+    ],
+    [
+      15,
+      16
+    ],
+    [
+      17,
+      17
+    ],
+    [
+      19,
+      18
+    ],
+    [
+      20,
+      19
+    ],
+    [
+      21,
+      20
+    ],
+    [
+      23,
+      21
+    ],
+    [
+      25,
+      22
+    ],
+    [
+      27,
+      23
+    ],
+    [
+      29,
+      24
+    ],
+    [
+      31,
+      25
+    ],
+    [
+      33,
+      26
+    ],
+    [
+      35,
+      27
+    ],
+    [
+      37,
+      28
+    ],
+    [
+      39,
+      29
+    ],
+    [
+      41,
+      30
+    ],
+    [
+      43,
+      31
+    ],
+    [
+      45,
+      32
+    ],
+    [
+      47,
+      33
+    ],
+    [
+      49,
+      34
+    ],
+    [
+      50,
+      35
+    ],
+    [
+      51,
+      36
+    ],
+    [
+      53,
+      37
+    ],
+    [
+      55,
+      38
+    ],
+    [
+      57,
+      39
+    ],
+    [
+      58,
+      40
+    ],
+    [
+      60,
+      41
+    ],
+    [
+      61,
+      42
+    ],
+    [
+      64,
+      43
+    ],
+    [
+      65,
+      44
+    ],
+    [
+      66,
+      45
+    ],
+    [
+      68,
+      46
+    ],
+    [
+      70,
+      47
+    ],
+    [
+      72,
+      48
+    ],
+    [
+      74,
+      49
+    ],
+    [
+      76,
+      50
+    ],
+    [
+      77,
+      50
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T10-E2-claude-sonnet-4-6-suraj-001/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T10-E2-claude-sonnet-4-6-suraj-001/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T10-E2-claude-sonnet-4-6-suraj-001/grade.json"
+  }
+}

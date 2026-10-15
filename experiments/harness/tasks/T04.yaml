@@ -1,0 +1,42 @@
+schema_version: "1"
+task_id: T04
+title: "Refactor scopes.py to use Python dataclasses"
+category: refactor
+difficulty: medium
+max_seconds: 2400
+estimated_tokens_baseline: null
+
+prompt: |
+  Refactor services/cowork_agent/scopes.py to use Python dataclasses instead
+  of plain dicts or namedtuples (inspect the current implementation first).
+
+  Requirements:
+  - Create a Scope dataclass with typed fields matching the current data structure
+  - All existing call sites that construct or access scope data must continue to work
+  - Add __post_init__ validation where appropriate (e.g. required fields non-empty)
+  - Do not change the public API surface (function signatures, return shapes)
+  - Update or add type hints throughout the file
+
+  Run any existing tests to verify nothing broke.
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "grep -n 'dataclass\\|@dataclass' services/cowork_agent/scopes.py | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+    - id: AC2
+      type: shell
+      command: "python3 -c \"import ast; ast.parse(open('services/cowork_agent/scopes.py').read()); print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+    - id: AC3
+      type: shell
+      command: "python3 -c \"from services.cowork_agent import scopes; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+
+reference_files:
+  - services/cowork_agent/scopes.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

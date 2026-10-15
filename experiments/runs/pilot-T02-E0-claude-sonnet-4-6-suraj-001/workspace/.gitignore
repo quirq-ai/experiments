@@ -1,0 +1,70 @@
+# Environment variables - NEVER commit these
+.env
+.env.local
+.env.*.local
+.env.backup
+main.tf
+
+.claude/
+
+# Ad-hoc smoke tests, debugging scripts, exploratory work — anything
+# that runs but isn't part of the shipped product. Not committed.
+experiments/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# mypy
+.mypy_cache/
+
+# Runtime data (usage sync watermark, etc.)
+data/
+docs/
+
+ARCHITECTURE.md
+
+# Connector secrets (created at runtime by gdrive/onedrive/vercel/github/manus)
+mcp-tokens.json
+rclone.conf

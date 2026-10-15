@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Use gtimeout (brew coreutils) if present; otherwise run with no limit.
+# The experiment runs with MAX_SECONDS=0 (no timeout), so passthrough is correct.
+if command -v gtimeout >/dev/null 2>&1; then exec gtimeout "$@"; fi
+shift            # drop the DURATION argument
+exec "$@"

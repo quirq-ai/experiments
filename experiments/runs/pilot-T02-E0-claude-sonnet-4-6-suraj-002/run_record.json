@@ -1,0 +1,261 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T02-E0-claude-sonnet-4-6-suraj-002",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 2,
+    "timestamp_start": "2026-06-20T06:42:39Z",
+    "timestamp_end": "2026-06-20T06:45:17Z"
+  },
+  "condition": {
+    "task_id": "T02",
+    "env_id": "E0",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:2f7d4eb3243c100eb6c3707138c6f49486f562cfa3447c41d963c9c9611faf3f"
+  },
+  "outcome": {
+    "terminal_state": "partial",
+    "score_automated": 0.3333333333333333,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC2": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC3": {
+        "passed": true,
+        "output": "ok"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 189,
+    "total_output": 28402,
+    "cache_read": 2759752,
+    "cache_write": 271344,
+    "total_effective": -2455185,
+    "context_acquisition": 187,
+    "phase_orientation_input": 186,
+    "phase_implementation_input": 2,
+    "phase_verification_input": 1
+  },
+  "timing": {
+    "wall_clock_seconds": 157.49,
+    "time_to_first_edit_seconds": 141.416,
+    "phase_orientation_seconds": 132.596,
+    "phase_implementation_seconds": 8.249,
+    "phase_verification_seconds": 7.722
+  },
+  "navigation": {
+    "file_reads_total": 7,
+    "file_reads_unique": 7,
+    "nav_entropy": 2.8073549220576037,
+    "nav_entropy_pre_edit": 2.8073549220576037,
+    "files_read_sequence": [
+      "routers/auth/auth.py",
+      "server.py",
+      "services/cowork_agent/scopes.py",
+      "routers/auth/claude_setup_token.py",
+      "routers/cowork_agent/connectors/vercel.py",
+      "routers/cowork_agent/connectors/github.py",
+      "routers/cowork_agent/xo_projects_sync.py"
+    ],
+    "files_edited": [
+      "routers/auth/auth.py"
+    ],
+    "memory_reads": 0,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 20,
+    "bash_calls": 11,
+    "search_calls": 9,
+    "git_calls": 0,
+    "web_searches": 0,
+    "agent_spawns": 0,
+    "replanning_events": 0,
+    "message_count": 62
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      12
+    ],
+    [
+      7,
+      83
+    ],
+    [
+      9,
+      154
+    ],
+    [
+      11,
+      155
+    ],
+    [
+      12,
+      156
+    ],
+    [
+      13,
+      157
+    ],
+    [
+      15,
+      158
+    ],
+    [
+      16,
+      159
+    ],
+    [
+      17,
+      160
+    ],
+    [
+      19,
+      161
+    ],
+    [
+      21,
+      162
+    ],
+    [
+      22,
+      163
+    ],
+    [
+      23,
+      164
+    ],
+    [
+      25,
+      165
+    ],
+    [
+      26,
+      166
+    ],
+    [
+      27,
+      167
+    ],
+    [
+      29,
+      168
+    ],
+    [
+      31,
+      169
+    ],
+    [
+      32,
+      170
+    ],
+    [
+      33,
+      171
+    ],
+    [
+      35,
+      172
+    ],
+    [
+      37,
+      173
+    ],
+    [
+      38,
+      174
+    ],
+    [
+      39,
+      175
+    ],
+    [
+      41,
+      176
+    ],
+    [
+      43,
+      177
+    ],
+    [
+      44,
+      178
+    ],
+    [
+      45,
+      179
+    ],
+    [
+      47,
+      180
+    ],
+    [
+      49,
+      181
+    ],
+    [
+      50,
+      182
+    ],
+    [
+      51,
+      183
+    ],
+    [
+      53,
+      184
+    ],
+    [
+      55,
+      185
+    ],
+    [
+      56,
+      186
+    ],
+    [
+      57,
+      187
+    ],
+    [
+      59,
+      188
+    ],
+    [
+      61,
+      189
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T02-E0-claude-sonnet-4-6-suraj-002/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T02-E0-claude-sonnet-4-6-suraj-002/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T02-E0-claude-sonnet-4-6-suraj-002/grade.json"
+  }
+}

@@ -1,0 +1,48 @@
+schema_version: "1"
+task_id: T08
+title: "Replace print/logging with structlog structured logging"
+category: feature
+difficulty: hard
+max_seconds: 3600
+estimated_tokens_baseline: null
+
+prompt: |
+  Replace the existing logging (print statements and stdlib logging) in this FastAPI
+  application with structlog for structured JSON logging.
+
+  Requirements:
+  - Install/add structlog to requirements.txt
+  - Configure structlog at app startup (in server.py or a dedicated logging config module)
+  - Output: JSON format in production (LOG_FORMAT=json env var), human-readable in dev
+  - Replace all print() calls in routers/ and services/ with structlog logger calls
+  - Use appropriate log levels (info, warning, error, debug)
+  - Bind request_id to each request's log context via FastAPI middleware
+  - Do not log sensitive values (tokens, credentials — follow existing CLAUDE.md guidance)
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "grep 'structlog' requirements.txt | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+    - id: AC2
+      type: shell
+      command: "grep -r 'structlog' . --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 3"
+    - id: AC3
+      type: shell
+      command: "python3 -c \"import ast, glob; [ast.parse(open(f).read()) for f in glob.glob('**/*.py', recursive=True) if '__pycache__' not in f]; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+  human:
+    - id: AC4
+      description: "request_id is bound to log context via middleware (not per-handler)"
+      rubric: binary
+
+reference_files:
+  - server.py
+  - routers/cowork_agent/chat.py
+  - DEVELOPING.md
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

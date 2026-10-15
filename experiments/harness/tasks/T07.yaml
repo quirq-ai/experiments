@@ -1,0 +1,46 @@
+schema_version: "1"
+task_id: T07
+title: "Make project creation idempotent"
+category: feature
+difficulty: hard
+max_seconds: 3600
+estimated_tokens_baseline: null
+
+prompt: |
+  Find the project creation logic in this codebase (likely in routers/cowork_agent/
+  or services/cowork_agent/). Make it idempotent: if a project with the same
+  identifier already exists, return the existing project rather than creating a
+  duplicate or raising an error.
+
+  Requirements:
+  - Identify the unique key for a project (inspect the data model)
+  - On create: check existence first; if found, return existing with HTTP 200 (not 201)
+  - Add a response header X-Created: true on new creation, X-Created: false on existing
+  - All existing behavior for genuinely new projects must be preserved
+  - Add tests: create twice → same project returned, status codes correct
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "grep -r 'idempotent\\|X-Created\\|already_exists\\|existing' . --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+    - id: AC2
+      type: shell
+      command: "python3 -c \"import ast, glob; [ast.parse(open(f).read()) for f in glob.glob('**/*.py', recursive=True) if '__pycache__' not in f]; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+  human:
+    - id: AC3
+      description: "Logic handles the duplicate case without raising an unhandled exception"
+      rubric: binary
+    - id: AC4
+      description: "X-Created header is set correctly in both code paths"
+      rubric: binary
+
+reference_files:
+  - routers/cowork_agent/
+  - services/cowork_agent/xo_cowork_state.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

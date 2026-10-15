@@ -1,0 +1,21 @@
+{
+  "run_id": "pilot-T04-E4-claude-sonnet-4-6-suraj-002",
+  "task_id": "T04",
+  "ac_results": {
+    "AC1": {
+      "passed": false,
+      "output": "0"
+    },
+    "AC2": {
+      "passed": true,
+      "output": "ok"
+    },
+    "AC3": {
+      "passed": false,
+      "output": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E4-claude-sonnet-4-6-suraj-002/workspace/services/cowork_agent/scopes.py\", line 25, in <module>\n    from services.cowork_agent import project_layout\n  File \"/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E4-claude-sonnet-4-6-suraj-002/workspace/services/cowork_agent/project_layo"
+    }
+  },
+  "score_automated": 0.3333333333333333,
+  "score_human": null,
+  "terminal_state": "partial"
+}

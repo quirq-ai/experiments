@@ -1,0 +1,53 @@
+schema_version: "1"
+task_id: T02
+title: "Fix bearer token not stripped from Authorization header"
+category: bugfix
+difficulty: easy
+max_seconds: 1200
+estimated_tokens_baseline: null
+
+prompt: |
+  There is a bug in the authentication handling: when a client sends an Authorization
+  header with the format "Bearer <token>", the code is not consistently stripping
+  the "Bearer " prefix before using the token value.
+
+  Find all places in routers/auth/ and any middleware where Authorization headers
+  are read. Ensure the token is extracted correctly regardless of whether the client
+  sends "Bearer <token>" or just "<token>".
+
+  Add a test that verifies both formats are accepted.
+
+acceptance_criteria:
+  automated:
+    # AC1 — the fix must actually strip a "Bearer " prefix somewhere in the code.
+    # Base-negative: at BASE_SHA no line co-occurs "Bearer" with a strip verb,
+    # so an agent that does nothing scores 0 here. Whole-tree search (excluding
+    # venv/__pycache__) so the fix counts whether it lands in routers/auth/ or
+    # in server.py middleware.
+    - id: AC1
+      type: shell
+      command: "grep -rn 'Bearer' . --include='*.py' | grep -vE '__pycache__|/venv/' | grep -iE 'removeprefix|replace|lstrip|split|startswith' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+    # AC2 — the task requires a test covering both 'Bearer <token>' and raw token.
+    # Base-negative: the base repo has no tests/ directory at all.
+    - id: AC2
+      type: shell
+      command: "grep -ril 'bearer' tests/ --include='*.py' 2>/dev/null | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+    # AC3 — codebase still parses (agent didn't leave broken Python behind).
+    - id: AC3
+      type: shell
+      command: "python3 -c \"import ast, glob; [ast.parse(open(f).read()) for f in glob.glob('routers/**/*.py', recursive=True)]; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+  human:
+    - id: AC4
+      description: "Fix handles both 'Bearer <token>' and raw '<token>' input"
+      rubric: binary
+
+reference_files:
+  - routers/auth/auth.py
+  - routers/auth/claude_setup_token.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

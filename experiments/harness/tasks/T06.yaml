@@ -1,0 +1,43 @@
+schema_version: "1"
+task_id: T06
+title: "Add cursor-based pagination to GET /api/files/list"
+category: feature
+difficulty: medium
+max_seconds: 2400
+estimated_tokens_baseline: null
+
+prompt: |
+  Add cursor-based pagination to the file listing endpoint in this FastAPI application.
+
+  Find the GET endpoint that lists files (look in routers/cowork_agent/files.py or similar).
+  Add pagination with:
+  - Query params: limit (int, default 50, max 500) and cursor (optional string, opaque)
+  - Response: add "next_cursor" field (null when no more results) alongside existing fields
+  - Cursor encodes the offset position (base64 of integer offset is acceptable)
+  - Backward compatible: existing clients with no cursor/limit params still work
+
+  Write a test that verifies: first page returns next_cursor, second page using cursor returns
+  different results, final page returns null next_cursor.
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "grep -r 'cursor\\|pagination\\|next_cursor' routers/ --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 2"
+    - id: AC2
+      type: shell
+      command: "python3 -c \"import ast, glob; [ast.parse(open(f).read()) for f in glob.glob('routers/**/*.py', recursive=True)]; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+    - id: AC3
+      type: shell
+      command: "grep -r 'limit' routers/cowork_agent/files.py 2>/dev/null | wc -l || echo 0"
+      pass_condition: "int(stdout.strip()) >= 1"
+
+reference_files:
+  - routers/cowork_agent/files.py
+  - routers/cowork_agent/__init__.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

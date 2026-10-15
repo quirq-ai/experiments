@@ -1,0 +1,47 @@
+schema_version: "1"
+task_id: T03
+title: "Add per-IP rate limiting to /api/chat endpoints"
+category: feature
+difficulty: medium
+max_seconds: 2400
+estimated_tokens_baseline: null
+
+prompt: |
+  Add rate limiting to all POST /api/chat/* endpoints in this FastAPI application.
+
+  Requirements:
+  - Limit: 10 requests per minute per client IP address (configurable via env var RATE_LIMIT_RPM, default 10)
+  - Return HTTP 429 with body {"error": "rate_limit_exceeded", "retry_after": <seconds>} when exceeded
+  - Use an in-memory sliding window approach (no external Redis required)
+  - Apply as FastAPI middleware or dependency so it covers all /api/chat/* routes uniformly
+  - Do not affect other routes
+
+  Write tests covering: normal requests pass, 11th request in 1 minute is rejected, rate resets after window.
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "grep -r 'rate_limit\\|RATE_LIMIT\\|429\\|rpm' . --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 2"
+    - id: AC2
+      type: shell
+      command: "python3 -c \"import ast, glob; [ast.parse(open(f).read()) for f in glob.glob('**/*.py', recursive=True) if '__pycache__' not in f]; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+    - id: AC3
+      type: shell
+      command: "grep -r 'retry_after\\|Retry-After' . --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 1"
+  human:
+    - id: AC4
+      description: "Rate limiter is applied as middleware/dependency, not inlined per route"
+      rubric: binary
+
+reference_files:
+  - server.py
+  - routers/cowork_agent/chat.py
+  - routers/cowork_agent/__init__.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

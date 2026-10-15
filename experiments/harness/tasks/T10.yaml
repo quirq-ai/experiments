@@ -1,0 +1,45 @@
+schema_version: "1"
+task_id: T10
+title: "Document the full API surface in OpenAPI operation descriptions"
+category: documentation
+difficulty: easy
+max_seconds: 1800
+estimated_tokens_baseline: null
+
+prompt: |
+  Add OpenAPI operation descriptions (summary and description fields) to all
+  FastAPI route handlers in this codebase that currently lack them.
+
+  Requirements:
+  - Read all route handlers in routers/cowork_agent/ and routers/auth/ and routers/status/
+  - For each @router.get / @router.post / etc. that has no summary= or description=,
+    add a concise summary (1 line) and description (2-4 sentences explaining params and behavior)
+  - Use FastAPI's summary= and description= kwargs on the route decorator, OR use docstrings
+    (FastAPI picks up the first line as summary, rest as description)
+  - Do not change any logic — documentation only
+  - After changes, verify the app still imports cleanly
+
+acceptance_criteria:
+  automated:
+    - id: AC1
+      type: shell
+      command: "grep -r 'summary=' routers/ --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 5"
+    - id: AC2
+      type: shell
+      command: "python3 -c \"import ast, glob; [ast.parse(open(f).read()) for f in glob.glob('routers/**/*.py', recursive=True)]; print('ok')\""
+      pass_condition: "stdout.strip() == 'ok'"
+    - id: AC3
+      type: shell
+      command: "grep -r 'description=' routers/ --include='*.py' | grep -v '__pycache__' | wc -l"
+      pass_condition: "int(stdout.strip()) >= 3"
+
+reference_files:
+  - routers/cowork_agent/chat.py
+  - routers/cowork_agent/sessions.py
+  - routers/auth/auth.py
+  - routers/status/providers.py
+
+ground_truth_tokens:
+  E0_median: null
+  oracle_min: null

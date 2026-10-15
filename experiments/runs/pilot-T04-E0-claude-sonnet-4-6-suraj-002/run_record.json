@@ -1,0 +1,231 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T04-E0-claude-sonnet-4-6-suraj-002",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 2,
+    "timestamp_start": "2026-06-20T07:40:24Z",
+    "timestamp_end": "2026-06-20T07:47:19Z"
+  },
+  "condition": {
+    "task_id": "T04",
+    "env_id": "E0",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:2f7d4eb3243c100eb6c3707138c6f49486f562cfa3447c41d963c9c9611faf3f"
+  },
+  "outcome": {
+    "terminal_state": "partial",
+    "score_automated": 0.3333333333333333,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC2": {
+        "passed": true,
+        "output": "ok"
+      },
+      "AC3": {
+        "passed": false,
+        "output": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E0-claude-sonnet-4-6-suraj-002/workspace/services/cowork_agent/scopes.py\", line 25, in <module>\n    from services.cowork_agent import project_layout\n  File \"/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E0-claude-sonnet-4-6-suraj-002/workspace/services/cowork_agent/project_layo"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 151,
+    "total_output": 80135,
+    "cache_read": 1706298,
+    "cache_write": 168350,
+    "total_effective": -1455382,
+    "context_acquisition": 129,
+    "phase_orientation_input": 92,
+    "phase_implementation_input": 58,
+    "phase_verification_input": 1
+  },
+  "timing": {
+    "wall_clock_seconds": 413.43,
+    "time_to_first_edit_seconds": 159.037,
+    "phase_orientation_seconds": 91.419,
+    "phase_implementation_seconds": 243.137,
+    "phase_verification_seconds": 11.138
+  },
+  "navigation": {
+    "file_reads_total": 1,
+    "file_reads_unique": 1,
+    "nav_entropy": -0.0,
+    "nav_entropy_pre_edit": -0.0,
+    "files_read_sequence": [
+      "services/cowork_agent/scopes.py"
+    ],
+    "files_edited": [
+      "services/cowork_agent/scopes.py"
+    ],
+    "memory_reads": 0,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 15,
+    "bash_calls": 11,
+    "search_calls": 6,
+    "git_calls": 0,
+    "web_searches": 0,
+    "agent_spawns": 0,
+    "replanning_events": 0,
+    "message_count": 51
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      12
+    ],
+    [
+      7,
+      13
+    ],
+    [
+      9,
+      14
+    ],
+    [
+      11,
+      15
+    ],
+    [
+      12,
+      16
+    ],
+    [
+      13,
+      17
+    ],
+    [
+      14,
+      18
+    ],
+    [
+      17,
+      55
+    ],
+    [
+      18,
+      92
+    ],
+    [
+      19,
+      129
+    ],
+    [
+      21,
+      130
+    ],
+    [
+      22,
+      131
+    ],
+    [
+      24,
+      132
+    ],
+    [
+      25,
+      133
+    ],
+    [
+      27,
+      134
+    ],
+    [
+      28,
+      135
+    ],
+    [
+      29,
+      136
+    ],
+    [
+      31,
+      137
+    ],
+    [
+      32,
+      138
+    ],
+    [
+      33,
+      139
+    ],
+    [
+      35,
+      140
+    ],
+    [
+      36,
+      141
+    ],
+    [
+      37,
+      142
+    ],
+    [
+      39,
+      143
+    ],
+    [
+      40,
+      144
+    ],
+    [
+      42,
+      145
+    ],
+    [
+      43,
+      146
+    ],
+    [
+      44,
+      147
+    ],
+    [
+      46,
+      148
+    ],
+    [
+      47,
+      149
+    ],
+    [
+      48,
+      150
+    ],
+    [
+      50,
+      151
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E0-claude-sonnet-4-6-suraj-002/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E0-claude-sonnet-4-6-suraj-002/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E0-claude-sonnet-4-6-suraj-002/grade.json"
+  }
+}

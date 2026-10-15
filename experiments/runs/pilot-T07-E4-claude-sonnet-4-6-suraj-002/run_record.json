@@ -1,0 +1,340 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T07-E4-claude-sonnet-4-6-suraj-002",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 2,
+    "timestamp_start": "2026-06-20T09:10:31Z",
+    "timestamp_end": "2026-06-20T09:14:16Z"
+  },
+  "condition": {
+    "task_id": "T07",
+    "env_id": "E4",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:f7d1b7ffa71e3e75ad35d9281bad0952c3a22e6fadeb830fac8e6f37447ecb01"
+  },
+  "outcome": {
+    "terminal_state": "completed",
+    "score_automated": 1.0,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": true,
+        "output": "98"
+      },
+      "AC2": {
+        "passed": true,
+        "output": "ok"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 70,
+    "total_output": 33099,
+    "cache_read": 3735603,
+    "cache_write": 202750,
+    "total_effective": -3328873,
+    "context_acquisition": 51,
+    "phase_orientation_input": 50,
+    "phase_implementation_input": 18,
+    "phase_verification_input": 2
+  },
+  "timing": {
+    "wall_clock_seconds": 220.745,
+    "time_to_first_edit_seconds": 146.694,
+    "phase_orientation_seconds": 145.005,
+    "phase_implementation_seconds": 61.008,
+    "phase_verification_seconds": 12.952
+  },
+  "navigation": {
+    "file_reads_total": 6,
+    "file_reads_unique": 6,
+    "nav_entropy": 2.584962500721156,
+    "nav_entropy_pre_edit": 2.584962500721156,
+    "files_read_sequence": [
+      "routers/cowork_agent/agents.py",
+      "routers/cowork_agent/bff/xo_projects.py",
+      "routers/cowork_agent/bff/__init__.py",
+      "routers/cowork_agent/files.py",
+      "services/cowork_agent/project_layout.py",
+      "server.py"
+    ],
+    "files_edited": [
+      "routers/cowork_agent/files.py"
+    ],
+    "memory_reads": 0,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 31,
+    "bash_calls": 19,
+    "search_calls": 11,
+    "git_calls": 0,
+    "web_searches": 0,
+    "agent_spawns": 0,
+    "replanning_events": 0,
+    "message_count": 94
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      12
+    ],
+    [
+      7,
+      13
+    ],
+    [
+      8,
+      14
+    ],
+    [
+      10,
+      15
+    ],
+    [
+      11,
+      16
+    ],
+    [
+      12,
+      17
+    ],
+    [
+      14,
+      18
+    ],
+    [
+      16,
+      19
+    ],
+    [
+      17,
+      20
+    ],
+    [
+      19,
+      21
+    ],
+    [
+      20,
+      22
+    ],
+    [
+      21,
+      23
+    ],
+    [
+      23,
+      24
+    ],
+    [
+      25,
+      25
+    ],
+    [
+      26,
+      26
+    ],
+    [
+      27,
+      27
+    ],
+    [
+      29,
+      28
+    ],
+    [
+      31,
+      29
+    ],
+    [
+      32,
+      30
+    ],
+    [
+      33,
+      31
+    ],
+    [
+      35,
+      32
+    ],
+    [
+      37,
+      33
+    ],
+    [
+      38,
+      34
+    ],
+    [
+      40,
+      35
+    ],
+    [
+      42,
+      36
+    ],
+    [
+      43,
+      37
+    ],
+    [
+      45,
+      38
+    ],
+    [
+      47,
+      39
+    ],
+    [
+      48,
+      40
+    ],
+    [
+      50,
+      41
+    ],
+    [
+      52,
+      42
+    ],
+    [
+      54,
+      43
+    ],
+    [
+      56,
+      44
+    ],
+    [
+      57,
+      45
+    ],
+    [
+      59,
+      46
+    ],
+    [
+      61,
+      47
+    ],
+    [
+      62,
+      48
+    ],
+    [
+      64,
+      49
+    ],
+    [
+      65,
+      50
+    ],
+    [
+      66,
+      51
+    ],
+    [
+      68,
+      52
+    ],
+    [
+      70,
+      53
+    ],
+    [
+      71,
+      54
+    ],
+    [
+      73,
+      55
+    ],
+    [
+      74,
+      56
+    ],
+    [
+      76,
+      57
+    ],
+    [
+      77,
+      58
+    ],
+    [
+      78,
+      59
+    ],
+    [
+      80,
+      60
+    ],
+    [
+      81,
+      61
+    ],
+    [
+      82,
+      62
+    ],
+    [
+      84,
+      63
+    ],
+    [
+      85,
+      64
+    ],
+    [
+      86,
+      65
+    ],
+    [
+      88,
+      66
+    ],
+    [
+      89,
+      67
+    ],
+    [
+      90,
+      68
+    ],
+    [
+      92,
+      69
+    ],
+    [
+      93,
+      70
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T07-E4-claude-sonnet-4-6-suraj-002/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T07-E4-claude-sonnet-4-6-suraj-002/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T07-E4-claude-sonnet-4-6-suraj-002/grade.json"
+  }
+}

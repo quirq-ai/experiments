@@ -1,0 +1,15 @@
+{
+  "schema_version": "1",
+  "run_id": "pilot-T04-E2-claude-sonnet-4-6-suraj-002",
+  "experiment_id": "pilot",
+  "operator": "suraj",
+  "replication": 2,
+  "timestamp_start": "2026-06-20T07:51:58Z",
+  "task_id": "T04",
+  "env_id": "E2",
+  "agent_id": "claude-sonnet-4-6",
+  "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+  "env_overlay_hash": "sha256:c1a34db4c6ebeedac24dfafb3e1c7395d5b850c71e0c58b37c03983487b23f30",
+  "workspace_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E2-claude-sonnet-4-6-suraj-002/workspace",
+  "timestamp_end": "2026-06-20T07:54:46Z"
+}

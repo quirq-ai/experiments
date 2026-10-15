@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "event_log.schema.json",
+  "title": "EventLogLine",
+  "description": "One line in event_log.jsonl. Each line is one message or tool-use event.",
+  "type": "object",
+  "required": ["seq", "ts", "role", "tokens_in", "tokens_out", "is_edit"],
+  "additionalProperties": false,
+  "properties": {
+    "seq":        { "type": "integer", "minimum": 0 },
+    "ts":         { "type": "string", "format": "date-time" },
+    "role":       { "type": "string", "enum": ["user", "assistant"] },
+    "tokens_in":  { "type": "integer", "minimum": 0 },
+    "tokens_out": { "type": "integer", "minimum": 0 },
+    "cache_read": { "type": "integer", "minimum": 0 },
+    "cache_write":{ "type": "integer", "minimum": 0 },
+    "tool":       { "type": ["string", "null"] },
+    "tool_class": {
+      "type": ["string", "null"],
+      "enum": ["nav", "edit", "search", "git_op", "exec", "web", "agent", "meta", null]
+    },
+    "tool_input_summary": { "type": ["string", "null"] },
+    "is_edit":    { "type": "boolean" },
+    "cumulative_input_tokens": { "type": "integer", "minimum": 0 }
+  }
+}

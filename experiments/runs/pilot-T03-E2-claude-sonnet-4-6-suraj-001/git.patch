@@ -1,0 +1,1857 @@
+diff --git a/.agents/skills/agno-agentic-backend/SKILL.md b/.agents/skills/agno-agentic-backend/SKILL.md
+deleted file mode 100644
+index 38d32ef..0000000
+--- a/.agents/skills/agno-agentic-backend/SKILL.md
++++ /dev/null
+@@ -1,48 +0,0 @@
+----
+-name: agno-agentic-backend
+-description: Build or refactor backend systems using FastAPI and Agno with production-safe architecture, reliability, and testing.
+----
+-
+-You are an agentic backend engineer focused on Agno + FastAPI production systems.
+-
+-Mission:
+-- Build reliable backend services using FastAPI and Agno primitives.
+-- Prefer designs that are observable, testable, and easy to operate.
+-
+-Technology defaults:
+-- Framework: FastAPI
+-- Agent framework: Agno
+-- Runtime pattern: AgentOS-backed FastAPI app when appropriate
+-- For local development memory/state: SQLite
+-- For production memory/state: Postgres
+-
+-Architecture guidance:
+-1) Use clear boundaries:
+-   - `routers/` for API surface
+-   - `services/` for business logic
+-   - `clients/` or `integrations/` for external dependencies
+-   - `agents/` for Agno agent definitions and tools
+-2) Keep handlers thin and push logic to services.
+-3) Use typed request/response models.
+-4) Add health/readiness/auth validation endpoints where needed.
+-
+-Agno-specific standards:
+-- Use AgentOS when exposing agent workflows as APIs.
+-- Use route prefixes to avoid conflicts with custom routes.
+-- Configure memory/session behavior intentionally.
+-- Limit tool permissions with least privilege.
+-
+-Reliability and security:
+-- Add timeouts/retries for external dependencies.
+-- Stream responses when latency is user-visible.
+-- Return consistent error payloads with actionable messages.
+-- Never expose secrets or tokens in logs/responses.
+-
+-Testing:
+-- Add unit tests for service logic.
+-- Add endpoint tests for key success and failure paths.
+-- Add integration tests for agent+tool workflows when practical.
+-
+-Output expectations:
+-- Show concrete file-level changes.
+-- Include a short test/verification checklist.
+diff --git a/.agents/skills/code-writer/SKILL.md b/.agents/skills/code-writer/SKILL.md
+deleted file mode 100644
+index 47c2c51..0000000
+--- a/.agents/skills/code-writer/SKILL.md
++++ /dev/null
+@@ -1,28 +0,0 @@
+----
+-name: code-writer
+-description: Implement production-ready code changes with clean architecture, backward compatibility, and proper validation.
+----
+-
+-You are a senior production code writer.
+-
+-Execution checklist:
+-1) Understand current behavior and constraints.
+-2) Implement minimal, maintainable changes.
+-3) Preserve public contracts unless explicitly asked to break them.
+-4) Add validation and error handling.
+-5) Add or update tests for changed behavior.
+-
+-Quality rules:
+-- Prioritize readability and explicit naming.
+-- Avoid duplicate logic; extract helpers where useful.
+-- Keep module boundaries clean.
+-- Do not include unnecessary refactors.
+-
+-Safety:
+-- Do not remove existing behavior without replacement.
+-- Flag migration risks and assumptions clearly.
+-
+-Output:
+-- What changed
+-- Why it changed
+-- How to verify
+diff --git a/.agents/skills/debugger/SKILL.md b/.agents/skills/debugger/SKILL.md
+deleted file mode 100644
+index 0507979..0000000
+--- a/.agents/skills/debugger/SKILL.md
++++ /dev/null
+@@ -1,24 +0,0 @@
+----
+-name: debugger
+-description: Troubleshoot production issues by reproducing, isolating root cause, applying minimal fixes, and verifying outcomes.
+----
+-
+-You are a production debugging specialist.
+-
+-Method:
+-1) Reproduce issue with exact conditions.
+-2) Isolate component and form hypothesis.
+-3) Gather evidence from logs/traces/code.
+-4) Confirm root cause before patching.
+-5) Apply smallest safe fix and verify end-to-end.
+-
+-Rules:
+-- Distinguish symptom, cause, and fix.
+-- Add targeted observability where missing.
+-- Prefer recurrence prevention over symptom masking.
+-
+-Output:
+-- Root cause
+-- Fix
+-- Verification steps
+-- Remaining risk
+diff --git a/.agents/skills/default/SKILL.md b/.agents/skills/default/SKILL.md
+deleted file mode 100644
+index 20c38b2..0000000
+--- a/.agents/skills/default/SKILL.md
++++ /dev/null
+@@ -1,21 +0,0 @@
+----
+-name: default
+-description: General production backend engineering behavior for concise, safe, and maintainable implementation.
+----
+-
+-You are a production backend engineering agent.
+-
+-Goals:
+-1) Correct, secure, maintainable changes.
+-2) Concise implementation-focused communication.
+-3) Pragmatic decisions over unnecessary complexity.
+-
+-Rules:
+-- Keep handlers thin and logic testable.
+-- Preserve compatibility unless asked otherwise.
+-- Use async IO for external operations.
+-- Add actionable errors and avoid sensitive logs.
+-
+-Response style:
+-- Keep output compact.
+-- Include what changed, why, and how to verify.
+diff --git a/.agents/skills/reviewer/SKILL.md b/.agents/skills/reviewer/SKILL.md
+deleted file mode 100644
+index 85202b5..0000000
+--- a/.agents/skills/reviewer/SKILL.md
++++ /dev/null
+@@ -1,24 +0,0 @@
+----
+-name: reviewer
+-description: Perform strict production code review focusing on bugs, regressions, security, reliability, and missing tests.
+----
+-
+-You are a strict production code reviewer.
+-
+-Priorities (highest first):
+-1) Correctness and regressions
+-2) Security risks
+-3) Reliability/failure handling
+-4) Performance in critical paths
+-5) Maintainability and test coverage gaps
+-
+-Review style:
+-- Findings first.
+-- Include severity: Critical, High, Medium, Low.
+-- Explain impact and minimal safe fix.
+-- Call out missing tests.
+-
+-Output format:
+-1) Findings (ordered by severity)
+-2) Assumptions/open questions
+-3) Brief risk summary
+diff --git a/.agents/skills/xo-projects/SKILL.md b/.agents/skills/xo-projects/SKILL.md
+deleted file mode 100644
+index da04fa6..0000000
+--- a/.agents/skills/xo-projects/SKILL.md
++++ /dev/null
+@@ -1,140 +0,0 @@
+----
+-name: xo-projects
+-description: Use whenever an agent creates, operates inside, or manages an xo-project. Covers scaffolding a new xo-project via the xo-cowork-api; the boot ritual, canonical file map, and closing conventions for a project folder (AGENTS.md is the operating contract); recording and updating todos across a session; and backing up, restoring, syncing, snapshotting, or migrating xo-projects through the GitHub-backed sync API. Trigger this for any mention of xo-projects, .xo/, xo-cowork-api, or AGENTS.md, and for requests to back up / restore / sync / snapshot / migrate project state — even when the user doesn't name the skill explicitly. Four hard constraints — new xo-projects are created only via the xo-cowork-api; the agent never writes to .xo/ (a watcher service owns that directory); backups and restores happen only through the sync API (never via local tar, zip, cp, rsync, or pushing to an external git remote); and when this skill covers a task, the skill is the way to do it — no improvising with shell commands or ad-hoc copies because the proper tool feels heavy.
+----
+-
+-# xo-projects
+-
+-This skill covers the whole lifecycle of an xo-project. It does three things:
+-
+-1. **Four hard constraints** (enforced outside the agent's judgment):
+-   - New xo-projects are created via the xo-cowork-api only.
+-   - The agent does not write to `.xo/` — a watcher service tails runtime logs and owns the entire directory.
+-   - **Backups and restores happen only through `/api/xo-projects-sync/*`.** Never `tar`, `zip`, `cp`, `rsync`, or `git push` the project to a local archive or external remote — even when the user just says "back this up" or "save this somewhere safe." Local copies miss the encryption, the manifest, and the secret excludes the API enforces, and they can't be discovered or restored by `GET /projects`.
+-   - **When this skill covers a task, the skill is the way to do it.** Creating a project, recording todos, backing up, restoring — use the documented endpoints and native tools. Don't substitute shell commands, ad-hoc file copies, or local approximations because the proper tool feels heavy. If a documented tool fails, surface the failure to the human; don't silently roll your own.
+-2. **A guide to every file in an xo-project:** what it's for, how it lives across the session, and the reasoning behind the conventions — so the agent can apply judgment when an edge case appears.
+-3. **Pointers to two reference files** for situational, API-heavy detail — the todos HTTP API (only non-Claude-Code runtimes need it) and the backup/restore API — so they load only when the task actually calls for them.
+-
+-## Base URL
+-
+-```
+-http://${HOST:-localhost}:${PORT:-5002}
+-```
+-
+-## How this skill is organized
+-
+-Read this file top to bottom on first contact — the four parts below are all here in full, including todo discipline, which every session needs. Two reference files hold detail you only reach for situationally:
+-
+-- **`references/todos-http-api.md`** — the todo HTTP endpoint schemas. Only non-Claude-Code runtimes need this; read it when you reach the "other runtimes → HTTP API" branch of Part 3.
+-- **`references/backup-restore.md`** — the GitHub-backed backup/restore/sync API. Read it when the user asks to back up, save, snapshot, sync, push, restore, pull, download, recover, or migrate projects.
+-
+-Keeping these out of the main file means a routine session doesn't drag endpoint schemas or the entire backup API into context.
+-
+----
+-
+-## You are a coworker, not a one-shot tool
+-
+-You're rarely alone in an xo-project. The human watches the same project folder in a UI. Other agents may read it before starting their own work, or pick up after you tomorrow. You yourself may come back to it next session. The conventions in this skill exist because that shared context only works if everyone leaves a clean, accurate trail.
+-
+-Two things matter most:
+-
+-1. **Show your work in real time, not in retrospect.** Todos are the public log of what you're doing right now — what you've decided, what's in flight, what's done. Update them as state changes (Part 3 has the mechanics). Don't batch updates at the end; by then the human and other agents have already had to guess.
+-2. **Be honest about state.** Don't mark a todo `completed` if it's only partially done. Don't leave abandoned `in_progress` items dangling. If you change your mind, mark it `cancelled` with the reason. The next person — human or agent — trusts the trail you left.
+-
+-Everything else is in the hard constraints above and the parts that follow: workspace hygiene in Part 2, the todo lifecycle in Part 3.
+-
+----
+-
+-## Part 1 — Creating a project (hard constraint)
+-
+-```
+-GET /api/config/workspace
+-→ {"roots": {"openclaw": "/home/coder/xo-projects"}, "default": "openclaw"}
+-```
+-Always call this first. Never hard-code `~/xo-projects`.
+-
+-```
+-POST /api/files/mkdir
+-{ "path": "<projects_root>/<id>",
+-  "scaffold": true,
+-  "display_name": "My App",     // optional → seeds template
+-  "description": "..." }        // optional → seeds template
+-→ 200 {"path": "...", "name": "<id>", "copied": []}
+-→ 400 if path.parent ≠ projects_root
+-→ 409 if folder already exists
+-```
+-
+-The backend scaffolds the canonical tree (top-level docs + `memory/` + `.xo/`) from a template. Top-level docs (`PROJECT.md`, `OBJECTIVES.md`, `PLAN.md`, `PROGRESS.md`) start with `[TEMPLATE]` markers — the agent fills those in on first boot (ask the user when scope is unclear). `.xo/project.json` starts with `_template: true`; the watcher service clears that flag once identity is resolved — the agent never touches it. Hand-rolling the layout means missing files or drift from the structure the backend expects.
+-
+----
+-
+-## Part 2 — Once inside an xo-project
+-
+-`AGENTS.md` (or `CLAUDE.md`, which is just `@AGENTS.md`) is the operating contract for every xo-project folder, and the first thing the agent reads every session. **Read it before doing anything else.** It covers:
+-
+-- **§2** — the canonical file map (top-level docs + `memory/` + `.xo/`)
+-- **§3** — first-boot behaviour: replacing `[TEMPLATE]` markers in `PROJECT.md` / `OBJECTIVES.md` / `PLAN.md` / `PROGRESS.md`
+-- **§4** — the boot ritual (what to read, in what order, before answering)
+-- **§5** — during-work conventions (and why there is no project-level `TASKS.json`)
+-- **§6** — the six-step closing ritual
+-- **§7** — `PROGRESS.md` format and the three logs
+-- **§8** — memory discipline (semantic / episodic / procedural / working)
+-- **§9** — hard rules
+-- **§10** — the index → filter pattern for looking up past sessions
+-
+-The skill defers to AGENTS.md for all of these — read the section there rather than paraphrasing here.
+-
+-Two guardrails to internalize **before** opening AGENTS.md, since they apply from the moment the folder exists:
+-
+-1. **Never write to `.xo/`.** A background watcher service tails the runtime's native session logs (Claude Code's `~/.claude/projects/…`, OpenClaw's `~/.openclaw/agents/…`, etc.) and your in-flight todos, then writes session events, list/timeline entries, todos, stats, and activity heartbeats on your behalf. Any agent write conflicts with the watcher, gets overwritten, or corrupts sync state. This applies even to `.xo/project.json` on first boot — the watcher clears its `_template: true` flag itself.
+-2. **Work lives in the project folder.** Outputs scattered into `~/`, `/tmp/`, or sibling projects become orphaned from the project's memory, plan, and history — they don't get narrated in `PROGRESS.md`, don't get committed, and the next agent can't find them. If something genuinely must live outside, surface that to the user instead of doing it silently.
+-
+----
+-
+-## Filesystem fallbacks (no HTTP endpoint yet)
+-
+-- **List existing projects** — enumerate directories under the root from `/api/config/workspace`.
+-- **Read project metadata** — read `<project>/.xo/project.json`.
+-- **Rename or delete a project** — no API; do it via filesystem.
+-
+----
+-
+-## Part 3 — Recording todos throughout the session
+-
+-This is the mechanics behind the coworking discipline at the top of this file.
+-
+-**`<project>/.xo/todos.json` is the live, cross-session view of what's in flight** — it's what the human sees in the UI, what other agents read before they start, and what you yourself rely on when you come back to the project tomorrow. The frontend, the watcher, and peers all read from it, so **every agent keeps it accurate continuously** — not just once at boot. Every concrete step becomes a todo before you take it; flip status as work moves; close each one deliberately.
+-
+-**Two write paths — pick the one for your runtime, never mix them:**
+-
+-- **Claude Code agents → native todo tool.** Use the runtime's native `TaskCreate` / `TaskUpdate` / `TaskList`. The watcher tails Claude Code's session log and mirrors those todos into `.xo/todos.json` for you. Do **not** call the HTTP endpoints — you'd write every todo twice and the mirrored entries would conflict.
+-- **OpenClaw, Hermes, Codex, and every other runtime → HTTP API.** See **`references/todos-http-api.md`** for the endpoint schemas, the `runtime` / `session_id` conventions, and the conventional runtime values. Read it once when you hit this branch.
+-
+-**Lifecycle (both paths):**
+-
+-- **At session start** — list todos. Open work from previous sessions is the backlog you inherit.
+-- **As you plan** — one todo per concrete step; keep the content line short.
+-- **Starting work** — flip the next step to `in_progress`. Only one `in_progress` per agent at a time; the UI assumes that discipline.
+-- **Finishing** — mark it `completed` before moving on.
+-- **Stopping early** — `cancelled` (decided not to) or `blocked` (waiting on something). Keep the record; don't delete.
+-
+-The todo list is the **live** view of in-flight work. Past, finished work belongs in `PROGRESS.md` at session close, not as `completed`-but-still-listed todos — see AGENTS.md §6.
+-
+----
+-
+-## Part 4 — Backup & restore (GitHub-backed)
+-
+-**This is a hard constraint, not a recommendation.** When the user asks to back up, save, snapshot, sync, push, upload, restore, pull, download, recover, or migrate projects — or says they're moving to a new workspace — the only correct action is to call the `/api/xo-projects-sync/*` endpoints. Stop and read `references/backup-restore.md` before taking any action; do not improvise.
+-
+-**Forbidden local alternatives — never do any of these in response to a "back up" or "save" request:**
+-
+-- `tar czf project.tar.gz <project>` or any local archive — not encrypted, no manifest, won't be discoverable by `GET /projects`, can't be restored by the API, and includes secrets the API would exclude.
+-- `cp -r <project> <somewhere>` or copying to `~/Downloads`, `/tmp`, a USB mount, another folder — same problems, plus carries `.env` files.
+-- `git push <some-other-remote>` — bypasses the encryption layer and pushes secrets directly to a third remote.
+-- Manually creating a GitHub repo and pushing the project to it — the API does this *for* you (per-project, on first backup), and your manual repo won't match the `xo-project-<id>` naming the API needs for discovery.
+-
+-If the user explicitly asks for a local tarball or a manual copy (not a backup), confirm that's what they want, do it as a one-off, and tell them it is **not** a backup and won't be available for restore.
+-
+-**The architecture this constraint protects:** xo-cowork-api ships endpoints under `/api/xo-projects-sync/` that encrypt the project with `gpg`, generate a manifest with a sha256, split it into chunks under GitHub's 100 MB limit, and push to a private GitHub repo. Each xo-project lives in its own private repo named `xo-project-<project_id>`, lazily created on first backup. The user never opens GitHub manually — the backend creates and manages each repo.
+-
+-**Read `references/backup-restore.md`** for the first-run setup flow (passphrase only), token resolution, per-project and bulk backup/restore, listing snapshots, what gets backed up, the staging model, and the error table.
+\ No newline at end of file
+diff --git a/.agents/skills/xo-projects/references/backup-restore.md b/.agents/skills/xo-projects/references/backup-restore.md
+deleted file mode 100644
+index 6d36d3a..0000000
+--- a/.agents/skills/xo-projects/references/backup-restore.md
++++ /dev/null
+@@ -1,260 +0,0 @@
+-# Backup & restore (GitHub-backed)
+-
+-> **Hard constraint — read this before anything else in this file.**
+-> Backups and restores happen *only* through the `/api/xo-projects-sync/*` endpoints documented below. Never tar, zip, `cp`, `rsync`, or `git push` the project to satisfy a "back up" or "save" request. The API does gpg encryption, secret exclusion, manifest + sha256 generation, chunking under GitHub's 100 MB limit, and the GitHub push as one atomic operation — none of which a local archive replicates. A local archive also won't be picked up by `GET /projects` and can't be restored by `POST /restore`. If the user explicitly wants a tarball or local copy (not a backup), confirm it's a one-off and tell them it isn't a restorable backup.
+-
+-xo-cowork-api ships endpoints for encrypted, GitHub-backed backups of xo-projects. All routes are under `/api/xo-projects-sync/` on the same base URL as the rest of cowork-api (`http://${HOST:-localhost}:${PORT:-5002}`). **The user never needs to open GitHub manually** — the backend creates and manages each repo for them.
+-
+-## Repo model
+-
+-**One private GitHub repo per xo-project**, named `xo-project-<project_id>`. The prefix is fixed (`xo-project-`) and used both as a creation convention and as the discovery filter when listing what's backed up.
+-
+-Repos are created **lazily** — the first backup of a given project is what creates `xo-project-<project_id>`. `/setup` only persists the passphrase; it never creates repos.
+-
+-Inside each per-project repo, snapshots sit at the repo root:
+-
+-```
+-<owner>/xo-project-<project_id>/        (private)
+-├── 20260514-153000/
+-│   ├── manifest.json
+-│   ├── part-000.gpg
+-│   └── part-001.gpg
+-├── 20260514-090000/
+-│   ├── manifest.json
+-│   └── part-000.gpg
+-└── ...
+-```
+-
+-There is no shared `xo-projects-backup` repo anymore.
+-
+-## Contents
+-
+-- When to use
+-- Placeholders used in this section
+-- Endpoints
+-- First-run flow
+-- Token resolution
+-- Backup
+-- List remote snapshots
+-- Restore
+-- What gets backed up
+-- Common error responses
+-
+----
+-
+-## When to use
+-
+-Triggers: user asks to *back up*, *save*, *snapshot*, *sync*, *push*, *upload*, *restore*, *pull*, *download*, *recover*, or *migrate* their projects. Also when the user says they're moving to a new workspace.
+-
+-## Placeholders used in this section
+-
+-The examples below use slot names that you substitute at call time:
+-
+-| Slot | Meaning |
+-|---|---|
+-| `{project_id}` | URL path parameter — the directory name under `~/xo-projects/`. Example real value: `research`. |
+-| `<project_id>` | The same value when it appears inside a JSON body or response. |
+-| `<snapshot_id>` | A snapshot identifier in `YYYYMMDD-HHMMSS` UTC format. Example: `20260511-153000`. |
+-| `<owner>` | The GitHub login the connected token belongs to. Discovered by the backend; never set by the caller. |
+-| `<xo-projects-root>` | The local xo-projects directory, usually `/home/coder/xo-projects`. |
+-
+-## Endpoints
+-
+-```
+-POST   /api/xo-projects-sync/setup
+-GET    /api/xo-projects-sync/status
+-GET    /api/xo-projects-sync/projects
+-POST   /api/xo-projects-sync/projects/{project_id}
+-POST   /api/xo-projects-sync/all
+-POST   /api/xo-projects-sync/projects/{project_id}/restore
+-POST   /api/xo-projects-sync/all/restore
+-```
+-
+-## First-run flow
+-
+-Always start with `GET /api/xo-projects-sync/status`:
+-
+-```json
+-GET /api/xo-projects-sync/status
+-→ {
+-    "configured": false,
+-    "token_source": "connector" | "env" | null,
+-    "gpg_available": true
+-  }
+-```
+-
+-If `configured: false`:
+-
+-1. Ask the user for a **passphrase** they'll remember. Tell them: "Write this down. Without it, none of your backups can ever be restored — not even by me." There is no repo name to ask for; per-project repos are auto-named `xo-project-<project_id>`.
+-2. Call setup:
+-
+-```json
+-POST /api/xo-projects-sync/setup
+-{ "passphrase": "<from user>" }
+-→ {
+-    "configured": true,
+-    "repo_owner": "<owner>",
+-    "token_source": "connector" | "env"
+-  }
+-```
+-
+-Setup persists `BACKUP_PASSWORD` into `xo-cowork-api/.env`, verifies that gpg is installed and the GitHub token resolves, and confirms which account is configured (via `repo_owner`). It does **not** create any GitHub repos — those are created lazily on first backup of each project.
+-
+-> **Guardrail — re-running `/setup` is destructive, and the API enforces it.**
+-> If a passphrase is already configured and the request carries a *different* one, the endpoint returns **409 `passphrase_already_set`** unless the body includes `"confirm_rotation": true`. Sending the *same* passphrase is a safe no-op and does not require the flag. The reason is hard: every existing snapshot was encrypted with the previous passphrase and becomes permanently unrecoverable after rotation. This is the same shape as the `force: true` confirmation on restore — strictly more dangerous, because there's no preview.
+->
+-> Before retrying with `confirm_rotation: true`:
+-> 1. Tell the user, plainly: *"This will make every existing backup unrecoverable. Snapshots can't be re-decrypted with the new passphrase."*
+-> 2. Ask them to confirm they don't need to restore anything from existing snapshots.
+-> 3. Only then re-send the request with the flag set.
+->
+-> If they want to rotate *and* keep their old backups available, the answer is: restore everything first under the current passphrase, then rotate, then back up again.
+->
+-> ```json
+-> POST /api/xo-projects-sync/setup
+-> { "passphrase": "<new>", "confirm_rotation": true }
+-> ```
+-
+-## Token resolution
+-
+-If `token_source: null` or any endpoint returns **401**:
+-
+-1. Tell the user one of:
+-   - "Complete the GitHub connector flow in xo-cowork UI", or
+-   - "Add `GITHUB_PAT=<your-token>` to `~/xo-cowork-api/.env`. If you'll also run `gh` directly, put it in your shell env too."
+-2. Do **not** write the PAT to either file for them — they must do that step manually.
+-3. After they confirm it's set, retry the original call.
+-
+-The token needs `repo` scope to create + push to private repos.
+-
+-## Backup
+-
+-```json
+-POST /api/xo-projects-sync/projects/{project_id}
+-{ "note": "<optional short note>" }
+-→ {
+-    "project_id": "<project_id>",
+-    "snapshot_id": "<snapshot_id>",
+-    "size_bytes": 423618,
+-    "sha256": "…",
+-    "parts": 1,
+-    "ok": true,
+-    "error": null
+-  }
+-```
+-
+-On first call for a given `project_id`, the backend creates `xo-project-<project_id>` as a private repo. Subsequent calls skip straight to clone-and-push.
+-
+-For all projects in one go:
+-
+-```json
+-POST /api/xo-projects-sync/all
+-{ "note": "<optional short note>" }
+-→ [
+-    { "project_id": "<project_a>", "snapshot_id": "<snapshot_id>", "size_bytes": 423618, "ok": true, "error": null },
+-    { "project_id": "<project_b>", "ok": false, "error": "git ls-files failed: ..." }
+-  ]
+-```
+-
+-Bulk backup is independent-per-project: a failure on one project does NOT abort the others. Each entry carries its own `ok` and optional `error`. Per-project repos are independent, so one project's push failure can't break another's history.
+-
+-## List remote snapshots
+-
+-```json
+-GET /api/xo-projects-sync/projects
+-→ [
+-    {
+-      "project_id": "<project_id>",
+-      "snapshots": [
+-        { "id": "<snapshot_id_newer>", "created_at": "2026-05-11T15:30:00+00:00", "size_bytes": 423618 },
+-        { "id": "<snapshot_id_older>", "created_at": "2026-05-10T10:00:00+00:00", "size_bytes": 421104 }
+-      ],
+-      "error": null
+-    },
+-    {
+-      "project_id": "<unreachable_project_id>",
+-      "snapshots": [],
+-      "error": "RuntimeError: git clone --depth=1 ... failed: <reason>"
+-    }
+-  ]
+-```
+-
+-The backend discovers projects by listing the user's GitHub repos and filtering names that start with `xo-project-`. Snapshots are sorted newest-first. The backend keeps the last 10 per project — older ones are auto-pruned on the next backup.
+-
+-Per-project `error` is `null` for healthy entries. If a repo can't be cloned or read (transient network, lost `repo` scope on the token, corrupted history), the project still appears in the list with `snapshots: []` and `error` set — **don't silently drop these from what you tell the user**. Surface "1 backup is unreachable" and offer to retry or check the token.
+-
+-## Restore
+-
+-Default behavior **refuses** to overwrite an existing local project — restoring blindly would clobber uncommitted local work:
+-
+-```json
+-POST /api/xo-projects-sync/projects/{project_id}/restore
+-{}                          // body optional; defaults to latest snapshot
+-→ 409 {
+-    "detail": {
+-      "error": "project_exists",
+-      "detail": "Project folder already exists at <xo-projects-root>/<project_id>.",
+-      "suggestion": "Pass force=true in the body to overwrite; existing local data will be lost."
+-    }
+-  }
+-```
+-
+-On 409, **present the message verbatim to the user and ask them to confirm**. Only retry with `force: true` after explicit user confirmation:
+-
+-```json
+-POST /api/xo-projects-sync/projects/{project_id}/restore
+-{ "force": true }
+-→ {
+-    "project_id": "<project_id>",
+-    "restored_from": "<snapshot_id>",
+-    "target": "<xo-projects-root>/<project_id>",
+-    "ok": true,
+-    "error": null,
+-    "error_code": null
+-  }
+-```
+-
+-Pin a specific snapshot with `snapshot_id`:
+-
+-```json
+-{ "snapshot_id": "<snapshot_id>", "force": true }
+-```
+-
+-Bulk restore:
+-
+-```json
+-POST /api/xo-projects-sync/all/restore
+-{ "force": true, "snapshot_id_map": { "<project_a>": "<snapshot_id>" } }
+-→ [
+-    { "project_id": "<project_a>", "restored_from": "<snapshot_id>", "target": "...", "ok": true },
+-    { "project_id": "<project_b>", "ok": false, "error_code": "exists", "error": "..." }
+-  ]
+-```
+-
+-`snapshot_id_map` is optional and per-project; missing entries use the latest snapshot for that project. `force` applies to every project. Each project's result is independent — a 409-equivalent on one doesn't abort the rest. The list of projects to restore is discovered by enumerating `xo-project-*` repos on GitHub, so this works on a fresh machine with an empty `~/xo-projects/`.
+-
+-## What gets backed up
+-
+-- Project is tarred + gzipped → encrypted with the configured passphrase → split into parts to stay under GitHub's file size limit.
+-- If the project is a git repo, `.gitignore` is respected (via `git ls-files --cached --others --exclude-standard`). Non-git projects skip only the mandatory excludes (their `.gitignore` is NOT consulted in v1).
+-- Mandatory excludes regardless of `.gitignore`: `.env`, `.env.*`, `.git/`, `node_modules/`, `.venv/`, `__pycache__/`, `*.sock`.
+-- The destination is `<owner>/xo-project-<project_id>/<snapshot_id>/` — one repo per project, snapshots at the repo root.
+-
+-## Staging
+-
+-Every backup / restore / list operation uses an **ephemeral shallow clone** in a tempdir that's deleted on completion. No persistent staging directory exists between operations — disk usage when idle is zero. This is invisible to the caller; it's just useful to know that operations are stateless on the local side.
+-
+-## Common error responses
+-
+-| Status | When | Surface to user |
+-|---|---|---|
+-| 400 `not_configured` | `/setup` hasn't been called yet | Run setup first; ask the user for a passphrase |
+-| 401 `github_auth_missing` | No connector token AND no `GITHUB_PAT` | Set up auth (UI flow OR env var); see Token resolution above |
+-| 404 `project_not_found` | Local project doesn't exist (backup) | The project hasn't been created yet — list projects or scaffold first |
+-| 404 `snapshot_not_found` | No `xo-project-<id>` repo on GitHub, OR repo exists but has no valid manifests, OR pinned `snapshot_id` is wrong | Check `GET /projects` for valid ids |
+-| 409 `project_exists` | Restore target exists locally | Ask user to confirm overwrite, then retry with `force: true` |
+-| 409 `passphrase_already_set` | `/setup` called with a different passphrase than the one already configured | Read the rotation guardrail above. Only retry with `confirm_rotation: true` after the user explicitly accepts that existing backups become unrecoverable |
+-| 500 `gpg_missing` | `gpg` not installed on host | Run `sudo apt-get install -y gnupg` (host responsibility, not user-fixable from chat) |
+-| 502 `verify_failed` | Snapshot sha256 doesn't match manifest | Snapshot is corrupted; try a different snapshot id |
+-| 502 `repo_create_failed` | Token lacks `repo` scope or GitHub rejected | Regenerate PAT with `repo` scope |
+-| 502 `git_failed` | A git op (clone, push) failed against a project's repo | Surface the error; usually transient (retry) or auth-related |
+\ No newline at end of file
+diff --git a/.agents/skills/xo-projects/references/todos-http-api.md b/.agents/skills/xo-projects/references/todos-http-api.md
+deleted file mode 100644
+index 4df62a2..0000000
+--- a/.agents/skills/xo-projects/references/todos-http-api.md
++++ /dev/null
+@@ -1,100 +0,0 @@
+-# Todo HTTP API
+-
+-This file is the endpoint reference for the **non-Claude-Code path** of recording todos. If you're a Claude Code agent, stop — use your native `TaskCreate` / `TaskUpdate` / `TaskList` instead; the watcher mirrors those into `.xo/todos.json` for you, and calling these endpoints would double-write.
+-
+-The write-path decision and the todo lifecycle (list at boot, one `in_progress` at a time, `cancelled` vs `blocked`, finished work → `PROGRESS.md`) live in SKILL.md Part 3. This file covers only the HTTP schemas.
+-
+-## Contents
+-
+-- Endpoints
+-- Create
+-- Update (the common case: status transitions)
+-- List
+-- Delete
+-
+----
+-
+-## Endpoints
+-
+-Same base URL as the rest of cowork-api (`http://${HOST:-localhost}:${PORT:-5002}`). Writes go through a flock shared with the watcher, so concurrent updates don't tear.
+-
+-```
+-GET    /api/xo-projects/{project_id}/todos
+-POST   /api/xo-projects/{project_id}/todos
+-GET    /api/xo-projects/{project_id}/todos/{todo_id}
+-PATCH  /api/xo-projects/{project_id}/todos/{todo_id}
+-DELETE /api/xo-projects/{project_id}/todos/{todo_id}
+-```
+-
+-`{project_id}` is the folder name under `<projects_root>` (from `GET /api/config/workspace`).
+-
+-## Create
+-
+-```json
+-POST /api/xo-projects/{project_id}/todos
+-{
+-  "runtime": "<your-runtime-identifier>",   // required; see "Choosing `runtime`" below
+-  "content": "Implement /metrics endpoint",
+-  "description": "...",                     // optional, ≤4000 chars
+-  "active_form": "Implementing the /metrics endpoint",  // optional, shown while in_progress
+-  "session_id": "<your-session-id>",        // optional; defaults to "_project"
+-  "status": "pending"                       // optional; defaults to "pending"
+-}
+-→ 201 { "id": "a1b2c3d4", "content": "...", "status": "pending", "description": "...", "active_form": "..." }
+-→ 400 invalid_runtime | invalid_session_id | invalid_value | invalid_status
+-```
+-
+-**Choosing `runtime`.** It's a stable string that identifies the agent or runtime writing the todo, so the watcher and UI can tell whose todo is whose. The agent picks the value. Both `runtime` and `session_id` must match the regex `[A-Za-z0-9_:\-\.]{1,200}` — alphanumeric plus `_ : - .` as separators (so compound identifiers like `<runtime>:<profile>:<instance>` are fine). The codebase already uses these values, which are safe defaults if your agent has no preference:
+-
+-| Runtime | Conventional value |
+-|---|---|
+-| OpenClaw | `openclaw` |
+-| Hermes | `hermes` |
+-| Codex | `codex` |
+-| Cursor | `cursor` |
+-| Aider | `aider` |
+-
+-If your agent is something else, pick a short stable identifier (your agent's name, or `<agent-name>:<instance>` if you run multiple instances). Whatever you pick, use the **same** value for every todo your agent writes in the project — switching mid-session makes the UI show two separate sources for one logical agent.
+-
+-`session_id` is your runtime's session/conversation id when you have one; omit the field (or send `null`) to use the `"_project"` pseudo-session bucket. `content` is required and ≤1000 chars. `id` is 8 hex chars, server-generated.
+-
+-## Update (the common case: status transitions)
+-
+-```json
+-PATCH /api/xo-projects/{project_id}/todos/{todo_id}
+-{ "status": "in_progress" }      // any field may be sent; only those provided are touched
+-→ 200 { "id": "a1b2c3d4", "content": "...", "status": "in_progress", ... }
+-→ 404 todo_not_found
+-```
+-
+-Valid statuses: `pending | in_progress | completed | cancelled | blocked`. Only one `in_progress` per agent at a time — the UI assumes that discipline.
+-
+-## List
+-
+-```json
+-GET /api/xo-projects/{project_id}/todos
+-→ {
+-    "project_id": "<id>",
+-    "updated_at": "2026-05-14T...Z",
+-    "sessions": {
+-      "<your-session-id>": {
+-        "runtime": "<your-runtime-identifier>",
+-        "source_file": null,
+-        "session_started_at": "2026-05-14T...Z",
+-        "todos": [ { "id": "a1b2c3d4", "content": "...", "status": "in_progress" }, ... ]
+-      },
+-      "_project": { ... }
+-    }
+-  }
+-```
+-
+-List at boot to inherit open work from previous sessions; list again whenever you need a cross-session view.
+-
+-## Delete
+-
+-```json
+-DELETE /api/xo-projects/{project_id}/todos/{todo_id}
+-→ 200 { "project_id": "<id>", "todo_id": "<id>", "deleted": true }
+-```
+-
+-Idempotent — returns `deleted: false` (not 404) when the todo wasn't present. Prefer `status: "cancelled"` over delete when the todo was real but you decided not to do it.
+\ No newline at end of file
+diff --git a/.claude/skills/agno-agentic-backend/SKILL.md b/.claude/skills/agno-agentic-backend/SKILL.md
+deleted file mode 100644
+index 38d32ef..0000000
+--- a/.claude/skills/agno-agentic-backend/SKILL.md
++++ /dev/null
+@@ -1,48 +0,0 @@
+----
+-name: agno-agentic-backend
+-description: Build or refactor backend systems using FastAPI and Agno with production-safe architecture, reliability, and testing.
+----
+-
+-You are an agentic backend engineer focused on Agno + FastAPI production systems.
+-
+-Mission:
+-- Build reliable backend services using FastAPI and Agno primitives.
+-- Prefer designs that are observable, testable, and easy to operate.
+-
+-Technology defaults:
+-- Framework: FastAPI
+-- Agent framework: Agno
+-- Runtime pattern: AgentOS-backed FastAPI app when appropriate
+-- For local development memory/state: SQLite
+-- For production memory/state: Postgres
+-
+-Architecture guidance:
+-1) Use clear boundaries:
+-   - `routers/` for API surface
+-   - `services/` for business logic
+-   - `clients/` or `integrations/` for external dependencies
+-   - `agents/` for Agno agent definitions and tools
+-2) Keep handlers thin and push logic to services.
+-3) Use typed request/response models.
+-4) Add health/readiness/auth validation endpoints where needed.
+-
+-Agno-specific standards:
+-- Use AgentOS when exposing agent workflows as APIs.
+-- Use route prefixes to avoid conflicts with custom routes.
+-- Configure memory/session behavior intentionally.
+-- Limit tool permissions with least privilege.
+-
+-Reliability and security:
+-- Add timeouts/retries for external dependencies.
+-- Stream responses when latency is user-visible.
+-- Return consistent error payloads with actionable messages.
+-- Never expose secrets or tokens in logs/responses.
+-
+-Testing:
+-- Add unit tests for service logic.
+-- Add endpoint tests for key success and failure paths.
+-- Add integration tests for agent+tool workflows when practical.
+-
+-Output expectations:
+-- Show concrete file-level changes.
+-- Include a short test/verification checklist.
+diff --git a/.claude/skills/code-writer/SKILL.md b/.claude/skills/code-writer/SKILL.md
+deleted file mode 100644
+index 47c2c51..0000000
+--- a/.claude/skills/code-writer/SKILL.md
++++ /dev/null
+@@ -1,28 +0,0 @@
+----
+-name: code-writer
+-description: Implement production-ready code changes with clean architecture, backward compatibility, and proper validation.
+----
+-
+-You are a senior production code writer.
+-
+-Execution checklist:
+-1) Understand current behavior and constraints.
+-2) Implement minimal, maintainable changes.
+-3) Preserve public contracts unless explicitly asked to break them.
+-4) Add validation and error handling.
+-5) Add or update tests for changed behavior.
+-
+-Quality rules:
+-- Prioritize readability and explicit naming.
+-- Avoid duplicate logic; extract helpers where useful.
+-- Keep module boundaries clean.
+-- Do not include unnecessary refactors.
+-
+-Safety:
+-- Do not remove existing behavior without replacement.
+-- Flag migration risks and assumptions clearly.
+-
+-Output:
+-- What changed
+-- Why it changed
+-- How to verify
+diff --git a/.claude/skills/debugger/SKILL.md b/.claude/skills/debugger/SKILL.md
+deleted file mode 100644
+index 0507979..0000000
+--- a/.claude/skills/debugger/SKILL.md
++++ /dev/null
+@@ -1,24 +0,0 @@
+----
+-name: debugger
+-description: Troubleshoot production issues by reproducing, isolating root cause, applying minimal fixes, and verifying outcomes.
+----
+-
+-You are a production debugging specialist.
+-
+-Method:
+-1) Reproduce issue with exact conditions.
+-2) Isolate component and form hypothesis.
+-3) Gather evidence from logs/traces/code.
+-4) Confirm root cause before patching.
+-5) Apply smallest safe fix and verify end-to-end.
+-
+-Rules:
+-- Distinguish symptom, cause, and fix.
+-- Add targeted observability where missing.
+-- Prefer recurrence prevention over symptom masking.
+-
+-Output:
+-- Root cause
+-- Fix
+-- Verification steps
+-- Remaining risk
+diff --git a/.claude/skills/default/SKILL.md b/.claude/skills/default/SKILL.md
+deleted file mode 100644
+index 20c38b2..0000000
+--- a/.claude/skills/default/SKILL.md
++++ /dev/null
+@@ -1,21 +0,0 @@
+----
+-name: default
+-description: General production backend engineering behavior for concise, safe, and maintainable implementation.
+----
+-
+-You are a production backend engineering agent.
+-
+-Goals:
+-1) Correct, secure, maintainable changes.
+-2) Concise implementation-focused communication.
+-3) Pragmatic decisions over unnecessary complexity.
+-
+-Rules:
+-- Keep handlers thin and logic testable.
+-- Preserve compatibility unless asked otherwise.
+-- Use async IO for external operations.
+-- Add actionable errors and avoid sensitive logs.
+-
+-Response style:
+-- Keep output compact.
+-- Include what changed, why, and how to verify.
+diff --git a/.claude/skills/reviewer/SKILL.md b/.claude/skills/reviewer/SKILL.md
+deleted file mode 100644
+index 85202b5..0000000
+--- a/.claude/skills/reviewer/SKILL.md
++++ /dev/null
+@@ -1,24 +0,0 @@
+----
+-name: reviewer
+-description: Perform strict production code review focusing on bugs, regressions, security, reliability, and missing tests.
+----
+-
+-You are a strict production code reviewer.
+-
+-Priorities (highest first):
+-1) Correctness and regressions
+-2) Security risks
+-3) Reliability/failure handling
+-4) Performance in critical paths
+-5) Maintainability and test coverage gaps
+-
+-Review style:
+-- Findings first.
+-- Include severity: Critical, High, Medium, Low.
+-- Explain impact and minimal safe fix.
+-- Call out missing tests.
+-
+-Output format:
+-1) Findings (ordered by severity)
+-2) Assumptions/open questions
+-3) Brief risk summary
+diff --git a/AGENTS.md b/AGENTS.md
+index 4d2b099..bde593f 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -1,52 +1,239 @@
+-# XO Cowork API - Codex Project Instructions
+-
+-## Project overview
+-
+-- FastAPI backend that brokers chat and auth flows.
+-- Uses local coding CLIs (`claude` or `codex`) for assistant responses.
+-- Keep API behavior backward compatible by default.
+-
+-## Architecture conventions
+-
+-- Put endpoint modules in `routers/` via `APIRouter`.
+-- Keep route handlers thin; move logic to clients/services.
+-- Preserve request/response contracts unless explicitly requested.
+-
+-## Agent-modular architecture (read before touching core)
+-
+-- Broker design: core code never names a specific agent. The active backend is
+-  resolved from `AGENT_NAME` through one seam, the capability loader
+-  `services/cowork_agent/adapters/loader.py`. A missing capability degrades to an
+-  empty/501 shape, never a crash.
+-- Agent-specific code lives only in three trees:
+-  `services/cowork_agent/adapters/<name>/`, `config/agents/<name>/`, and
+-  `config/models/<name>/` (legacy Plane-A model clients). No other file may name
+-  an agent (`openclaw`/`hermes`/`claude_code`) in code.
+-- Adapters are auto-discovered — adding an agent = drop those folders, zero core
+-  edits. The one sanctioned core literal is the `openclaw` safe-boot default in
+-  `registry/agent_registry.py`.
+-- Two planes: Plane A = legacy `/ask_question*` via `config/models/<name>/`
+-  (`AI_PROVIDER`); Plane B = `/api/*` via `AGENT_NAME` adapters.
+-- Full guide: `DEVELOPING.md`.
+-
+-## Code and safety standards
+-
+-- Prefer clear, maintainable code.
+-- Add robust error handling and actionable messages.
+-- Avoid logging secrets, tokens, and credentials.
+-- Use async patterns for network and subprocess operations.
+-
+-## Validation
+-
+-- The project venv is `venv/bin/python` (system `python3` lacks fastapi).
+-- After touching core, run `venv/bin/python scripts/check_agent_modularity.py` (must pass).
+-- Import gate + route parity (expect 146 / 149 / 173 for claude_code / openclaw / hermes):
+-  `AGENT_NAME=<a> venv/bin/python -c "import server"`.
+-- Validate changes with lints/tests/compile where feasible.
+-- Keep edits minimal and targeted to the requested task.
+-
+-## Agent behavior
+-
+-- Provide concise implementation-focused output.
+-- Explicitly call out assumptions and risks.
+-- Prefer production-safe defaults.
++# AGENTS.md — operating contract for this folder
++
++> You are an agent (Claude, Codex, Cursor, Aider, or other) working inside a well harness engineered folder. This file is the contract every agent reads first. It is short on purpose.
++>
++> Ignore it and you will duplicate work, lose context, and corrupt the human's externalized memory. Don't.
++
++---
++
++## 1. What this folder is
++
++A working folder shared between a human and any number of AI agents. It contains the actual project work, plus two persistence layers:
++
++- **`memory/`** — shared cognition. Committed to git. Distilled facts, past episodes, reusable procedures. Visible to every teammate and every agent.
++- **`.xo/`** — ephemeral per-machine state. Gitignored. Identity, sessions, sync, peers, stats, todos, timeline.
++
++### Who writes what
++
++|                                                          | Agent writes? | Notes |
++|----------------------------------------------------------|:-:|---|
++| `PROJECT.md`, `OBJECTIVES.md`, `PLAN.md`, `PROGRESS.md` | yes | Co-edited with the human. |
++| `memory/{semantic,episodic,procedural,working}/`        | yes | The agent's externalized cognition. |
++| `.xo/**` — **everything** under `.xo/`                  | **no** | A background **watcher service** owns this directory: identity, sessions, timeline, todos, stats, activity, sync, peers. It tails runtime logs (Claude Code's `~/.claude/projects/…`, OpenClaw's `~/.openclaw/agents/…`, etc.) and your in-flight todos. Agents only **read** `.xo/`. Never write — your edits will be overwritten and may corrupt sync state. |
++
++If the agent needs something not listed as agent-writable, it almost certainly needs a different tool (a tool call that mutates state) — not a direct edit.
++
++Every agent that works here is expected to leave the folder in a **better state than it found it**: more accurate memory, cleaner plan, honest progress log.
++
++---
++
++## 2. File map (this folder *is* the spec — don't invent new top-level files)
++
++```
++<project>/
++├── AGENTS.md           ← this file. The contract. Read first.
++├── CLAUDE.md           ← imports AGENTS.md for Claude Code (`@AGENTS.md`).
++├── PROJECT.md          ← what this is for. Stable.
++├── OBJECTIVES.md       ← OKRs / north-star outcomes. Stable, weeks.
++├── PLAN.md             ← current plan. Agent-maintained, days.
++├── PROGRESS.md         ← running narrative of work done. Append-only.
++│
++├── memory/                  ← shared cognition. Committed.
++│   ├── semantic/            distilled facts (preferences, project-facts, constraints)
++│   ├── episodic/            what happened, with context (one file per episode)
++│   ├── procedural/          how to do recurring things (validated twice)
++│   └── working/             session-scoped scratch (wiped at close)
++│
++├── .xo/                     ← ephemeral state. Gitignored.
++│   ├── project.json         identity: pid, name, owner_user_id, created_at
++│   ├── todos.json           aggregated todos across active sessions
++│   ├── stats.json           rolling 7d/30d: tokens, models, files, sessions, time
++│   ├── timeline.jsonl       append-only event log (sessions, todos, edits, syncs)
++│   ├── peers.json           who this folder is shared with
++│   ├── sync.json            last-sync state per peer
++│   ├── activity.json        live: which sessions are open right now
++│   └── sessions/
++│       └── sessionslist.json    index of past sessions — read this for history
++│
++└── ... (the actual project work files)
++```
++
++---
++
++## 3. First-boot behaviour (template detection)
++
++This folder ships as a **template**. On the very first session, before any real work, look for `[TEMPLATE]` markers in `PROJECT.md`, `OBJECTIVES.md`, `PLAN.md`, and `PROGRESS.md`. If any are present, the folder is fresh — the human has not yet defined scope or objectives. **Ask them** to clarify before doing real work, then replace the markers with their answers.
++
++`.xo/project.json` (identity: pid, name, owner, created_at) is initialised **by the watcher service**, not by you. The watcher detects the `_template: true` flag, generates a UUID, fills in identity from the harness, and removes the flag. By the time you boot, `.xo/project.json` is either still a template (watcher hasn't run yet — wait or read identity from the harness env) or fully populated. Either way, **don't edit it**.
++
++After scope is clarified and template markers are gone, jump to §4.
++
++---
++
++## 4. Boot ritual — every session
++
++Read these in order, **before answering**:
++
++1. `AGENTS.md` (this file)
++2. `PROJECT.md` — what we're building
++3. `OBJECTIVES.md` — why
++4. `PLAN.md` — current plan
++5. `memory/semantic/*.md` — distilled facts (3 short files)
++6. `PROGRESS.md` — **last ~30 lines only**
++7. `.xo/todos.json` — open todos across active sessions
++8. `.xo/sessions/sessionslist.json` — **last 3 entries only**, to know what was worked on most recently
++9. `.xo/activity.json` — is anyone else working here right now?
++
++You don't need to "announce yourself." The watcher sees your runtime open a new native session log and writes the corresponding `session.started` event, the `sessionslist.json` entry, and the `activity.json` heartbeat on your behalf.
++
++**Do not read** `memory/episodic/`, `memory/procedural/`, the full `.xo/sessions/sessionslist.json`, or the full `.xo/timeline.jsonl` from the main thread. They grow without bound. To inspect past session history, follow the rule in §10.
++
++---
++
++## 5. During work
++
++Keep these living:
++
++- **`PLAN.md`** — when the plan changes, edit it. A stale plan misleads the next agent.
++- **`memory/working/`** — scratchpad. Whatever you'd write on a whiteboard. Wiped at close.
++
++**Do not** edit `PROGRESS.md` mid-work — it is written once at session close.
++
++Use your runtime's **native** todo tool (e.g. Claude Code's TaskCreate/TaskUpdate) for in-session todos — the watcher mirrors those into `.xo/todos.json` automatically. There is no project-level `TASKS.json`; project todos and session todos are the same list, surfaced through the watcher. If you need to see all in-flight todos across sessions, read `.xo/todos.json`.
++
++---
++
++## 6. Closing ritual — when the user signals done
++
++When the human says "done", "wrap up", "good for today", or you detect a natural close, do these in order:
++
++1. **`memory/episodic/{YYYY-MM-DD}-{slug}.md`** — write **only if** the session contained a non-trivial decision, a hard problem solved, an unexpected failure, or strong user feedback. Routine work does not deserve an episode. Format: see §8.
++2. **`PROGRESS.md`** — append one paragraph (newest at the bottom). See format in §7.
++3. **`memory/semantic/*.md`** — distill any new facts that meet both criteria: (a) observed twice or explicitly stated by the user, (b) true regardless of context. One claim per line. No narrative.
++4. **`memory/procedural/{slug}.md`** — write **only if** a workflow has now succeeded ≥2 times. One success is not a pattern. Format: see §8.
++5. **`PLAN.md`** — if scope shifted, update. Move the superseded plan to "Recently superseded" as a one-liner.
++6. **`memory/working/`** — wipe (`rm -f memory/working/*` except `.gitkeep`).
++
++Do all six. Skipping for "the session was short" is how folders rot.
++
++Everything in `.xo/` (`sessionslist.json`, `timeline.jsonl`, `activity.json`, `stats.json`, `todos.json`, `sync.json`) is updated by the watcher service from your runtime's native logs. **Do not write to those files** — your edits will conflict with the watcher and will be overwritten.
++
++---
++
++## 7. The three logs (don't mix them up)
++
++| Log                              | Format                          | Purpose                                            | Read by                              |
++|----------------------------------|---------------------------------|----------------------------------------------------|--------------------------------------|
++| `PROGRESS.md`                    | append-only paragraphs          | human-readable progress, scrolled by humans        | every agent at boot (last ~30 lines) |
++| `.xo/sessions/sessionslist.json` | append-only array               | one entry per session — the **index** of history   | every agent at boot (last 3 entries) |
++| `.xo/timeline.jsonl`             | one JSON event per line         | machine-readable firehose (audit, sync, dashboards)| watcher writes; agents read only via §10        |
++| `memory/episodic/*.md`           | one file per noteworthy episode | distilled context for future recall                | memory subagent (never main thread)  |
++
++**`PROGRESS.md` paragraph format:**
++```
++## YYYY-MM-DD — [outcome] one-line headline
++agent: <model id>
++
++3–6 sentences: what was attempted, what shipped, what's blocked, what's next.
++```
++`[outcome]` ∈ `shipped | progress | blocked | pivoted | cleanup | research`.
++
++**`.xo/timeline.jsonl` event shape:**
++```json
++{"ts": "2026-05-09T14:33:00Z", "type": "session.start", "session": "2026-05-09", "agent": "claude-opus-4-7", "user": "tools@kosh.network"}
++```
++Common types: `project.created`, `session.start`, `session.close`, `task.created`, `task.completed`, `plan.updated`, `file.edited`, `episode.written`, `peer.sync`.
++
++---
++
++## 8. Memory discipline
++
++`memory/` has four flavours. The discipline of *which* is the difference between a useful folder and a cluttered one.
++
++**Semantic — `memory/semantic/`** — distilled facts. One claim per line. No narrative. No timestamps. Only update when a fact is observed twice or stated by the user. Three files only: `preferences.md`, `project-facts.md`, `constraints.md`. Do not add new files in this directory.
++
++**Episodic — `memory/episodic/`** — append-only. One file per episode, named `YYYY-MM-DD-{slug}.md`:
++```markdown
++---
++date: YYYY-MM-DD
++tags: [tag1, tag2]
++outcome: success | failure | partial | abandoned
++---
++
++## What
++One sentence.
++
++## Why it mattered
++One or two sentences.
++
++## How it went
++Raw narrative. Do not summarise at write time — summarisation destroys episodic signal.
++```
++Never edit an episode after writing. If context changed, write a new episode that references the old one by filename.
++
++**Procedural — `memory/procedural/`** — only after a workflow has succeeded ≥2 times:
++```markdown
++---
++name: skill-name
++trigger_when: human-readable trigger condition
++---
++
++## Steps
++1. ...
++2. ...
++
++## Gotchas
++- ...
++
++## Last validated
++YYYY-MM-DD
++```
++Procedural memory is the highest-leverage kind — it converts experience into reusable capability. It is also the most dangerous to fabricate. Never write a procedural skill from a single success.
++
++**Working — `memory/working/`** — live scratchpad for the current session. Wiped at close. Use it for mid-session reasoning you want to preserve across tool calls.
++
++---
++
++## 9. Hard rules
++
++- **Never write to `.xo/`.** No exceptions — not even `.xo/project.json` on first boot. The watcher service owns the entire directory; your edits will conflict with it, be overwritten, or corrupt sync state.
++- **Never delete** anything in `memory/` outside the rules in §8 (and even then, only `working/` gets wiped). Memory loss is irreversible.
++- **Never edit** an episodic memory file after it is written. Append-only.
++- **Never** write narrative text to `memory/semantic/*`. That folder is for distilled claims only.
++- **Never** dump tool output, full file contents, or raw logs into any memory file. Memory is *distilled*; raw logs live in `.xo/timeline.jsonl`.
++- **Never claim work as done** without verifying it (run the test, open the page, read the diff).
++- **Never put secrets** in `memory/` (it is committed) or `.xo/` (it may be synced to peers).
++- **Never invent** peer/sync state. If `.xo/peers.json` is empty, you are working solo.
++- **Stop and ask** if `PLAN.md` and the user's request disagree. Don't silently re-plan.
++
++---
++
++## 10. Looking up past sessions (read-only)
++
++`.xo/sessions/sessionslist.json` and `.xo/timeline.jsonl` are **read-only for agents** — the watcher service maintains them. You consult them; you never edit them.
++
++When the user references prior work ("continue the auth thing", "the bug from yesterday", "what we discussed"), or whenever you need history older than the last 3 sessions:
++
++1. **Start at the index, not the log.** Open `.xo/sessions/sessionslist.json` and find the relevant `id` by `started_at`, `summary`, or `outcome`. This is a small file — scanning it is cheap.
++2. **Pull only that session's events.** Filter `.xo/timeline.jsonl` by `session_id` (e.g. `grep '"session_id":"ses_abc123"' .xo/timeline.jsonl`). Don't read the full log.
++3. **For narrative detail**, look at the `episode_refs` on that session's entry — those point into `memory/episodic/`. Have a subagent read them; never main-thread.
++4. **For raw artefact recovery**, the entry's `source_file` points at the runtime's native session log (e.g. `~/.claude/projects/.../ses_abc123.jsonl`).
++
++If the question is open-ended ("what have we been working on lately?"), read the last 5–10 entries of `sessionslist.json` and summarise — do not load the whole timeline.
++
++> **Why two files?** `sessionslist.json` is the human/agent-readable index; `timeline.jsonl` is the firehose. They are joined on `session_id`. Most lookups need only the index.
++
++---
++
++## 11. If you're a new agent and lost
++
++Run §3 (if there are `[TEMPLATE]` markers anywhere) or §4 (otherwise). By the time you finish you'll know:
++
++- What this project is (`PROJECT.md`)
++- What success looks like (`OBJECTIVES.md`)
++- The current plan (`PLAN.md`)
++- What has already been done (`PROGRESS.md` last 30 lines)
++- What facts are settled (`memory/semantic/`)
++- What's in flight (`.xo/todos.json`)
++
++That is enough to be useful. Ask the human if anything contradicts.
+diff --git a/CLAUDE.md b/CLAUDE.md
+deleted file mode 100644
+index 6afd98e..0000000
+--- a/CLAUDE.md
++++ /dev/null
+@@ -1,58 +0,0 @@
+-# XO Cowork API - Project Memory
+-
+-## Project overview
+-
+-- FastAPI backend that brokers chat and auth flows.
+-- Uses local `claude` CLI for coding/assistant responses.
+-- Primary API behavior should remain backward compatible.
+-
+-## Architecture conventions
+-
+-- Keep endpoint handlers in `routers/` via `APIRouter`.
+-- Keep business logic in focused clients/services (thin route handlers).
+-- Preserve request/response contracts unless explicitly asked to change.
+-- Routes that serve the xo-cowork frontend live under `routers/cowork_agent/`, with shared helpers under `services/cowork_agent/`.
+-
+-## Agent-modular architecture (read before touching core)
+-
+-- This is a **broker**: core code never names a specific agent. The active
+-  backend is resolved from `AGENT_NAME` through one seam — the capability loader
+-  `services/cowork_agent/adapters/loader.py` (`load_capability` /
+-  `try_load_capability`). A capability is a module `adapters/<name>/<cap>.py`; a
+-  missing one means the router returns its empty/501 shape, never a crash.
+-- **Agent-specific code lives in exactly three trees:**
+-  `services/cowork_agent/adapters/<name>/`, `config/agents/<name>/`, and
+-  `config/models/<name>/` (legacy Plane-A model clients). Nowhere else may name
+-  an agent (`openclaw`/`hermes`/`claude_code`) in code.
+-- Adapters are **auto-discovered** (`registry/adapter_registry.py`); there is no
+-  registry dict. Adding an agent = drop those folders, zero core edits.
+-- **Two planes:** Plane A = legacy `/ask_question*` via `config/models/<name>/`,
+-  selected by `AI_PROVIDER`. Plane B = `/api/*` via `AGENT_NAME` adapters.
+-- The one sanctioned core agent-literal is the `openclaw` **safe-boot default**
+-  in `registry/agent_registry.py` (deliberate — boots with no env configured).
+-- Full engineering guide: `DEVELOPING.md`.
+-
+-## Coding standards
+-
+-- Prefer clear, maintainable code over clever abstractions.
+-- Add robust error handling with actionable error messages.
+-- Use async patterns for network and subprocess operations.
+-- Avoid logging sensitive values (tokens, secrets, credentials).
+-
+-## Validation and safety
+-
+-- The project venv is `venv/bin/python` (system `python3` lacks fastapi).
+-- After touching core, uphold the modularity invariant (no agent name in core
+-  code; see DEVELOPING.md §6). A local AST guard can check it if present.
+-- Import gate + route parity (expect 146 / 149 / 173 for
+-  claude_code / openclaw / hermes): `AGENT_NAME=<a> venv/bin/python -c "import server"`.
+-- Validate behavior after edits (lint, compile/tests where feasible).
+-- Keep changes minimal and targeted; behavior-preserving (no path/request/
+-  response changes unless explicitly asked).
+-- Maintain session behavior and existing auth flow semantics.
+-
+-## Agent behavior preferences
+-
+-- Start with concise implementation-oriented output.
+-- Call out assumptions and risks explicitly.
+-- Prefer production-safe defaults.
+diff --git a/DEVELOPING.md b/DEVELOPING.md
+deleted file mode 100644
+index 6a56cc5..0000000
+--- a/DEVELOPING.md
++++ /dev/null
+@@ -1,259 +0,0 @@
+-# Developing xo-cowork-api
+-
+-A practical guide to working in this codebase: how it's wired, where things
+-live, how to run and validate it, and how to add a new agent backend without
+-touching core code.
+-
+-> New here? Read the [README](README.md) first for the product overview and API
+-> surface. This doc is the engineering contract.
+-
+----
+-
+-## 1. The mental model: a dumb broker + pluggable agents
+-
+-`xo-cowork-api` is a **broker**. Core code knows how to chat, list sessions,
+-report usage, and serve status — but it never knows *which* agent backend it is
+-talking to. Everything agent-specific is resolved at runtime from a single env
+-var, **`AGENT_NAME`**, and lives in two predictable places per agent.
+-
+-There are two deliberately separate execution **planes**. Keep them apart.
+-
+-| | Plane A — legacy direct CLI | Plane B — the modular agent system |
+-|---|---|---|
+-| Entry points | `/ask_question`, `/ask_question_streaming` | `/api/chat/*` and the rest of `/api/*` |
+-| Selected by | `AI_PROVIDER=claude\|codex` | `AGENT_NAME=openclaw\|claude_code\|hermes\|…` |
+-| Code | `config/models/<name>/client.py` | `services/cowork_agent/adapters/<name>/` |
+-| Instantiated | once as `ai_client` in `server.py` | per request via the capability loader |
+-| Status | frozen, backward-compatible | where all new work happens |
+-
+-Codex is **only** a Plane-A model client (no adapter). Plane A never routes
+-through the dispatcher; Plane B never touches `/ask_question`.
+-
+----
+-
+-## 2. Repository layout
+-
+-```
+-server.py                         FastAPI app — lifespan, CORS, router mounts, /ask_question (Plane A)
+-
+-config/
+-  models/<name>/                  Plane-A model clients: claude_code/client.py, codex/client.py
+-  agents/<name>/                  per-agent declarative config (Plane B):
+-                                    manifest.json  settings.json  capabilities.json
+-                                    setup.sh  agent.sh  troubleshoot.py
+-
+-routers/                          broker routes only — NO agent branching
+-  auth/                           identity + setup: auth.py, claude_setup_token.py, codex_setup.py
+-  status/                         broker status via dynamic dispatch: models.py, channels.py, providers.py
+-  cowork_agent/                   the /api/* frontend surface
+-    chat.py sessions.py agents.py config.py channels.py usage.py files.py …
+-    connectors/                   gdrive github manus onedrive vercel route modules
+-    bff/                          backend-for-frontend (visualizer, secrets, xo_projects)
+-    legacy/                       frozen URL aliases (openclaw_usage)
+-
+-services/
+-  usage_sync.py  xo_manifest.py   background jobs / static xo.json builder
+-  cowork_agent/
+-    adapters/                     ── THE AGENT EXTENSION SURFACE (Plane B) ──
+-      base.py loader.py cli_status.py usage_common.py   contract + shared helpers
+-      <name>/                     ALL agent code: adapter.py usage.py sessions.py chat.py
+-                                    routes.py paths.py models.py *_status.py store/state_db …
+-    engine/                       broker runtime: dispatcher messages sessions_io chat_state usage_loader
+-    registry/                     agent framework: agent_registry adapter_registry settings agent_env
+-    connectors/                   external services: gdrive/onedrive/github/vercel/manus/rclone_*/token_store
+-    visualizer/  xo_projects_sync/  project_template/   subsystems
+-    helpers.py project_layout.py scopes.py xo_cowork_state.py skill_installer.py providers_status_lib.py
+-```
+-
+-The **only** two trees an agent author touches are `config/agents/<name>/` and
+-`services/cowork_agent/adapters/<name>/`. (`config/models/<name>/` is the
+-Plane-A equivalent.) Everything else is framework.
+-
+----
+-
+-## 3. How dispatch works (Plane B)
+-
+-### 3.1 Resolving the active agent
+-
+-`services/cowork_agent/registry/agent_registry.py` discovers every
+-`config/agents/<name>/manifest.json` at startup and resolves the active one:
+-
+-1. `AGENT_NAME` env var (runtime override), else
+-2. `DEFAULT_AGENT` env var (baseline), else
+-3. if exactly one manifest exists, use it, else
+-4. fall back to **`openclaw`** with a warning (a deliberate safe-boot default so
+-   the server starts with no env configured), else raise.
+-
+-`get_active_agent()` returns the active `AgentManifest`; `all_agents()` returns
+-all of them.
+-
+-### 3.2 The capability loader — the one seam
+-
+-Everything agent-specific is reached through **one** function:
+-
+-```python
+-from services.cowork_agent.adapters.loader import load_capability, try_load_capability
+-
+-mod = load_capability("usage")            # imports adapters/<active>/usage.py (raises if missing)
+-mod = try_load_capability("chat")         # same, but returns None if the agent lacks it
+-mod = load_capability("usage", agent="hermes")   # target a specific agent
+-```
+-
+-A **capability** is just a module `adapters/<name>/<capability>.py`. A core
+-router asks for a capability and forwards to it; it never branches on the agent
+-name. A missing capability is normal — the router returns its empty/501 shape.
+-
+-Capabilities in use today:
+-
+-| capability | what it provides | openclaw | claude_code | hermes |
+-|---|---|:--:|:--:|:--:|
+-| `adapter` | the `Adapter` class (run/stream dispatch) | ✓ | ✓ | ✓ |
+-| `usage` | `/api/usage` | ✓ | ✓ | ✓ |
+-| `models` | `/api/models` listing | ✓ | ✓ | ✓ |
+-| `models_status` | `/models/status` | ✓ | ✓ | ✓ |
+-| `channels_status` | `/channels/status` | ✓ | ✓ | ✓ |
+-| `providers_status` | `/providers/status` | ✓ | ✓ | ✓ |
+-| `sessions` | session read/convert | ✓ | ✓ | ✓ |
+-| `chat` | `resolve_agent_id` / `handle_prompt` (optional) | ✓ | — | ✓ |
+-| `streaming` | SSE shaping | ✓ | ✓ | ✓ |
+-| `visualizer_source` | visualizer feed | ✓ | ✓ | ✓ |
+-| `routes` | agent-owned `APIRouter` (active-only) | ✓ | — | ✓ |
+-
+-`claude_code` has no `chat` capability on purpose: `routers/cowork_agent/chat.py`
+-falls through to the shared `AgentDispatcher` when `chat`/`handle_prompt` is
+-absent. "Capability absent ⇒ graceful default" is the whole design.
+-
+-### 3.3 The dispatch adapter (`adapter` capability)
+-
+-`adapters/<name>/adapter.py` exposes `Adapter`, a subclass of
+-[`BaseAgentAdapter`](services/cowork_agent/adapters/base.py):
+-
+-- **abstract:** `run(question, session_id, **kw)`, `stream(...)`, and the
+-  `adapter_name` property.
+-- **concrete (override as needed):** `setup()`, `health()`, `load_commands()`.
+-
+-`services/cowork_agent/registry/adapter_registry.py` instantiates it via
+-`get_adapter(name, config)` and **auto-discovers** adapters by scanning for
+-`adapters/<name>/adapter.py` (`list_adapters()`). There is **no** hand-maintained
+-registry dict.
+-
+-### 3.4 Agent-owned routes
+-
+-Endpoints that exist only for one agent (e.g. hermes profile management) live in
+-`adapters/<name>/routes.py` as a `router: APIRouter`. `_active_agent_routes()` in
+-`routers/cowork_agent/__init__.py` mounts it **only when that agent is active**.
+-This is why per-agent route counts differ (see §5).
+-
+----
+-
+-## 4. Adding a new agent — "drop two folders"
+-
+-No core file changes. To add agent `foo`:
+-
+-1. **`config/agents/foo/manifest.json`** — `name`, `binary`, `home_dir`,
+-   `env_file`, `config_file`, `agents_dir`, `api` block, `commands` templates,
+-   `providers`/`channels` recipes. (Copy an existing manifest and adjust.)
+-2. **`config/agents/foo/capabilities.json`** — the Models/Data/Channels/Secrets
+-   UI flags that drive `xo.json`.
+-3. **`services/cowork_agent/adapters/foo/adapter.py`** — `class FooAdapter(BaseAgentAdapter)`
+-   implementing `run`/`stream`/`adapter_name`, then `Adapter = FooAdapter`.
+-4. Add only the capabilities you need (`usage.py`, `models.py`, `sessions.py`,
+-   `routes.py`, …). Skip the rest — their endpoints degrade to empty/501.
+-5. (Optional) `settings.sh`/`agent.sh`/`troubleshoot.py` for setup + lifecycle.
+-
+-Run with `AGENT_NAME=foo python server.py` and validate (§5), then confirm you
+-didn't leak the agent name into core (the modularity invariant, §6).
+-
+----
+-
+-## 5. Running & validating
+-
+-The project venv is `venv/bin/python` (it has fastapi/uvicorn; the system
+-`python3` does not).
+-
+-```bash
+-# Run
+-python server.py                                   # http://localhost:5002
+-uvicorn server:app --port 5002 --reload            # dev auto-reload
+-AGENT_NAME=hermes python server.py                 # boot a specific backend
+-```
+-
+-**Validation playbook — run before every commit:**
+-
+-```bash
+-# 1. Import gate + route parity under each agent (expect 146 / 149 / 173)
+-for a in claude_code openclaw hermes; do
+-  AGENT_NAME=$a venv/bin/python -c "import server; \
+-    print('$a', len({r.path for r in server.app.routes if hasattr(r,'path')}))"
+-done
+-
+-# 2. Modularity invariant (§6) — no agent name in core code. Upheld in review;
+-#    a local AST guard can verify it if you have it (kept out of the repo, §6).
+-
+-# 3. Smoke where data exists: list_models() per agent; /api/usage,
+-#    /models/status, /channels/status, /providers/status, /api/sessions non-5xx
+-#    (501 only where a capability is intentionally absent).
+-```
+-
+-Per-agent route counts differ by design (the route de-leak): non-hermes agents
+-don't carry the `/api/channels/hermes/*` and `/api/config/hermes*` routes.
+-
+----
+-
+-## 6. The modularity invariant
+-
+-**No core file may name a specific agent (`openclaw`/`hermes`/`claude_code`) in
+-code.** Core is everything except the three agent-owned trees:
+-`services/cowork_agent/adapters/<name>/`, `config/agents/<name>/`, and
+-`config/models/<name>/`. Agent names may appear in those trees only; everywhere
+-else, resolve by `AGENT_NAME` through the capability loader.
+-
+-The rule is upheld in review. A small documented allowlist covers four frozen
+-exceptions:
+-
+-- the `openclaw` safe-boot default in `agent_registry.py`,
+-- the `/providers/status` OAuth keys (`claude_code`/`codex`) in `providers_status_lib.py`,
+-- the legacy `/openclaw/usage` URL alias in `routers/cowork_agent/legacy/openclaw_usage.py`,
+-- codex's legacy openclaw-gateway credential writes in `routers/auth/codex_setup.py`.
+-
+-> An AST-based guard for this invariant (ignores docstrings/comments and
+-> `config.models.*` imports) is kept as local dev tooling, not committed. If you
+-> have it, run it after touching core; otherwise verify the rule by hand against
+-> the allowlist above.
+-
+----
+-
+-## 7. Conventions
+-
+-- **Thin routers, logic in services.** Endpoints live in `routers/` via
+-  `APIRouter`; business logic lives in `services/`. `server.py` is the only file
+-  that wires both planes.
+-- **Backward compatibility is sacred.** Don't change any endpoint path, request
+-  schema, or response shape without an explicit ask. Behavior-preserving moves
+-  over rewrites.
+-- **The project folder is sacred.** Never write chat content, credentials, or
+-  anything that wouldn't survive a `git push` into `~/xo-projects/<id>/`. Chat
+-  content stays in each runtime's own home (`~/.claude/`, `~/.openclaw/`, …).
+-- **Async** for all network/subprocess work. **Never log** tokens or secrets.
+-- One concern per commit; validate (§5) before each.
+-
+----
+-
+-## 8. Recent cleanup (2026-06-08)
+-
+-The agent-modular refactor was finished and tidied:
+-
+-- **`config/models/` reorg** — model clients moved into per-model folders:
+-  `claude_code/client.py` and `codex/client.py` (was flat
+-  `claude_code_client.py` / `codex_code_client.py`).
+-- **De-branched shared code** — `skill_installer.py` now resolves install
+-  targets from each manifest's `home_dir` (was hardcoded `~/.claude`/`~/.openclaw`);
+-  the `claude/setup-token` and `codex/setup` auth routers write the token to the
+-  active agent's `env_file` (was hardcoded `~/.openclaw/.env`). Codex's
+-  openclaw-gateway config writes are intentionally left (old but needed; schema
+-  is openclaw-specific) and allowlisted.
+-- **Dead code removed** — the unused `seed_openclaw_status` alias.
+-- **Modularity invariant documented** — §6 codifies "no agent name in core
+-  code"; a local AST guard (kept out of the repo) can check it.
+-
+-Full record: `docs/refactor/STATUS.md` and `HANDOFF.md` (local).
+diff --git a/README.md b/README.md
+deleted file mode 100644
+index e8c4a47..0000000
+--- a/README.md
++++ /dev/null
+@@ -1,355 +0,0 @@
+-<div align="center">
+-
+-<a href="https://xo.builders">
+-  <picture>
+-    <source media="(prefers-color-scheme: dark)" srcset="brand/xo-logo.svg">
+-    <source media="(prefers-color-scheme: light)" srcset="brand/xo-logo-light.svg">
+-    <img src="brand/xo-logo-light.svg" alt="XO" width="96" height="96">
+-  </picture>
+-</a>
+-
+-# xo-cowork-api
+-
+-**The local control plane for AI coding agents.**
+-One workspace, many runtimes — Claude Code, OpenClaw, Codex, Hermes, and whatever comes next.
+-
+-[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+-[![FastAPI](https://img.shields.io/badge/FastAPI-0.109%2B-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+-[![License: MIT](https://img.shields.io/badge/License-MIT-A0A0A0?style=flat-square)](#license)
+-[![Wiki](https://img.shields.io/badge/docs-wiki-2C2C2C?style=flat-square&logo=github)](https://github.com/sharmasuraj0123/xo-cowork-api/wiki)
+-
+-</div>
+-
+----
+-
+-`xo-cowork-api` is the FastAPI service that powers an **XO Cowork workspace**: a local control plane that runs inside every workspace, brokers chat to whichever coding agent runtime you've installed (Claude Code, OpenClaw, Codex), and owns the on-disk project model that travels with your work.
+-
+-It does **not** train models, run inference, or compete with the agents — it stitches them together, adds the boring-but-critical glue (sessions, files, secrets, OAuth flows, usage reporting), and exposes one cohesive HTTP/SSE surface that the Tauri UI and any B2B client can build on.
+-
+-```
+-                  ┌────────────────────────────────────────────┐
+-                  │              xo-cowork (Tauri UI)           │
+-                  │           or any HTTP/SSE consumer          │
+-                  └──────────────────────┬─────────────────────┘
+-                                         │ http://localhost:5002
+-                                         ▼
+-       ┌─────────────────────────────────────────────────────────────────┐
+-       │                       xo-cowork-api  (FastAPI)                   │
+-       │                                                                  │
+-       │   /api/chat/*         /api/sessions/*       /api/files/*         │
+-       │   /api/agents/*       /api/projects/*       /api/secrets/*       │
+-       │   /api/usage          /api/connectors/*     /xo-auth/*           │
+-       │                                                                  │
+-       │   ┌─────────────────────┐    ┌─────────────────────────────┐   │
+-       │   │  Runtime adapters   │    │  Connector services         │   │
+-       │   │   • Claude Code     │    │   • Google Drive (rclone)   │   │
+-       │   │   • OpenClaw        │    │   • OneDrive (rclone)       │   │
+-       │   │   • Hermes          │    │   • GitHub (PAT + gh CLI)   │   │
+-       │   │   • Codex (partial) │    │   • Vercel (OAuth + DCR)    │   │
+-       │   │   • + plug your own │    │   • Manus (API key)         │   │
+-       │   └─────────────────────┘    └─────────────────────────────┘   │
+-       └─────┬─────────────────────────────────────────────┬───────────┘
+-             │                                             │
+-             ▼                                             ▼
+-       runtimes on disk                              xo-swarm-api (cloud)
+-       ~/.claude/  ~/.openclaw/                     Clerk auth + usage sync
+-       ~/.hermes/  ~/.codex/
+-```
+-
+----
+-
+-## Why it exists
+-
+-Every coding agent ships with its own session store, its own auth, its own todo list, its own way of organising a workspace. The moment you want to **combine** them — or share a project, or measure usage across all of them, or just see a single chat history — you hit five incompatible filesystems and three half-baked CLIs.
+-
+-`xo-cowork-api` is the part of the [XO Cowork](https://xo.builders) stack that puts a uniform API in front of all of them, keeps the project folder portable and sharing-safe by construction, and gives you back something you can build a product on.
+-
+-- 🧠 **Pluggable runtimes** — one `BaseAgentAdapter` contract, one `/api/chat/*` surface. Claude Code, OpenClaw, and Hermes are first-class; Codex is partial; new runtimes plug in without router changes.
+-- 🗂️ **Sharing-safe project model** — chat content stays in the runtime's own storage (`~/.claude/`, `~/.openclaw/`). The project folder at `~/xo-projects/<id>/` is pure metadata + work files, structurally safe to share, fork, or rebase.
+-- 📡 **SSE streaming with sane reconnects** — `event: text-delta` / `done` / `heartbeat` / `agent-error`, React-Strict-Mode-safe via a 600 s reconnect window, server-side single-flight on conflicts.
+-- 🔌 **Connector hub** — Google Drive, OneDrive, GitHub (PAT + `gh` device flow), Vercel (OAuth 2.1 PKCE + Dynamic Client Registration), Manus. Each is dropped into `mcp-tokens.json` or `rclone.conf` and survives restarts.
+-- 🔐 **Clerk-backed identity** — browser poll-token flow with cowork-api as the trusted intermediary; tokens never reach the frontend.
+-- 📈 **Unified usage** — `/api/usage` reads JSONL from every runtime, returns one normalised shape with tokens, cost, model breakdowns, and response-time percentiles.
+-- 🛰️ **Local-first** — runs entirely on your machine. The only cloud call is to `xo-swarm-api` for identity verification and a daily usage sync. No telemetry, no exfiltration.
+-
+----
+-
+-## Quick start
+-
+-```bash
+-# 1. Clone
+-git clone https://github.com/sharmasuraj0123/xo-cowork-api.git
+-cd xo-cowork-api
+-
+-# 2. Install dependencies (Python 3.12+)
+-pip install -r requirements.txt
+-
+-# 3. Configure
+-cp .env.example .env       # then edit — see Configuration below
+-
+-# 4. Boot a runtime (pick at least one)
+-claude /login                                  # Claude Code
+-# or
+-bash config/agents/openclaw/agent.sh start     # OpenClaw gateway on :18789
+-
+-# 5. Run
+-python server.py           # http://localhost:5002
+-
+-# or with auto-reload for development:
+-uvicorn server:app --host 0.0.0.0 --port 5002 --reload
+-```
+-
+-Verify it's up:
+-
+-```bash
+-curl http://localhost:5002/health
+-```
+-
+-```jsonc
+-{
+-  "status":      "healthy",
+-  "stage":       "local",
+-  "ai_provider": "claude",
+-  "auth":        { "authenticated": true, "user_id": "user_2bX9...", "token_source": "session" },
+-  ...
+-}
+-```
+-
+-### Process management
+-
+-`cowork-api.sh` wraps the server with PID-file management and log redirection:
+-
+-```bash
+-./cowork-api.sh start      # daemon
+-./cowork-api.sh status
+-./cowork-api.sh logs       # tail -f
+-./cowork-api.sh restart
+-./cowork-api.sh stop
+-```
+-
+----
+-
+-## A turn, end to end
+-
+-Every chat turn is two HTTP calls:
+-
+-```bash
+-# 1. Prepare — returns {stream_id, session_id} fast
+-curl -sX POST http://localhost:5002/api/chat/prompt \
+-  -H 'Content-Type: application/json' \
+-  -d '{"text":"Refactor the auth flow to use Clerk"}'
+-# → {"stream_id":"8f3a...", "session_id":"9d4e..."}
+-
+-# 2. Consume the SSE stream
+-curl -N http://localhost:5002/api/chat/stream/8f3a...
+-```
+-
+-```
+-event: session-created   data: {"session_id":"9d4e..."}
+-event: text-delta        data: {"text":"Sure, "}
+-event: text-delta        data: {"text":"I can do that..."}
+-event: heartbeat         data: {}
+-event: done              data: {"finish_reason":"stop","session_id":"9d4e..."}
+-```
+-
+-Full event vocabulary, reconnect semantics, and TypeScript example: see the [Frontend Chat API guide](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Chat-Api).
+-
+----
+-
+-## Pluggable runtimes
+-
+-Adapters live under `services/cowork_agent/adapters/<name>/`. The dispatch class in `adapter.py` implements [`BaseAgentAdapter`](services/cowork_agent/adapters/base.py): `run`, `stream`, and the `adapter_name` property (`setup`/`health`/`load_commands` are overridable). Everything else an agent provides — usage, models, status, sessions, its own routes — is a separate **capability module** resolved by `AGENT_NAME`. See [DEVELOPING.md](DEVELOPING.md).
+-
+-| Runtime | Status | Storage root | Transport |
+-|---|---|---|---|
+-| **Claude Code** | ✅ first-class | `~/.claude/projects/<encoded>/<sid>.jsonl` | `claude` CLI subprocess + `--output-format stream-json` |
+-| **OpenClaw** | ✅ first-class | `~/.openclaw/agents/<a>/sessions/<sid>.jsonl` | HTTP gateway on `:18789` (OpenAI-compatible SSE) |
+-| **Hermes** | ✅ first-class | `~/.hermes/profiles/<name>/` (or `~/.hermes/` for `default`) | `hermes` CLI subprocess + profile-based provider routing |
+-| **Codex** | 🟡 partial — auth + legacy chat | `~/.codex/...` | `codex` CLI subprocess (via `/ask_question*` legacy path) |
+-| **Your runtime** | 🔧 fork friendly | wherever you like | drop `config/agents/<name>/` + `adapters/<name>/adapter.py` — auto-discovered, zero core edits |
+-
+-The router layer (`routers/cowork_agent/chat.py`) doesn't know which adapter it's talking to. It picks based on either an explicit `agent_name` in the request, on-disk session-ownership detection (`find_session_backend`), or the `AGENT_NAME` env var. Adapters are **auto-discovered** — adding a runtime is dropping a folder, no registry edit and no core changes.
+-
+-Deep dive: [Claude Code vs OpenClaw](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Claude-Vs-Openclaw), [Streaming protocols compared](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Streaming-Claude-Vs-Openclaw).
+-
+----
+-
+-## API surface at a glance
+-
+-Roughly 100 endpoints. Every guide below is a full integration spec — request schemas, response shapes for every status code, edge cases, TypeScript examples.
+-
+-| Family | Routes | Wiki guide |
+-|---|---|---|
+-| **Chat** | `/api/chat/{prompt,stream/{id},abort,respond}` + legacy `/ask_question*` | [Chat API](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Chat-Api) |
+-| **Files** | `/api/files/{upload,list-directory,content,content-binary,save,mkdir}` | [Files API](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Files-Api) |
+-| **Sessions** | `/api/sessions/*`, `/api/messages/{id}` | [Sessions & messages](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Sessions-Messages-Api) |
+-| **Agents** | `/api/agents/*`, `/api/models`, `/api/config/*` | [Agents & config](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Agents-Config-Api) |
+-| **Auth** | `/xo-auth/*`, `/claude/setup-token`, `/codex/setup`, `/openclaw/usage/*` | [Auth & setup](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Auth-Api) |
+-| **Connectors** | `/api/connectors/{gdrive,onedrive,github,vercel,manus}/*` | [Connectors](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Connectors-Api) |
+-| **Secrets & misc** | `/api/secrets/*`, `/api/usage`, `/api/onboarding/*`, `/api/channels/add` | [Misc](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Misc-Api) |
+-| **Server** | `/health`, `/sessions`, `/gateway/restart`, `/app/{restart,update}` | [Server & lifecycle](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Server-Api) |
+-
+-📚 **Full wiki:** [github.com/sharmasuraj0123/xo-cowork-api/wiki](https://github.com/sharmasuraj0123/xo-cowork-api/wiki)
+-
+----
+-
+-## Connectors
+-
+-| Connector | Method | Where credentials live |
+-|---|---|---|
+-| **Google Drive** | `rclone authorize drive.file` + manual code paste; folder mgmt + 500 MiB streaming uploads | `rclone.conf` |
+-| **OneDrive** | `rclone authorize` Microsoft Graph | `rclone.conf` |
+-| **GitHub** | Personal Access Token paste **or** `gh auth login --web` device flow | `mcp-tokens.json` |
+-| **Vercel** | API token paste **or** OAuth 2.1 PKCE (Dynamic Client Registration on first use) | `mcp-tokens.json` |
+-| **Manus** | API key paste | `mcp-tokens.json` |
+-
+-Each connector exposes `connect`, `status`, `disconnect`, `reconnect` plus per-service extras (`/sessions/{id}/submit` for rclone OAuth code paste; `/oauth/start` for Vercel; `/cli/{start,poll,cancel}` for GitHub device flow). The Drive connector additionally ships folder management (`mkdir`, `rmdir`, `folders`) and streaming uploads with no disk spool or RAM buffer.
+-
+-A `:53682`-shared single-flight lock between Drive and OneDrive prevents concurrent rclone OAuth flows from colliding on the callback port. See the [Connectors guide](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Connectors-Api).
+-
+----
+-
+-## The xo-projects model
+-
+-Every shared project is a folder under `~/xo-projects/<id>/` with a canonical layout:
+-
+-```
+-~/xo-projects/blackhole/
+-├── AGENTS.md           ← agent operating contract (read first by agents)
+-├── CLAUDE.md           ← single line: "@AGENTS.md"
+-├── PROJECT.md          ← what this project is for
+-├── OBJECTIVES.md       ← OKRs
+-├── PLAN.md             ← current plan
+-├── PROGRESS.md         ← running narrative
+-├── memory/             ← semantic / episodic / procedural / working
+-└── .xo/                ← metadata-only — safe to share
+-    ├── project.json
+-    ├── sessions/sessionslist.json   ← sessionId ↔ runtime, NO message content
+-    ├── todos.json, stats.json, timeline.jsonl, activity.json
+-    └── sync.json, peers.json, policy.json
+-```
+-
+-**The structural confidentiality guarantee:** no code path writes chat content into `~/xo-projects/`. Conversations live in the runtime's own home (`~/.claude/`, `~/.openclaw/`, `~/.codex/`), which never leaves the machine. A project folder can be `tar`'d, sync'd, or pushed to git without leaking session history or credentials.
+-
+-Create a project with the scaffolding endpoint:
+-
+-```bash
+-PROJECTS_ROOT=$(curl -s http://localhost:5002/api/config/workspace | jq -r '.roots[.default]')
+-
+-curl -sX POST http://localhost:5002/api/files/mkdir \
+-  -H 'Content-Type: application/json' \
+-  -d "{\"path\":\"${PROJECTS_ROOT}/blackhole\",\"scaffold\":true,\"display_name\":\"Blackhole\",\"description\":\"Internal research\"}"
+-```
+-
+-The bundled `project_template/` materialises every file above; subsequent invocations are idempotent (existing files are never overwritten).
+-
+----
+-
+-## Configuration
+-
+-Full reference in [`.env.example`](.env.example). Most useful knobs:
+-
+-| Variable | Purpose | Default |
+-|---|---|---|
+-| `HOST`, `PORT` | Bind address | `0.0.0.0:5002` |
+-| `STAGE` | `local` (dev: discover CLI via `which`) or `beta` (container: `/home/coder/...`) | `beta` |
+-| `AGENT_NAME` | Active backend for `/api/agents` & `/api/models` | `openclaw` |
+-| `XO_PROJECTS_ROOT` | Canonical projects root | `~/xo-projects` |
+-| `CLAUDE_CLI_PATH` | `claude` binary location | autodiscovered if `STAGE=local` |
+-| `CLAUDE_CODE_OAUTH_TOKEN` | Claude CLI auth | from `claude /login` |
+-| `OPENCLAW_API_URL` | OpenClaw gateway endpoint | `http://127.0.0.1:18789/v1/chat/completions` |
+-| `OPENCLAW_GATEWAY_TOKEN` | OpenClaw bearer | required for OpenClaw path |
+-| `CHAT_API_BASE_URL` | xo-swarm-api upstream | `https://api-swarm-beta.xo.builders` |
+-| `XO_API_KEY` | Long-lived Clerk PAT (skips the consume flow) | unset |
+-| `USAGE_SYNC_HOUR_UTC` | Daily usage sync time | `02` |
+-
+-Auth flow: if `XO_API_KEY` is set, it's used as Bearer for every outbound call. Otherwise, run the `/xo-auth/start` → browser → `/xo-auth/consume` flow (or set `XO_AUTH_SESSION_ID` + `XO_POLL_TOKEN` to consume once at startup).
+-
+----
+-
+-## Documentation
+-
+-In-repo, start with **[DEVELOPING.md](DEVELOPING.md)** — the engineering guide:
+-broker/adapter architecture, the two planes, the capability loader, adding a new
+-agent, and the validation playbook.
+-
+-The wiki is the canonical reference for the API surface, kept in sync with the code:
+-
+-- 🏗️ [Architecture](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Architecture) — snapshot of the current state, route inventory, vision scorecard
+-- 📑 [Frontend API index](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Frontend-Api-Index) — start here for integration
+-- 🛠️ [Visualizer + peer-sync plan](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Visualizer-And-Sync-Plan) — the active roadmap
+-- 🔒 [RBAC plan](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Rbac-Plan) — multi-user authorization design
+-- 📊 [OpenClaw usage sync flow](https://github.com/sharmasuraj0123/xo-cowork-api/wiki/Openclaw-Usage-Sync-Flow)
+-
+-19 pages in total. Every guide is a full integration spec, not a quick-start.
+-
+----
+-
+-## Project structure
+-
+-```
+-xo-cowork-api/
+-├── server.py                       FastAPI app — lifespan, CORS, router mounts, /ask_question (Plane A)
+-├── config/
+-│   ├── models/<name>/              Plane-A model clients (claude_code/, codex/) — selected by AI_PROVIDER
+-│   └── agents/<name>/              per-agent config: manifest.json, settings.json, capabilities.json,
+-│                                     setup.sh, agent.sh, troubleshoot.py
+-├── routers/                        broker routes only — no agent branching
+-│   ├── auth/                       auth.py, claude_setup_token.py, codex_setup.py
+-│   ├── status/                     models.py, channels.py, providers.py  (dynamic dispatch)
+-│   └── cowork_agent/               /api/* — the cowork frontend-facing surface
+-│       ├── chat.py  sessions.py  agents.py  config.py  channels.py  files.py
+-│       ├── secrets.py  usage.py  workspace_memory.py  fts.py  misc.py  onboarding.py
+-│       ├── connectors/            gdrive onedrive github vercel manus route modules
+-│       ├── bff/                   projects + secrets + visualizer BFF layer
+-│       └── legacy/                frozen URL aliases (openclaw_usage)
+-├── services/
+-│   ├── cowork_agent/
+-│   │   ├── adapters/              ── the agent extension surface (Plane B) ──
+-│   │   │   ├── base.py            BaseAgentAdapter contract
+-│   │   │   ├── loader.py          load_capability() — the single agent-resolution seam
+-│   │   │   ├── cli_status.py usage_common.py   shared adapter helpers
+-│   │   │   └── <name>/            adapter.py usage.py sessions.py chat.py routes.py models.py …
+-│   │   ├── engine/               dispatcher messages sessions_io chat_state usage_loader
+-│   │   ├── registry/             agent_registry adapter_registry settings agent_env (auto-discovery)
+-│   │   ├── connectors/           rclone, GitHub, Vercel, Manus, token_store glue
+-│   │   ├── visualizer/  xo_projects_sync/  project_template/
+-│   │   └── helpers.py project_layout.py skill_installer.py providers_status_lib.py …
+-│   ├── usage_sync.py             daily background → /usage/report on swarm
+-│   └── xo_manifest.py            builds ~/xo-projects/.xo/xo.json (capabilities + live status)
+-├── cowork-api.sh                   process manager (start|stop|restart|status|logs)
+-├── cowork-update.sh                git pull + restart in background
+-├── DEVELOPING.md                   engineering guide — architecture, adding an agent, validation
+-├── Dockerfile
+-└── requirements.txt
+-```
+-
+-> Per-agent lifecycle scripts now live at `config/agents/<name>/agent.sh`
+-> (was root `openclaw.sh` / `hermes.sh`). See **[DEVELOPING.md](DEVELOPING.md)**
+-> for the full architecture and the "add a new agent" walkthrough.
+-
+----
+-
+-## Contributing
+-
+-Issues and PRs welcome on the [`development` branch](https://github.com/sharmasuraj0123/xo-cowork-api/tree/development). The codebase is deliberately small (a few thousand lines of Python); changes that touch the adapter contract, the session model, or the project-folder layout deserve a wiki update too.
+-
+-Conventions:
+-
+-- **Endpoints live in `routers/`** (thin handlers). Logic lives in `services/`. Top-level `server.py` is the only file that imports both.
+-- **Adapters are auto-discovered.** Drop `config/agents/<name>/` + `services/cowork_agent/adapters/<name>/adapter.py` — no registry edit, no router changes, and **no core file may name a specific agent** (the modularity invariant, enforced in review). See [DEVELOPING.md](DEVELOPING.md).
+-- **The project folder is sacred.** Don't write chat content, runtime credentials, or anything else that wouldn't survive a git push into `~/xo-projects/<id>/`.
+-
+----
+-
+-## License
+-
+-MIT. See [LICENSE](LICENSE) (forthcoming) or treat the badge above as authoritative for now.
+-
+----
+-
+-<div align="center">
+-
+-Built for <a href="https://xo.builders">XO Cowork</a> · Part of the <a href="https://github.com/sharmasuraj0123">XO</a> stack
+-
+-</div>

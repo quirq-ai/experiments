@@ -1,0 +1,204 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T01-E5-claude-sonnet-4-6-suraj-002",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 2,
+    "timestamp_start": "2026-06-20T06:41:20Z",
+    "timestamp_end": "2026-06-20T06:42:36Z"
+  },
+  "condition": {
+    "task_id": "T01",
+    "env_id": "E5",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:d19aea8c96d9ff9c65579ce9a5255bfc5068d192904629850f3b135d9233366f"
+  },
+  "outcome": {
+    "terminal_state": "partial",
+    "score_automated": 0.6666666666666666,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC2": {
+        "passed": true,
+        "output": "ok"
+      },
+      "AC3": {
+        "passed": true,
+        "output": "1"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 337,
+    "total_output": 11522,
+    "cache_read": 1236278,
+    "cache_write": 173905,
+    "total_effective": -1100791,
+    "context_acquisition": 335,
+    "phase_orientation_input": 334,
+    "phase_implementation_input": 2,
+    "phase_verification_input": 1
+  },
+  "timing": {
+    "wall_clock_seconds": 75.347,
+    "time_to_first_edit_seconds": 66.466,
+    "phase_orientation_seconds": 56.775,
+    "phase_implementation_seconds": 6.441,
+    "phase_verification_seconds": 2.35
+  },
+  "navigation": {
+    "file_reads_total": 10,
+    "file_reads_unique": 10,
+    "nav_entropy": 3.3219280948873626,
+    "nav_entropy_pre_edit": 3.3219280948873626,
+    "files_read_sequence": [
+      "routers/status/__init__.py",
+      "routers/status/models.py",
+      "routers/status/providers.py",
+      "routers/status/channels.py",
+      "server.py",
+      ".env.example",
+      "requirements.txt",
+      "memory/semantic/project-facts.md",
+      "memory/episodic/2026-05-28-router-not-autodiscovered.md",
+      "services/cowork_agent/providers_status_lib.py"
+    ],
+    "files_edited": [
+      "routers/status/health.py"
+    ],
+    "memory_reads": 2,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 16,
+    "bash_calls": 4,
+    "search_calls": 3,
+    "git_calls": 0,
+    "web_searches": 0,
+    "agent_spawns": 0,
+    "replanning_events": 0,
+    "message_count": 43
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      12
+    ],
+    [
+      7,
+      114
+    ],
+    [
+      9,
+      216
+    ],
+    [
+      11,
+      318
+    ],
+    [
+      13,
+      319
+    ],
+    [
+      15,
+      320
+    ],
+    [
+      17,
+      321
+    ],
+    [
+      18,
+      322
+    ],
+    [
+      19,
+      323
+    ],
+    [
+      21,
+      324
+    ],
+    [
+      23,
+      325
+    ],
+    [
+      24,
+      326
+    ],
+    [
+      26,
+      327
+    ],
+    [
+      28,
+      328
+    ],
+    [
+      29,
+      329
+    ],
+    [
+      31,
+      330
+    ],
+    [
+      33,
+      331
+    ],
+    [
+      34,
+      332
+    ],
+    [
+      36,
+      333
+    ],
+    [
+      37,
+      334
+    ],
+    [
+      38,
+      335
+    ],
+    [
+      40,
+      336
+    ],
+    [
+      42,
+      337
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T01-E5-claude-sonnet-4-6-suraj-002/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T01-E5-claude-sonnet-4-6-suraj-002/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T01-E5-claude-sonnet-4-6-suraj-002/grade.json"
+  }
+}

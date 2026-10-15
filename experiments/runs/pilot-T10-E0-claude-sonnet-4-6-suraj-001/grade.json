@@ -1,0 +1,21 @@
+{
+  "run_id": "pilot-T10-E0-claude-sonnet-4-6-suraj-001",
+  "task_id": "T10",
+  "ac_results": {
+    "AC1": {
+      "passed": false,
+      "output": "0"
+    },
+    "AC2": {
+      "passed": true,
+      "output": "ok"
+    },
+    "AC3": {
+      "passed": true,
+      "output": "29"
+    }
+  },
+  "score_automated": 0.6666666666666666,
+  "score_human": null,
+  "terminal_state": "partial"
+}

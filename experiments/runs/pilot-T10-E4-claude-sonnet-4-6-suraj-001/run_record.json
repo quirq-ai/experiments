@@ -1,0 +1,618 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T10-E4-claude-sonnet-4-6-suraj-001",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 1,
+    "timestamp_start": "2026-06-20T05:43:46Z",
+    "timestamp_end": "2026-06-20T05:54:33Z"
+  },
+  "condition": {
+    "task_id": "T10",
+    "env_id": "E4",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:f7d1b7ffa71e3e75ad35d9281bad0952c3a22e6fadeb830fac8e6f37447ecb01"
+  },
+  "outcome": {
+    "terminal_state": "partial",
+    "score_automated": 0.6666666666666666,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC2": {
+        "passed": true,
+        "output": "ok"
+      },
+      "AC3": {
+        "passed": true,
+        "output": "29"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 129,
+    "total_output": 108636,
+    "cache_read": 14402004,
+    "cache_write": 574183,
+    "total_effective": -12853038,
+    "context_acquisition": 79,
+    "phase_orientation_input": 78,
+    "phase_implementation_input": 25,
+    "phase_verification_input": 26
+  },
+  "timing": {
+    "wall_clock_seconds": 645.624,
+    "time_to_first_edit_seconds": 350.569,
+    "phase_orientation_seconds": 345.607,
+    "phase_implementation_seconds": 111.008,
+    "phase_verification_seconds": 183.94
+  },
+  "navigation": {
+    "file_reads_total": 35,
+    "file_reads_unique": 29,
+    "nav_entropy": 4.764857659740295,
+    "nav_entropy_pre_edit": 4.712319091186708,
+    "files_read_sequence": [
+      "routers/auth/auth.py",
+      "routers/auth/claude_setup_token.py",
+      "routers/auth/codex_setup.py",
+      "routers/cowork_agent/agents.py",
+      "routers/cowork_agent/channels.py",
+      "routers/cowork_agent/chat.py",
+      "routers/cowork_agent/config.py",
+      "routers/cowork_agent/files.py",
+      "routers/cowork_agent/fts.py",
+      "routers/cowork_agent/misc.py",
+      "routers/cowork_agent/onboarding.py",
+      "routers/cowork_agent/secrets.py",
+      "routers/cowork_agent/sessions.py",
+      "routers/cowork_agent/usage.py",
+      "routers/cowork_agent/workspace_memory.py",
+      "routers/status/channels.py",
+      "routers/status/models.py",
+      "routers/status/providers.py",
+      "routers/cowork_agent/xo_projects_sync.py",
+      "routers/cowork_agent/xo_projects_sync.py",
+      "routers/cowork_agent/bff/xo_projects.py",
+      "routers/cowork_agent/channels.py",
+      "routers/cowork_agent/chat.py",
+      "routers/cowork_agent/bff/secrets.py",
+      "routers/cowork_agent/connectors/github.py",
+      "routers/cowork_agent/bff/visualizer.py",
+      "routers/cowork_agent/connectors/manus.py",
+      "routers/cowork_agent/connectors/gdrive.py",
+      "routers/cowork_agent/connectors/vercel.py",
+      "routers/cowork_agent/bff/visualizer.py",
+      "routers/cowork_agent/connectors/onedrive.py",
+      "routers/cowork_agent/bff/visualizer.py",
+      "routers/cowork_agent/bff/workspace_visualizer.py",
+      "routers/cowork_agent/bff/workspace_visualizer.py",
+      "/Users/surshar/.claude/settings.json"
+    ],
+    "files_edited": [
+      "routers/cowork_agent/agents.py",
+      "routers/cowork_agent/fts.py"
+    ],
+    "memory_reads": 0,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 66,
+    "bash_calls": 24,
+    "search_calls": 8,
+    "git_calls": 4,
+    "web_searches": 0,
+    "agent_spawns": 1,
+    "replanning_events": 0,
+    "message_count": 190
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      6,
+      11
+    ],
+    [
+      7,
+      12
+    ],
+    [
+      9,
+      13
+    ],
+    [
+      10,
+      14
+    ],
+    [
+      11,
+      15
+    ],
+    [
+      13,
+      16
+    ],
+    [
+      15,
+      17
+    ],
+    [
+      17,
+      18
+    ],
+    [
+      18,
+      19
+    ],
+    [
+      19,
+      20
+    ],
+    [
+      21,
+      21
+    ],
+    [
+      23,
+      22
+    ],
+    [
+      25,
+      23
+    ],
+    [
+      27,
+      24
+    ],
+    [
+      28,
+      25
+    ],
+    [
+      29,
+      26
+    ],
+    [
+      31,
+      27
+    ],
+    [
+      33,
+      28
+    ],
+    [
+      35,
+      29
+    ],
+    [
+      37,
+      30
+    ],
+    [
+      39,
+      31
+    ],
+    [
+      41,
+      32
+    ],
+    [
+      43,
+      33
+    ],
+    [
+      45,
+      34
+    ],
+    [
+      46,
+      35
+    ],
+    [
+      47,
+      36
+    ],
+    [
+      49,
+      37
+    ],
+    [
+      51,
+      38
+    ],
+    [
+      53,
+      39
+    ],
+    [
+      55,
+      40
+    ],
+    [
+      56,
+      41
+    ],
+    [
+      58,
+      42
+    ],
+    [
+      60,
+      43
+    ],
+    [
+      61,
+      44
+    ],
+    [
+      62,
+      45
+    ],
+    [
+      64,
+      46
+    ],
+    [
+      65,
+      47
+    ],
+    [
+      66,
+      48
+    ],
+    [
+      68,
+      49
+    ],
+    [
+      70,
+      50
+    ],
+    [
+      72,
+      51
+    ],
+    [
+      74,
+      52
+    ],
+    [
+      75,
+      53
+    ],
+    [
+      76,
+      54
+    ],
+    [
+      78,
+      55
+    ],
+    [
+      80,
+      56
+    ],
+    [
+      81,
+      57
+    ],
+    [
+      82,
+      58
+    ],
+    [
+      84,
+      59
+    ],
+    [
+      86,
+      60
+    ],
+    [
+      87,
+      61
+    ],
+    [
+      89,
+      62
+    ],
+    [
+      91,
+      63
+    ],
+    [
+      92,
+      64
+    ],
+    [
+      93,
+      65
+    ],
+    [
+      95,
+      66
+    ],
+    [
+      97,
+      67
+    ],
+    [
+      98,
+      68
+    ],
+    [
+      99,
+      69
+    ],
+    [
+      101,
+      70
+    ],
+    [
+      103,
+      71
+    ],
+    [
+      104,
+      72
+    ],
+    [
+      106,
+      73
+    ],
+    [
+      108,
+      74
+    ],
+    [
+      109,
+      75
+    ],
+    [
+      110,
+      76
+    ],
+    [
+      112,
+      77
+    ],
+    [
+      113,
+      78
+    ],
+    [
+      114,
+      79
+    ],
+    [
+      116,
+      80
+    ],
+    [
+      117,
+      81
+    ],
+    [
+      119,
+      82
+    ],
+    [
+      120,
+      83
+    ],
+    [
+      121,
+      84
+    ],
+    [
+      123,
+      85
+    ],
+    [
+      124,
+      86
+    ],
+    [
+      125,
+      87
+    ],
+    [
+      127,
+      88
+    ],
+    [
+      128,
+      89
+    ],
+    [
+      130,
+      90
+    ],
+    [
+      131,
+      91
+    ],
+    [
+      132,
+      92
+    ],
+    [
+      134,
+      93
+    ],
+    [
+      136,
+      94
+    ],
+    [
+      138,
+      95
+    ],
+    [
+      140,
+      96
+    ],
+    [
+      141,
+      97
+    ],
+    [
+      142,
+      98
+    ],
+    [
+      144,
+      99
+    ],
+    [
+      146,
+      100
+    ],
+    [
+      148,
+      101
+    ],
+    [
+      149,
+      102
+    ],
+    [
+      150,
+      103
+    ],
+    [
+      152,
+      104
+    ],
+    [
+      153,
+      105
+    ],
+    [
+      154,
+      106
+    ],
+    [
+      156,
+      107
+    ],
+    [
+      157,
+      108
+    ],
+    [
+      158,
+      109
+    ],
+    [
+      160,
+      110
+    ],
+    [
+      162,
+      111
+    ],
+    [
+      163,
+      112
+    ],
+    [
+      164,
+      113
+    ],
+    [
+      166,
+      114
+    ],
+    [
+      168,
+      115
+    ],
+    [
+      169,
+      116
+    ],
+    [
+      170,
+      117
+    ],
+    [
+      172,
+      118
+    ],
+    [
+      174,
+      119
+    ],
+    [
+      176,
+      120
+    ],
+    [
+      177,
+      121
+    ],
+    [
+      179,
+      122
+    ],
+    [
+      181,
+      123
+    ],
+    [
+      182,
+      124
+    ],
+    [
+      184,
+      125
+    ],
+    [
+      185,
+      126
+    ],
+    [
+      186,
+      127
+    ],
+    [
+      188,
+      128
+    ],
+    [
+      189,
+      129
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T10-E4-claude-sonnet-4-6-suraj-001/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T10-E4-claude-sonnet-4-6-suraj-001/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T10-E4-claude-sonnet-4-6-suraj-001/grade.json"
+  }
+}

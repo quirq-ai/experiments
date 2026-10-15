@@ -1,0 +1,159 @@
+{
+  "schema_version": "1",
+  "run": {
+    "run_id": "pilot-T04-E3-claude-sonnet-4-6-suraj-001",
+    "experiment_id": "pilot",
+    "operator": "suraj",
+    "batch_id": null,
+    "replication": 1,
+    "timestamp_start": "2026-06-19T18:37:15Z",
+    "timestamp_end": "2026-06-19T18:40:20Z"
+  },
+  "condition": {
+    "task_id": "T04",
+    "env_id": "E3",
+    "agent_id": "claude-sonnet-4-6",
+    "agent_provider": "anthropic",
+    "base_repo_sha": "4e09644cab6f2ac4a2b91573fb670a0546f69cd4",
+    "env_overlay_hash": "sha256:70284c6a4a3d76015262c0c535fe5340532a6c92b922f49a3c2dc85801a90002"
+  },
+  "outcome": {
+    "terminal_state": "partial",
+    "score_automated": 0.3333333333333333,
+    "score_human": null,
+    "ac_results": {
+      "AC1": {
+        "passed": false,
+        "output": "0"
+      },
+      "AC2": {
+        "passed": true,
+        "output": "ok"
+      },
+      "AC3": {
+        "passed": false,
+        "output": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E3-claude-sonnet-4-6-suraj-001/workspace/services/cowork_agent/scopes.py\", line 25, in <module>\n    from services.cowork_agent import project_layout\n  File \"/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E3-claude-sonnet-4-6-suraj-001/workspace/services/cowork_agent/project_layo"
+      }
+    }
+  },
+  "tokens": {
+    "total_input": 23,
+    "total_output": 27827,
+    "cache_read": 644942,
+    "cache_write": 83683,
+    "total_effective": -552597,
+    "context_acquisition": 18,
+    "phase_orientation_input": 17,
+    "phase_implementation_input": 4,
+    "phase_verification_input": 2
+  },
+  "timing": {
+    "wall_clock_seconds": 183.918,
+    "time_to_first_edit_seconds": 112.515,
+    "phase_orientation_seconds": 110.41,
+    "phase_implementation_seconds": 58.903,
+    "phase_verification_seconds": 12.4
+  },
+  "navigation": {
+    "file_reads_total": 1,
+    "file_reads_unique": 1,
+    "nav_entropy": -0.0,
+    "nav_entropy_pre_edit": -0.0,
+    "files_read_sequence": [
+      "services/cowork_agent/scopes.py"
+    ],
+    "files_edited": [
+      "services/cowork_agent/scopes.py"
+    ],
+    "memory_reads": 0,
+    "memory_writes": 0,
+    "xo_reads": 0,
+    "agents_md_read": false,
+    "project_md_read": false
+  },
+  "operations": {
+    "tool_calls_total": 8,
+    "bash_calls": 4,
+    "search_calls": 4,
+    "git_calls": 0,
+    "web_searches": 0,
+    "agent_spawns": 0,
+    "replanning_events": 0,
+    "message_count": 26
+  },
+  "token_curve": [
+    [
+      1,
+      3
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      7,
+      11
+    ],
+    [
+      8,
+      12
+    ],
+    [
+      9,
+      13
+    ],
+    [
+      11,
+      14
+    ],
+    [
+      13,
+      15
+    ],
+    [
+      15,
+      16
+    ],
+    [
+      16,
+      17
+    ],
+    [
+      17,
+      18
+    ],
+    [
+      19,
+      19
+    ],
+    [
+      21,
+      20
+    ],
+    [
+      22,
+      21
+    ],
+    [
+      24,
+      22
+    ],
+    [
+      25,
+      23
+    ]
+  ],
+  "raw": {
+    "transcript_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E3-claude-sonnet-4-6-suraj-001/transcript.jsonl",
+    "patch_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E3-claude-sonnet-4-6-suraj-001/git.patch",
+    "grade_path": "/Users/surshar/Programming/XO/ClaudeWorkspace/experiment-20260612/experiments/runs/pilot-T04-E3-claude-sonnet-4-6-suraj-001/grade.json"
+  }
+}

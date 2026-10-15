@@ -1,0 +1,12 @@
+---
+description: Keep every Innernet popup brief and free of scrolling
+alwaysApply: true
+---
+
+# Popups never scroll
+
+- Every popup, modal, dialog and popover must fit its content without horizontal or vertical scrolling, including on phones and at increased text size.
+- Use popups only for brief information or a small, focused confirmation.
+- If content needs scrolling, give it a normal page with ordinary document scrolling. Do not hide, clip or shrink content to keep it in a popup.
+- Settings, long forms, lists and detailed reference information belong on pages. For example, source choices and storage locations live at `/sources`.
+- Check both narrow and wide screens when adding or changing an overlay.

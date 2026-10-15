@@ -1,0 +1,197 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" fill="none">
+  <g class="L-con" stroke-width="1.2">
+    <line x1="98" y1="96" x2="98" y2="920"/>
+    <line x1="862" y1="96" x2="862" y2="920"/>
+    <line x1="72" y1="140" x2="874" y2="140"/>
+    <line x1="72" y1="912" x2="874" y2="912"/>
+    <line x1="80" y1="124" x2="880" y2="124"/>
+    <line x1="72" y1="240" x2="82" y2="240"/>
+    <line x1="72" y1="298" x2="82" y2="298"/>
+    <line x1="72" y1="356" x2="82" y2="356"/>
+    <line x1="72" y1="414" x2="82" y2="414"/>
+    <line x1="72" y1="472" x2="82" y2="472"/>
+    <line x1="72" y1="530" x2="82" y2="530"/>
+    <line x1="72" y1="588" x2="82" y2="588"/>
+    <line x1="72" y1="646" x2="82" y2="646"/>
+    <line x1="72" y1="704" x2="82" y2="704"/>
+    <line x1="72" y1="762" x2="82" y2="762"/>
+    <line x1="72" y1="820" x2="82" y2="820"/>
+    <line x1="72" y1="878" x2="82" y2="878"/>
+    <line x1="77" y1="240" x2="77" y2="878"/>
+    <line x1="84" y1="126" x2="98" y2="140"/>
+    <line x1="876" y1="126" x2="862" y2="140"/>
+    <line x1="562" y1="128" x2="562" y2="140"/>
+    <line x1="862" y1="128" x2="862" y2="140"/>
+    <line x1="562" y1="132" x2="862" y2="132"/>
+    <path d="M 572 128 L 562 132 L 572 136"/>
+    <path d="M 852 128 L 862 132 L 852 136"/>
+  </g>
+  <g class="L-main" stroke-width="2.6">
+    <rect x="98" y="140" width="764" height="772"/>
+    <line x1="98" y1="146" x2="862" y2="146"/>
+    <line x1="98" y1="206" x2="862" y2="206"/>
+    <line x1="98" y1="212" x2="862" y2="212"/>
+    <line x1="98" y1="906" x2="862" y2="906"/>
+    <line x1="148" y1="146" x2="148" y2="906"/>
+    <line x1="192" y1="146" x2="192" y2="906"/>
+    <line x1="304" y1="146" x2="304" y2="906"/>
+    <line x1="364" y1="146" x2="364" y2="906"/>
+    <line x1="436" y1="146" x2="436" y2="906"/>
+    <line x1="562" y1="146" x2="562" y2="906"/>
+    <line x1="592" y1="146" x2="592" y2="906"/>
+    <line x1="622" y1="146" x2="622" y2="906"/>
+    <line x1="652" y1="146" x2="652" y2="906"/>
+    <line x1="682" y1="146" x2="682" y2="906"/>
+    <line x1="712" y1="146" x2="712" y2="906"/>
+    <line x1="742" y1="146" x2="742" y2="906"/>
+    <line x1="772" y1="146" x2="772" y2="906"/>
+    <line x1="802" y1="146" x2="802" y2="906"/>
+    <line x1="832" y1="146" x2="832" y2="906"/>
+    <line x1="98" y1="240" x2="862" y2="240"/>
+    <line x1="98" y1="298" x2="862" y2="298"/>
+    <line x1="98" y1="356" x2="862" y2="356"/>
+    <line x1="98" y1="414" x2="862" y2="414"/>
+    <line x1="98" y1="472" x2="862" y2="472"/>
+    <line x1="98" y1="530" x2="862" y2="530"/>
+    <line x1="98" y1="588" x2="862" y2="588"/>
+    <line x1="98" y1="646" x2="862" y2="646"/>
+    <line x1="98" y1="704" x2="862" y2="704"/>
+    <line x1="98" y1="762" x2="862" y2="762"/>
+    <line x1="98" y1="820" x2="862" y2="820"/>
+    <line x1="98" y1="878" x2="862" y2="878"/>
+    <path d="M98 226 L102 227.4 L106 228.7 L110 229.5 L114 230 L118 229.9 L122 229.3 L126 228.2 L130 226.9 L134 225.5 L138 224.1 L142 223 L146 222.2 L150 222 L154 222.3 L158 223.1 L162 224.2 L166 225.6 L170 227 L174 228.3 L178 229.3 L182 229.9 L186 230 L190 229.5 L194 228.6 L198 227.3 L202 225.9 L206 224.5 L210 223.3 L214 222.4 L218 222 L222 222.2 L226 222.8 L230 223.9 L234 225.2 L238 226.6 L242 228 L246 229.1 L250 229.8 L254 230 L258 229.7 L262 228.9 L266 227.7 L270 226.3 L274 224.8 L278 223.6 L282 222.6 L286 222.1 L290 222.1 L294 222.6 L298 223.5 L302 224.8 L306 226.2 L310 227.6 L314 228.8 L318 229.7 L322 230 L326 229.8 L330 229.1 L334 228 L338 226.7 L342 225.2 L346 223.9 L350 222.8 L354 222.2 L358 222 L362 222.4 L366 223.2 L370 224.4 L374 225.8 L378 227.3 L382 228.5 L386 229.5 L390 230 L394 229.9 L398 229.4 L402 228.4 L406 227.1 L410 225.6 L414 224.2 L418 223.1 L422 222.3 L426 222 L430 222.2 L434 222.9 L438 224.1 L442 225.4 L446 226.9 L450 228.2 L454 229.2 L458 229.9 L462 230 L466 229.6 L470 228.7 L474 227.5 L478 226 L482 224.6 L486 223.4 L490 222.5 L494 222 L498 222.1 L502 222.7 L506 223.7 L510 225 L514 226.5 L518 227.9 L522 229 L526 229.7 L530 230 L534 229.7 L538 229 L542 227.8 L546 226.5 L550 225 L554 223.7 L558 222.7 L562 222.1 L566 222 L570 222.5 L574 223.4 L578 224.6 L582 226.1 L586 227.5 L590 228.7 L594 229.6 L598 230 L602 229.9 L606 229.2 L610 228.2 L614 226.9 L618 225.4 L622 224 L626 222.9 L630 222.2 L634 222 L638 222.3 L642 223.1 L646 224.3 L650 225.7 L654 227.1 L658 228.4 L662 229.4 L666 229.9 L670 229.9 L674 229.5 L678 228.5 L682 227.2 L686 225.8 L690 224.4 L694 223.2 L698 222.4 L702 222 L706 222.2 L710 222.8 L714 223.9 L718 225.3 L722 226.7 L726 228.1 L730 229.1 L734 229.8 L738 230 L742 229.6 L746 228.8 L750 227.6 L754 226.2 L758 224.8 L762 223.5 L766 222.6 L770 222.1 L774 222.1 L778 222.6 L782 223.6 L786 224.9 L790 226.3 L794 227.7 L798 228.9 L802 229.7 L806 230 L810 229.8 L814 229.1 L818 228 L822 226.6 L826 225.2 L830 223.8 L834 222.8 L838 222.1 L842 222 L846 222.4 L850 223.3 L854 224.5 L858 225.9 L862 227.3"/>
+    <path d="M98 892 L102 893.4 L106 894.7 L110 895.5 L114 896 L118 895.9 L122 895.3 L126 894.2 L130 892.9 L134 891.5 L138 890.1 L142 889 L146 888.2 L150 888 L154 888.3 L158 889.1 L162 890.2 L166 891.6 L170 893 L174 894.3 L178 895.3 L182 895.9 L186 896 L190 895.5 L194 894.6 L198 893.3 L202 891.9 L206 890.5 L210 889.3 L214 888.4 L218 888 L222 888.2 L226 888.8 L230 889.9 L234 891.2 L238 892.6 L242 894 L246 895.1 L250 895.8 L254 896 L258 895.7 L262 894.9 L266 893.7 L270 892.3 L274 890.8 L278 889.6 L282 888.6 L286 888.1 L290 888.1 L294 888.6 L298 889.5 L302 890.8 L306 892.2 L310 893.6 L314 894.8 L318 895.7 L322 896 L326 895.8 L330 895.1 L334 894 L338 892.7 L342 891.2 L346 889.9 L350 888.8 L354 888.2 L358 888 L362 888.4 L366 889.2 L370 890.4 L374 891.8 L378 893.3 L382 894.5 L386 895.5 L390 896 L394 895.9 L398 895.4 L402 894.4 L406 893.1 L410 891.6 L414 890.2 L418 889.1 L422 888.3 L426 888 L430 888.2 L434 888.9 L438 890.1 L442 891.4 L446 892.9 L450 894.2 L454 895.2 L458 895.9 L462 896 L466 895.6 L470 894.7 L474 893.5 L478 892 L482 890.6 L486 889.4 L490 888.5 L494 888 L498 888.1 L502 888.7 L506 889.7 L510 891 L514 892.5 L518 893.9 L522 895 L526 895.7 L530 896 L534 895.7 L538 895 L542 893.8 L546 892.5 L550 891 L554 889.7 L558 888.7 L562 888.1 L566 888 L570 888.5 L574 889.4 L578 890.6 L582 892.1 L586 893.5 L590 894.7 L594 895.6 L598 896 L602 895.9 L606 895.2 L610 894.2 L614 892.9 L618 891.4 L622 890 L626 888.9 L630 888.2 L634 888 L638 888.3 L642 889.1 L646 890.3 L650 891.7 L654 893.1 L658 894.4 L662 895.4 L666 895.9 L670 895.9 L674 895.5 L678 894.5 L682 893.2 L686 891.8 L690 890.4 L694 889.2 L698 888.4 L702 888 L706 888.2 L710 888.8 L714 889.9 L718 891.3 L722 892.7 L726 894.1 L730 895.1 L734 895.8 L738 896 L742 895.6 L746 894.8 L750 893.6 L754 892.2 L758 890.8 L762 889.5 L766 888.6 L770 888.1 L774 888.1 L778 888.6 L782 889.6 L786 890.9 L790 892.3 L794 893.7 L798 894.9 L802 895.7 L806 896 L810 895.8 L814 895.1 L818 894 L822 892.6 L826 891.2 L830 889.8 L834 888.8 L838 888.1 L842 888 L846 888.4 L850 889.3 L854 890.5 L858 891.9 L862 893.3"/>
+  </g>
+  <g class="L-detail" stroke-width="1.3">
+    <path d="M 154 165 L 166 165 M 160 159 L 160 171"/>
+    <path d="M 174 165 L 186 165"/>
+    <path d="M 155.5 182.5 L 164.5 191.5 M 164.5 182.5 L 155.5 191.5"/>
+    <path d="M 174 187 L 186 187 M 178.6 183.3 A 1.4 1.4 0 1 0 181.4 183.3 A 1.4 1.4 0 1 0 178.6 183.3 M 178.6 190.7 A 1.4 1.4 0 1 0 181.4 190.7 A 1.4 1.4 0 1 0 178.6 190.7"/>
+    <path d="M 161 269 L 179 269"/>
+    <path d="M 380 263 L 380 275 M 380 269 L 416 269 M 409 264 L 416 269 L 409 274"/>
+    <line x1="720" y1="269" x2="734" y2="269"/>
+    <line x1="570" y1="269" x2="584" y2="269"/>
+    <circle cx="727" cy="269" r="9"/>
+    <path d="M 161 327 L 179 327 M 170 318 L 170 336"/>
+    <path d="M 380 321 L 380 333 M 380 327 L 416 327 M 409 322 L 416 327 L 409 332"/>
+    <line x1="570" y1="327" x2="584" y2="327"/>
+    <line x1="750" y1="327" x2="764" y2="327"/>
+    <circle cx="757" cy="327" r="9"/>
+    <path d="M 161 385 L 179 385 M 168.2 379.4 A 1.8 1.8 0 1 0 171.8 379.4 A 1.8 1.8 0 1 0 168.2 379.4 M 168.2 390.6 A 1.8 1.8 0 1 0 171.8 390.6 A 1.8 1.8 0 1 0 168.2 390.6"/>
+    <path d="M 380 379 L 380 391 M 380 385 L 416 385 M 409 380 L 416 385 L 409 390"/>
+    <line x1="720" y1="385" x2="734" y2="385"/>
+    <line x1="750" y1="385" x2="764" y2="385"/>
+    <circle cx="787" cy="385" r="9"/>
+    <path d="M 163.3 436.3 L 176.8 449.8 M 176.8 436.3 L 163.3 449.8"/>
+    <path d="M 380 437 L 380 449 M 380 443 L 416 443 M 409 438 L 416 443 L 409 448"/>
+    <line x1="780" y1="443" x2="794" y2="443"/>
+    <path d="M 161 501 L 179 501"/>
+    <path d="M 380 495 L 380 507 M 380 501 L 416 501 M 409 496 L 416 501 L 409 506"/>
+    <line x1="720" y1="501" x2="734" y2="501"/>
+    <line x1="570" y1="501" x2="584" y2="501"/>
+    <circle cx="727" cy="501" r="9"/>
+    <path d="M 161 559 L 179 559 M 170 550 L 170 568"/>
+    <path d="M 380 553 L 380 565 M 380 559 L 416 559 M 409 554 L 416 559 L 409 564"/>
+    <line x1="570" y1="559" x2="584" y2="559"/>
+    <line x1="750" y1="559" x2="764" y2="559"/>
+    <circle cx="757" cy="559" r="9"/>
+    <path d="M 161 617 L 179 617 M 168.2 611.4 A 1.8 1.8 0 1 0 171.8 611.4 A 1.8 1.8 0 1 0 168.2 611.4 M 168.2 622.6 A 1.8 1.8 0 1 0 171.8 622.6 A 1.8 1.8 0 1 0 168.2 622.6"/>
+    <path d="M 380 611 L 380 623 M 380 617 L 416 617 M 409 612 L 416 617 L 409 622"/>
+    <line x1="720" y1="617" x2="734" y2="617"/>
+    <line x1="750" y1="617" x2="764" y2="617"/>
+    <circle cx="817" cy="617" r="9"/>
+    <path d="M 163.3 668.3 L 176.8 681.8 M 176.8 668.3 L 163.3 681.8"/>
+    <path d="M 380 669 L 380 681 M 380 675 L 416 675 M 409 670 L 416 675 L 409 680"/>
+    <line x1="810" y1="675" x2="824" y2="675"/>
+    <path d="M 163.3 726.3 L 176.8 739.8 M 176.8 726.3 L 163.3 739.8"/>
+    <path d="M 380 727 L 380 739 M 380 733 L 416 733 M 409 728 L 416 733 L 409 738"/>
+    <path d="M 161 791 L 179 791 M 170 782 L 170 800"/>
+    <path d="M 380 785 L 380 797 M 380 791 L 416 791 M 409 786 L 416 791 L 409 796"/>
+    <path d="M 161 849 L 179 849"/>
+    <path d="M 380 843 L 380 855 M 380 849 L 416 849 M 409 844 L 416 849 L 409 854"/>
+    <line x1="840" y1="849" x2="854" y2="849"/>
+    <line x1="570" y1="849" x2="584" y2="849"/>
+    <circle cx="847" cy="849" r="9"/>
+    <path d="M 102 237 L 110 215 M 112 237 L 120 215 M 122 237 L 130 215 M 132 237 L 140 215 M 142 237 L 150 215 M 152 237 L 160 215 M 162 237 L 170 215 M 172 237 L 180 215 M 182 237 L 190 215 M 192 237 L 200 215 M 202 237 L 210 215 M 212 237 L 220 215 M 222 237 L 230 215 M 232 237 L 240 215 M 242 237 L 250 215 M 252 237 L 260 215 M 262 237 L 270 215 M 272 237 L 280 215 M 282 237 L 290 215 M 292 237 L 300 215 M 302 237 L 310 215 M 312 237 L 320 215 M 322 237 L 330 215 M 332 237 L 340 215 M 342 237 L 350 215 M 352 237 L 360 215 M 362 237 L 370 215 M 372 237 L 380 215 M 382 237 L 390 215 M 392 237 L 400 215 M 402 237 L 410 215 M 412 237 L 420 215 M 422 237 L 430 215 M 432 237 L 440 215 M 442 237 L 450 215 M 452 237 L 460 215 M 462 237 L 470 215 M 472 237 L 480 215 M 482 237 L 490 215 M 492 237 L 500 215 M 502 237 L 510 215 M 512 237 L 520 215 M 522 237 L 530 215 M 532 237 L 540 215 M 542 237 L 550 215 M 552 237 L 560 215 M 562 237 L 570 215 M 572 237 L 580 215 M 582 237 L 590 215 M 592 237 L 600 215 M 602 237 L 610 215 M 612 237 L 620 215 M 622 237 L 630 215 M 632 237 L 640 215 M 642 237 L 650 215 M 652 237 L 660 215 M 662 237 L 670 215 M 672 237 L 680 215 M 682 237 L 690 215 M 692 237 L 700 215 M 702 237 L 710 215 M 712 237 L 720 215 M 722 237 L 730 215 M 732 237 L 740 215 M 742 237 L 750 215 M 752 237 L 760 215 M 762 237 L 770 215 M 772 237 L 780 215 M 782 237 L 790 215 M 792 237 L 800 215 M 802 237 L 810 215 M 812 237 L 820 215 M 822 237 L 830 215 M 832 237 L 840 215 M 842 237 L 850 215"/>
+    <path d="M 102 903 L 110 881 M 112 903 L 120 881 M 122 903 L 130 881 M 132 903 L 140 881 M 142 903 L 150 881 M 152 903 L 160 881 M 162 903 L 170 881 M 172 903 L 180 881 M 182 903 L 190 881 M 192 903 L 200 881 M 202 903 L 210 881 M 212 903 L 220 881 M 222 903 L 230 881 M 232 903 L 240 881 M 242 903 L 250 881 M 252 903 L 260 881 M 262 903 L 270 881 M 272 903 L 280 881 M 282 903 L 290 881 M 292 903 L 300 881 M 302 903 L 310 881 M 312 903 L 320 881 M 322 903 L 330 881 M 332 903 L 340 881 M 342 903 L 350 881 M 352 903 L 360 881 M 362 903 L 370 881 M 372 903 L 380 881 M 382 903 L 390 881 M 392 903 L 400 881 M 402 903 L 410 881 M 412 903 L 420 881 M 422 903 L 430 881 M 432 903 L 440 881 M 442 903 L 450 881 M 452 903 L 460 881 M 462 903 L 470 881 M 472 903 L 480 881 M 482 903 L 490 881 M 492 903 L 500 881 M 502 903 L 510 881 M 512 903 L 520 881 M 522 903 L 530 881 M 532 903 L 540 881 M 542 903 L 550 881 M 552 903 L 560 881 M 562 903 L 570 881 M 572 903 L 580 881 M 582 903 L 590 881 M 592 903 L 600 881 M 602 903 L 610 881 M 612 903 L 620 881 M 622 903 L 630 881 M 632 903 L 640 881 M 642 903 L 650 881 M 652 903 L 660 881 M 662 903 L 670 881 M 672 903 L 680 881 M 682 903 L 690 881 M 692 903 L 700 881 M 702 903 L 710 881 M 712 903 L 720 881 M 722 903 L 730 881 M 732 903 L 740 881 M 742 903 L 750 881 M 752 903 L 760 881 M 762 903 L 770 881 M 772 903 L 780 881 M 782 903 L 790 881 M 792 903 L 800 881 M 802 903 L 810 881 M 812 903 L 820 881 M 822 903 L 830 881 M 832 903 L 840 881 M 842 903 L 850 881"/>
+    <line x1="898" y1="269" x2="914" y2="269"/>
+    <line x1="898" y1="327" x2="914" y2="327"/>
+    <line x1="898" y1="385" x2="914" y2="385"/>
+    <line x1="898" y1="443" x2="914" y2="443"/>
+    <line x1="898" y1="501" x2="914" y2="501"/>
+    <line x1="898" y1="559" x2="914" y2="559"/>
+    <line x1="898" y1="617" x2="914" y2="617"/>
+    <line x1="898" y1="675" x2="914" y2="675"/>
+    <line x1="898" y1="733" x2="914" y2="733"/>
+    <line x1="898" y1="791" x2="914" y2="791"/>
+    <line x1="898" y1="849" x2="914" y2="849"/>
+    <line x1="866" y1="269" x2="882" y2="269"/>
+  </g>
+  <g class="L-acc" stroke-width="3.6">
+    <path d="M 868 849 L 893 849 Q 907 849 907 835 L 907 283 Q 907 269 893 269 L 870 269"/>
+    <path d="M 882 261 L 868 269 L 882 277"/>
+    <circle cx="868" cy="849" r="4"/>
+  </g>
+  <g class="L-lbl">
+    <text x="480" y="116" font-family="JetBrains Mono" font-size="22" letter-spacing="6" text-anchor="middle" fill="currentColor">NOTE G</text>
+    <text x="123" y="181" font-family="JetBrains Mono" font-size="14" letter-spacing="2" text-anchor="middle" fill="currentColor">NO.</text>
+    <text x="248" y="181" font-family="JetBrains Mono" font-size="14" letter-spacing="2" text-anchor="middle" fill="currentColor">ACTED</text>
+    <text x="334" y="181" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">RECVD</text>
+    <text x="400" y="181" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">CHANGE</text>
+    <text x="499" y="181" font-family="JetBrains Mono" font-size="14" letter-spacing="2" text-anchor="middle" fill="currentColor">RESULT</text>
+    <text x="577" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V1</text>
+    <text x="607" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V2</text>
+    <text x="637" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V3</text>
+    <text x="667" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V4</text>
+    <text x="697" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V5</text>
+    <text x="727" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V6</text>
+    <text x="757" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V7</text>
+    <text x="787" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V8</text>
+    <text x="817" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="1" text-anchor="middle" fill="currentColor">V9</text>
+    <text x="847" y="181" font-family="JetBrains Mono" font-size="13" letter-spacing="0" text-anchor="middle" fill="currentColor">V10</text>
+    <text x="123" y="275" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">13</text>
+    <text x="248" y="275" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V6-V1</text>
+    <text x="334" y="275" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V6</text>
+    <text x="499" y="275" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">2N-1</text>
+    <text x="123" y="333" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">14</text>
+    <text x="248" y="333" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V1+V7</text>
+    <text x="334" y="333" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V7</text>
+    <text x="499" y="333" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">2+1=3</text>
+    <text x="123" y="391" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">15</text>
+    <text x="248" y="391" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V6÷V7</text>
+    <text x="334" y="391" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V8</text>
+    <text x="499" y="391" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">(2N-1)/3</text>
+    <text x="123" y="449" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">16</text>
+    <text x="248" y="449" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V8×V11</text>
+    <text x="334" y="449" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V11</text>
+    <text x="499" y="449" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">A1(2N-1)/3</text>
+    <text x="123" y="507" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">17</text>
+    <text x="248" y="507" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V6-V1</text>
+    <text x="334" y="507" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V6</text>
+    <text x="499" y="507" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">2N-2</text>
+    <text x="123" y="565" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">18</text>
+    <text x="248" y="565" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V1+V7</text>
+    <text x="334" y="565" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V7</text>
+    <text x="499" y="565" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">3+1=4</text>
+    <text x="123" y="623" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">19</text>
+    <text x="248" y="623" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V6÷V7</text>
+    <text x="334" y="623" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V9</text>
+    <text x="499" y="623" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">(2N-2)/4</text>
+    <text x="123" y="681" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">20</text>
+    <text x="248" y="681" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V9×V11</text>
+    <text x="334" y="681" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V11</text>
+    <text x="499" y="681" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">A3</text>
+    <text x="123" y="739" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">21</text>
+    <text x="248" y="739" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V22×V11</text>
+    <text x="334" y="739" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V12</text>
+    <text x="499" y="739" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">B3A3</text>
+    <text x="123" y="797" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">22</text>
+    <text x="248" y="797" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V12+V13</text>
+    <text x="334" y="797" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V13</text>
+    <text x="499" y="797" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">A0+..+B3A3</text>
+    <text x="123" y="855" font-family="JetBrains Mono" font-size="17" letter-spacing="2" text-anchor="middle" fill="currentColor">23</text>
+    <text x="248" y="855" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V10-V1</text>
+    <text x="334" y="855" font-family="JetBrains Mono" font-size="15" letter-spacing="1" text-anchor="middle" fill="currentColor">V10</text>
+    <text x="499" y="855" font-family="JetBrains Mono" font-size="14" letter-spacing="1" text-anchor="middle" fill="currentColor">N-3</text>
+  </g>
+</svg>

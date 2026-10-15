@@ -7,139 +7,188 @@
   "experiments": {
     "artifact-evolution": {
       "description": "One idea in five forms: terminal, markdown one-pager, slide deck, notebook and Next.js app, each kept as an immutable artifact.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "updated": "2026-05-28"
     },
     "assets": {
       "description": "Shared quirq brand assets: the mark, favicon, Möbius artwork and OG image.",
-      "stack": "Images"
+      "stack": "Images",
+      "updated": "2026-07-24"
     },
     "autospawn-clone": {
       "description": "Mock-data clone of autospawn.com, an AI outbound sales platform, built to study its UX.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "updated": "2026-08-29"
     },
     "brand-dna-visualization": {
       "description": "Brand DNA: explore the colors, stories, voice and visual world behind a brand.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "updated": "2026-10-03"
     },
     "claude-messages": {
       "description": "An iMessage-style window onto every Claude Code session running on the machine.",
-      "stack": "Node.js"
+      "stack": "Node.js",
+      "updated": "2026-10-09"
     },
     "computing-age": {
       "description": "Video essay: computing as one accelerating project, from counting stones to thinking machines.",
-      "stack": "HyperFrames"
+      "stack": "HyperFrames",
+      "updated": "2026-09-30"
     },
     "experiment-20260612": {
       "description": "Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants.",
-      "stack": "Python"
+      "stack": "Python",
+      "updated": "2026-06-20"
     },
     "experiment-space-smoke": {
       "description": "Generated content for smoke-testing one-click sandbox launch, the sandbox-local Space URL and Agents API turns.",
-      "stack": "Markdown"
+      "stack": "Markdown",
+      "updated": "2026-07-19"
     },
     "fractal-lab": {
       "description": "Interactive canvas playground for exploring fractal simulations.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "updated": "2026-06-25"
     },
     "galaxy-sandbox": {
       "description": "Galaxy and particle simulation where every Claude Code session on the machine becomes its own galaxy.",
-      "stack": "Vite, React"
+      "stack": "Vite, React",
+      "updated": "2026-06-30"
     },
     "hello-simulator": {
       "description": "Hello Sim, a one-screen SwiftUI app where each card shows one thing Claude can do in the iOS Simulator, plus XO Space.",
-      "stack": "Swift"
+      "stack": "Swift",
+      "updated": "2026-09-25"
     },
     "innernet": {
       "description": "A personal internet made from your folders: search them like the web, read your projects like an encyclopedia.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "source": "https://github.com/quirq-ai/innernet",
+      "updated": "2026-10-04"
     },
     "jev-hello": {
       "description": "Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out.",
-      "stack": "Python"
+      "stack": "Python",
+      "updated": "2026-09-28"
     },
     "laya": {
       "description": "Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes.",
-      "stack": "Python"
+      "stack": "Python",
+      "source": "https://github.com/NandhaKishorM/laya",
+      "updated": "2026-09-23"
     },
     "linear-clone": {
       "description": "Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "updated": "2026-08-16"
     },
     "makepad": {
       "description": "Makepad, the AI-accelerated Rust app and game environment, studied for its file explorer and treemap.",
-      "stack": "Rust"
+      "stack": "Rust",
+      "source": "https://github.com/makepad/makepad",
+      "pointer": true,
+      "updated": "2026-09-18"
     },
     "my-video": {
       "description": "Remotion project with the XO main video plus Clawdbot and XO Agency videos.",
-      "stack": "Remotion"
+      "stack": "Remotion",
+      "updated": "2026-01-30"
     },
     "navier-stokes": {
       "description": "Flow Lab: an interactive Navier-Stokes fluid lab with four experiments and synchronized measurements.",
-      "stack": "Vite, React"
+      "stack": "Vite, React",
+      "source": "https://github.com/sharmasuraj0123/navier-stokes",
+      "updated": "2026-09-10"
     },
     "nirvana": {
       "description": "One-pager and create script for Nirvana agent sandboxes: isolated, managed environments for autonomous agents.",
-      "stack": "Shell"
+      "stack": "Shell",
+      "updated": "2026-07-09"
     },
     "os-taxonomy": {
       "description": "Marble's open taxonomy of what children learn (1,590 micro-topics in a prerequisite graph), plus a local viewer.",
-      "stack": "Vite, React"
+      "stack": "Vite, React",
+      "source": "https://github.com/withmarbleapp/os-taxonomy",
+      "updated": "2026-07-12"
     },
     "paperclip": {
       "description": "Paperclip, open-source orchestration for zero-human companies, with two local patches.",
-      "stack": "Node.js"
+      "stack": "Node.js",
+      "source": "https://github.com/paperclipai/paperclip",
+      "updated": "2026-04-08"
     },
     "rea": {
       "description": "REA: reverse engineer anything from the terminal or an agent, through one CLI and MCP server.",
-      "stack": "TypeScript"
+      "stack": "TypeScript",
+      "source": "https://github.com/morluto/rea",
+      "pointer": true,
+      "updated": "2026-10-13"
     },
     "remotion-studio": {
       "description": "Bare Remotion starter project.",
-      "stack": "Remotion"
+      "stack": "Remotion",
+      "updated": "2026-01-25"
     },
     "shipnotes-demo": {
       "description": "Runnable tour of the shipnotes web components, vendored unmodified.",
-      "stack": "HTML"
+      "stack": "HTML",
+      "updated": "2026-09-26"
     },
     "solar-claude": {
       "description": "Observatory: pose a question, run it in real physics and keep the trace. Began as a real-ephemeris solar system.",
-      "stack": "Vite, Three.js"
+      "stack": "Vite, Three.js",
+      "source": "https://github.com/sharmasuraj0123/solar-claude",
+      "updated": "2026-10-09"
     },
     "solar-system": {
       "description": "Solar system simulation in Next.js and React Three Fiber.",
-      "stack": "Next.js, Three.js"
+      "stack": "Next.js, Three.js",
+      "updated": "2026-06-19"
     },
     "space-walk": {
       "description": "Replays coding-agent sessions on a 3D map of the codebase. A fork of cosmtrek/mindwalk.",
-      "stack": "Go"
+      "stack": "Go",
+      "source": "https://github.com/sharmasuraj0123/space-walk",
+      "updated": "2026-09-23"
     },
     "timesfm": {
       "description": "TimesFM, Google Research's time-series foundation model, reworked locally.",
-      "stack": "Python"
+      "stack": "Python",
+      "source": "https://github.com/google-research/timesfm",
+      "updated": "2026-07-11"
     },
     "tiny-world-builder": {
       "description": "A 3D voxel world editor in a single HTML file: build, sculpt, fly through and share tiny worlds.",
-      "stack": "HTML, Three.js"
+      "stack": "HTML, Three.js",
+      "source": "https://github.com/jasonkneen/tiny-world-builder",
+      "pointer": true,
+      "updated": "2026-06-19"
     },
     "trees": {
       "description": "How a Tree Eats Air: a single-page carbon simulation.",
-      "stack": "HTML"
+      "stack": "HTML",
+      "updated": "2026-07-12"
     },
     "vercel": {
       "description": "Three Vercel experiments: the AI SDK computer-use demo, a Next.js sandbox deployer and its Python twin.",
-      "stack": "Next.js, Python"
+      "stack": "Next.js, Python",
+      "updated": "2026-06-08"
     },
     "visualizer": {
       "description": "Histography-style animation of git history where every dot is a commit.",
-      "stack": "Next.js"
+      "stack": "Next.js",
+      "source": "https://github.com/sharmasuraj0123/xo-history",
+      "updated": "2026-06-08"
     },
     "workbench": {
       "description": "Codex-style desktop app with two engines behind one UI: the Codex app-server and Claude through the Agent SDK.",
-      "stack": "Electron"
+      "stack": "Electron",
+      "updated": "2026-10-13"
     },
     "zombie-survival": {
       "description": "Zombie Survival, a single-file browser game.",
-      "stack": "HTML"
+      "stack": "HTML",
+      "updated": "2026-07-24"
     }
   }
 }

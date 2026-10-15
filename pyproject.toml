@@ -1,0 +1,10 @@
+[project]
+name = "jev-hello"
+version = "0.1.0"
+description = "Hello world for Jev, TypeSafe's System One model"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["typesafe-sdk>=0.7.2"]
+
+[tool.uv]
+package = false

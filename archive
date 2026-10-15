@@ -1,53 +1,24 @@
 #!/usr/bin/env node
-// Archive finished experiments. Each named branch becomes the next commit on the
-// archive branch: that commit adds the branch's files under <name>/ and keeps the
-// branch's whole history as its second parent. Then the branch is deleted and the
-// index on main lists the experiment as archived.
+// Archive finished experiments. Each named branch is compressed into one commit
+// on top of the archive branch: the commit holds only that experiment's final
+// files, at the root, and none of its snapshot history. Then the branch is deleted
+// and the index on main lists the experiment as archived. The archive tip is the
+// newest archived experiment; each commit back is the one archived before it.
 //
 //   ./archive trees              archive one experiment
-//   ./archive trees nirvana      several at once, one commit each
+//   ./archive trees nirvana      several at once, one commit each, in that order
 //   ./archive --dry-run trees    show what would happen; write and push nothing
 //   ./archive --force trees      archive the published version even if the folder changed since
 'use strict'
 
 const fs = require('node:fs')
 const path = require('node:path')
-const { ROOT, RESERVED, git, run, die, entries, count, day, repoUrl, loadManifest, remoteBranches, syncMain, snapshot, saveIndex } =
-  require('./publish')
+const { ROOT, RESERVED, git, run, die, count, day, loadManifest, remoteBranches, syncMain, snapshot, saveIndex } = require('./publish')
 
 const BRANCH = 'archive'
 
 const hasCommit = (sha) => git(['cat-file', '-e', `${sha}^{commit}`], { ok: true }) !== null
 const treeOf = (sha) => git(['rev-parse', `${sha}^{tree}`]).trim()
-const commit = (tree, parents, message) =>
-  git(['commit-tree', tree, ...parents.flatMap((p) => ['-p', p]), '-F', '-'], { input: message }).trim()
-
-// The archive branch's first commit: a README saying how it works.
-function startArchive() {
-  const readme = [
-    '# archive',
-    '',
-    'Finished experiments. Each one is a folder here, added by the commit that archived it.',
-    "That commit's second parent is the experiment's old branch, so its whole history stays reachable after the branch is deleted.",
-    '',
-    '```bash',
-    'git log --first-parent --oneline archive   # one line per archived experiment',
-    '```',
-    '',
-    `Live experiments and the full index: ${repoUrl()}`,
-    '',
-  ].join('\n')
-  const blob = git(['hash-object', '-w', '--stdin'], { input: readme }).trim()
-  const tree = git(['mktree'], { input: `100644 blob ${blob}\tREADME.md\n` }).trim()
-  return commit(tree, [], 'Start the archive\n')
-}
-
-// The tree of `tip` with <name>/ set to `tree`; archiving a name again replaces its folder.
-function withFolder(tip, name, tree) {
-  const rows = entries(git(['ls-tree', '-z', tip])).filter((row) => row.slice(row.indexOf('\t') + 1) !== name)
-  rows.push(`040000 tree ${tree}\t${name}`)
-  return git(['mktree', '-z'], { input: rows.map((row) => `${row}\0`).join('') }).trim()
-}
 
 function main() {
   const argv = process.argv.slice(2)
@@ -79,22 +50,25 @@ function main() {
     }
   }
 
-  let tip = remote.get(BRANCH) ?? startArchive()
+  let tip = remote.get(BRANCH) ?? null
+  const archived = {}
   const report = []
   for (const name of names) {
     const head = remote.get(name)
     const description = manifest.experiments[name]?.description
+    const history = count(Number(git(['rev-list', '--count', head]).trim()), 'commit')
     const message = [
       `Archive ${name}`,
       '',
       ...(description ? [description, ''] : []),
-      `The ${name} branch moved here: its files are in ${name}/ and its history is`,
-      `this commit's second parent. Last commit on the branch: ${head.slice(0, 7)}.`,
+      `The ${name} branch compressed to its final state (${head.slice(0, 7)}), squashed from ${history}.`,
+      tip ? 'The branch was deleted. The commit before this one holds the experiment archived before it.' : 'The branch was deleted.',
       '',
     ].join('\n')
-    tip = commit(withFolder(tip, name, treeOf(head)), [tip, head], message)
-    const history = count(Number(git(['rev-list', '--count', head]).trim()), 'commit')
-    report.push(`  ${name.padEnd(26)} ${(dryRun ? 'would archive' : 'archived').padEnd(13)} ${history} of history, now ${BRANCH}/${name}/`)
+    tip = git(['commit-tree', treeOf(head), ...(tip ? ['-p', tip] : []), '-F', '-'], { input: message }).trim()
+    archived[name] = tip
+    const note = `${history} squashed into 1 on ${BRANCH}${dryRun ? '' : ` (${tip.slice(0, 7)})`}`
+    report.push(`  ${name.padEnd(26)} ${(dryRun ? 'would archive' : 'archived').padEnd(13)} ${note}`)
   }
   if (dryRun) return console.log(`${report.join('\n')}\n\nDry run: nothing was written or pushed.`)
 
@@ -112,10 +86,13 @@ function main() {
     git(['update-ref', '-d', `refs/remotes/origin/${name}`], { ok: true })
   }
 
+  // "archived" stays in archive order, so re-archiving a name moves it to the newest spot.
   const today = day(new Date())
   for (const name of names) {
-    manifest.archived[name] = { ...manifest.experiments[name], archived: today }
+    const entry = { ...manifest.experiments[name], archived: today, commit: archived[name] }
+    delete manifest.archived[name]
     delete manifest.experiments[name]
+    manifest.archived[name] = entry
   }
   const live = new Set([...remote.keys(), BRANCH].filter((branch) => !names.includes(branch)))
   saveIndex(manifest, live, `Archive ${names.join(', ')}`)

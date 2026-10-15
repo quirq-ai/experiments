@@ -343,17 +343,18 @@ function renderIndex(manifest, live) {
       return `| [${name}](${repo}/tree/${name}) | ${cell(e.description)} | ${cell(e.stack)} | ${source} | ${e.updated ?? ''} |`
     }),
   ]
-  const archived = Object.entries(manifest.archived).sort(newestFirst('archived'))
+  // "archived" is kept in archive order, so reversed it reads like the archive branch, tip first.
+  const archived = Object.entries(manifest.archived).reverse()
   if (archived.length) {
     lines.push(
       '',
       '### Archived',
       '',
-      `Finished experiments, kept as folders in the [\`archive\`](${repo}/tree/archive) branch, most recently archived first.`,
+      `Each finished experiment is one commit on the [\`archive\`](${repo}/commits/archive) branch, newest first: the tip holds the last one archived, and each commit back holds the one before.`,
       '',
       '| Experiment | What it was | Archived |',
       '| --- | --- | --- |',
-      ...archived.map(([name, e]) => `| [${name}](${repo}/tree/archive/${name}) | ${cell(e.description)} | ${e.archived ?? ''} |`),
+      ...archived.map(([name, e]) => `| [${name}](${repo}/tree/${e.commit ?? 'archive'}) | ${cell(e.description)} | ${e.archived ?? ''} |`),
     )
   }
   return lines.join('\n')
@@ -369,9 +370,7 @@ function writeReadme(index) {
 
 // Rewrite experiments.json and the README index, then commit and push them on main.
 function saveIndex(manifest, live, message) {
-  const sorted = (section) => Object.fromEntries(Object.entries(section).sort(([a], [b]) => a.localeCompare(b)))
-  manifest.experiments = sorted(manifest.experiments)
-  manifest.archived = sorted(manifest.archived)
+  manifest.experiments = Object.fromEntries(Object.entries(manifest.experiments).sort(([a], [b]) => a.localeCompare(b)))
   fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)
   writeReadme(renderIndex(manifest, live))
   const files = ['README.md', 'experiments.json']
@@ -430,11 +429,8 @@ module.exports = {
   git,
   run,
   die,
-  entries,
-  lastLine,
   count,
   day,
-  repoUrl,
   loadManifest,
   remoteBranches,
   syncMain,

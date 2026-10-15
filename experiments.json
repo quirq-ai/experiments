@@ -108,7 +108,7 @@
       "source": "https://github.com/sharmasuraj0123/solar-claude",
       "updated": "2026-10-09"
     },
-    "solar-system": {
+    "space/solar-system": {
       "description": "Solar system simulation in Next.js and React Three Fiber.",
       "stack": "Next.js, Three.js",
       "updated": "2026-06-19"

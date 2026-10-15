@@ -62,11 +62,6 @@
       "pointer": true,
       "updated": "2026-09-18"
     },
-    "my-video": {
-      "description": "Remotion project with the XO main video plus Clawdbot and XO Agency videos.",
-      "stack": "Remotion",
-      "updated": "2026-01-30"
-    },
     "navier-stokes": {
       "description": "Flow Lab: an interactive Navier-Stokes fluid lab with four experiments and synchronized measurements.",
       "stack": "Vite, React",
@@ -96,6 +91,11 @@
       "source": "https://github.com/morluto/rea",
       "pointer": true,
       "updated": "2026-10-13"
+    },
+    "Remotion": {
+      "description": "Remotion project with the XO main video plus Clawdbot and XO Agency videos.",
+      "stack": "Remotion",
+      "updated": "2026-01-30"
     },
     "remotion-studio": {
       "description": "Bare Remotion starter project.",

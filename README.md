@@ -83,7 +83,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [visualizer](https://github.com/quirq-ai/experiments/tree/visualizer) | Histography-style animation of git history where every dot is a commit. | Next.js | [sharmasuraj0123/xo-history](https://github.com/sharmasuraj0123/xo-history) | 2026-06-08 |
 | [artifact-evolution](https://github.com/quirq-ai/experiments/tree/artifact-evolution) | One idea in five forms: terminal, markdown one-pager, slide deck, notebook and Next.js app, each kept as an immutable artifact. | Next.js |  | 2026-05-28 |
 | [paperclip](https://github.com/quirq-ai/experiments/tree/paperclip) | Paperclip, open-source orchestration for zero-human companies, with two local patches. | Node.js | [paperclipai/paperclip](https://github.com/paperclipai/paperclip) | 2026-04-08 |
-| [my-video](https://github.com/quirq-ai/experiments/tree/my-video) | Remotion project with the XO main video plus Clawdbot and XO Agency videos. | Remotion |  | 2026-01-30 |
+| [Remotion](https://github.com/quirq-ai/experiments/tree/Remotion) | Remotion project with the XO main video plus Clawdbot and XO Agency videos. | Remotion |  | 2026-01-30 |
 | [remotion-studio](https://github.com/quirq-ai/experiments/tree/remotion-studio) | Bare Remotion starter project. | Remotion |  | 2026-01-25 |
 
 ### Archived

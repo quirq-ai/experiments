@@ -30,11 +30,6 @@
       "stack": "Node.js",
       "updated": "2026-10-09"
     },
-    "experiment-20260612": {
-      "description": "Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants.",
-      "stack": "Python",
-      "updated": "2026-06-20"
-    },
     "experiment-space-smoke": {
       "description": "Generated content for smoke-testing one-click sandbox launch, the sandbox-local Space URL and Agents API turns.",
       "stack": "Markdown",
@@ -203,6 +198,13 @@
       "updated": "2026-08-16",
       "archived": "2026-10-16",
       "commit": "1fe9d9c94c2b123d799a8ed368dfdd4b0332c3c7"
+    },
+    "experiment-20260612": {
+      "description": "Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants.",
+      "stack": "Python",
+      "updated": "2026-06-20",
+      "archived": "2026-10-16",
+      "commit": "78dc8909540245d61d2aa941620cefb847a09334"
     }
   }
 }

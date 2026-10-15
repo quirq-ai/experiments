@@ -53,7 +53,7 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-28 experiments, most recently changed first.
+27 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
@@ -76,7 +76,6 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [nirvana](https://github.com/quirq-ai/experiments/tree/nirvana) | One-pager and create script for Nirvana agent sandboxes: isolated, managed environments for autonomous agents. | Shell |  | 2026-07-09 |
 | [galaxy-sandbox](https://github.com/quirq-ai/experiments/tree/galaxy-sandbox) | Galaxy and particle simulation where every Claude Code session on the machine becomes its own galaxy. | Vite, React |  | 2026-06-30 |
 | [fractal-lab](https://github.com/quirq-ai/experiments/tree/fractal-lab) | Interactive canvas playground for exploring fractal simulations. | Next.js |  | 2026-06-25 |
-| [experiment-20260612](https://github.com/quirq-ai/experiments/tree/experiment-20260612) | Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants. | Python |  | 2026-06-20 |
 | [solar-system](https://github.com/quirq-ai/experiments/tree/solar-system) | Solar system simulation in Next.js and React Three Fiber. | Next.js, Three.js |  | 2026-06-19 |
 | [tiny-world-builder](https://github.com/quirq-ai/experiments/tree/tiny-world-builder) | A 3D voxel world editor in a single HTML file: build, sculpt, fly through and share tiny worlds. | HTML, Three.js | [jasonkneen/tiny-world-builder](https://github.com/jasonkneen/tiny-world-builder) (pointer) | 2026-06-19 |
 | [vercel](https://github.com/quirq-ai/experiments/tree/vercel) | Three Vercel experiments: the AI SDK computer-use demo, a Next.js sandbox deployer and its Python twin. | Next.js, Python |  | 2026-06-08 |
@@ -92,6 +91,7 @@ Each finished experiment is one commit on the [`archive`](https://github.com/qui
 
 | Experiment | What it was | Archived |
 | --- | --- | --- |
+| [experiment-20260612](https://github.com/quirq-ai/experiments/tree/78dc8909540245d61d2aa941620cefb847a09334) | Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants. | 2026-10-16 |
 | [linear-clone](https://github.com/quirq-ai/experiments/tree/1fe9d9c94c2b123d799a8ed368dfdd4b0332c3c7) | Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write. | 2026-10-16 |
 | [laya](https://github.com/quirq-ai/experiments/tree/59dfde9cbc646d98bd15b57744872da8d67a8d1f) | Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes. | 2026-10-16 |
 | [jev-hello](https://github.com/quirq-ai/experiments/tree/bdf18fcb72cf01630658496094412324de57bd17) | Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out. | 2026-10-16 |

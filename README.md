@@ -1,6 +1,6 @@
 # experiments
 
-One repo, one branch per experiment. This branch, `main`, is the index.
+One repo, one branch per experiment. This branch, `main`, is the index, and `archive` keeps the finished ones.
 
 ## How it works
 
@@ -12,13 +12,15 @@ Every experiment starts as a folder. [`./publish`](publish) turns each folder in
 - **One commit per change.** Publishing adds a snapshot commit only when the folder changed, so a branch's log is that experiment's history. The author date is when the folder last changed.
 - **Ignored files stay home.** The folder's own `.gitignore` applies, and [`.publishignore`](.publishignore) always wins on top of it: dependencies, build caches, `.env` files, local state. Files over GitHub's 100 MB limit are left out and named in the commit message.
 - **Untouched clones become pointers.** A folder that is a clean clone of someone else's repo publishes a README with the upstream URL and exact commit instead of a copy.
+- **Finished experiments move to `archive`.** [`./archive`](archive) turns a branch into the next commit on the `archive` branch: the commit adds the branch's files under `<name>/` and keeps its whole history as the commit's second parent, then the branch is deleted. `git log --first-parent archive` lists every archived experiment, one line each.
 
 ## Get an experiment
 
 ```bash
 git clone --single-branch -b <name> https://github.com/quirq-ai/experiments.git <name>
 ```
-## Publish
+
+## Publish and archive
 
 Clone `main`, keep experiment folders inside it, then:
 
@@ -26,13 +28,15 @@ Clone `main`, keep experiment folders inside it, then:
 ./publish                # every folder; pushes what changed, then this index
 ./publish innernet rea   # only these folders
 ./publish --dry-run      # show what would happen; write and push nothing
+./archive trees          # move a finished experiment into the archive branch
+./archive --dry-run trees
 ```
+
+Archiving leaves the local folder alone, and `./publish` skips archived names from then on. It refuses when the folder has changes that were never published (publish first, or `--force` to archive the published version). To revive an experiment, move its entry from `archived` back to `experiments` and publish it: it starts a fresh branch, and its old history stays in the archive.
 
 Descriptions and stack labels live in [`experiments.json`](experiments.json): edit them there and the next publish rewrites the table. Folders listed under `skip` never get a branch. Clones of repos owned by an account under `owners` are always copied, never turned into pointers.
 
 `./publish` only builds on commits it made itself. If a branch gets commits from anywhere else, it stops rather than snapshot over them; `--force` overrides that.
-
-
 
 ## Index
 
@@ -76,5 +80,3 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 | [my-video](https://github.com/quirq-ai/experiments/tree/my-video) | Remotion project with the XO main video plus Clawdbot and XO Agency videos. | Remotion |  | 2026-01-30 |
 | [remotion-studio](https://github.com/quirq-ai/experiments/tree/remotion-studio) | Bare Remotion starter project. | Remotion |  | 2026-01-25 |
 <!-- index:end -->
-
-

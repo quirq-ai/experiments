@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Publish every experiment folder as its own orphan branch (branch name = folder
 // name, branch root = folder contents), then rebuild the index in README.md on main.
+// ./archive builds on the helpers exported at the bottom.
 //
 //   ./publish                 every folder; pushes what changed, then the index
 //   ./publish innernet rea    only these folders
@@ -20,13 +21,10 @@ const README = path.join(ROOT, 'README.md')
 const SCRATCH_INDEX = path.join(GIT_DIR, 'publish.index')
 const MAX_FILE = 100 * 1024 * 1024 // GitHub rejects files over 100 MB
 const TRAILER = 'Published-by: publish'
+const RESERVED = new Set(['main', 'archive']) // branches that are not experiments
+const GITHUB = /github\.com[:/]+([^/]+\/[^/]+?)(?:\.git)?\/?$/
 const START = '<!-- index:start -->'
 const END = '<!-- index:end -->'
-
-const argv = process.argv.slice(2)
-const dryRun = argv.includes('--dry-run')
-const force = argv.includes('--force')
-const only = argv.filter((a) => !a.startsWith('--'))
 
 // Never let git pick up a repo from the caller's environment.
 const ENV = { ...process.env }
@@ -125,7 +123,7 @@ function originOf(dir) {
   const remote = git(['remote', 'get-url', 'origin'], { cwd: dir, ok: true })?.trim()
   const head = git(['rev-parse', '-q', '--verify', 'HEAD'], { cwd: dir, ok: true })?.trim()
   if (!remote || !head) return null
-  const slug = remote.match(/github\.com[:/]+([^/]+\/[^/]+?)(?:\.git)?\/?$/)?.[1] ?? null
+  const slug = remote.match(GITHUB)?.[1] ?? null
   return {
     slug,
     url: slug ? `https://github.com/${slug}` : remote,
@@ -201,6 +199,22 @@ function gitDate(date) {
   return `${Math.floor(date.getTime() / 1000)} ${offset < 0 ? '-' : '+'}${hhmm}`
 }
 
+// The repo's web address, for links in the index.
+function repoUrl() {
+  const url = git(['config', '--get', 'remote.origin.url']).trim()
+  const slug = url.match(GITHUB)?.[1]
+  return slug ? `https://github.com/${slug}` : url.replace(/\.git$/, '')
+}
+
+function loadManifest() {
+  const manifest = readJson(MANIFEST) ?? die('experiments.json is missing or is not valid JSON.')
+  manifest.owners ??= []
+  manifest.skip ??= []
+  manifest.experiments ??= {}
+  manifest.archived ??= {}
+  return manifest
+}
+
 function remoteBranches() {
   const out = git(['ls-remote', '--heads', 'origin'], { ok: true })
   if (out === null) die('Cannot reach origin. Check the network and your GitHub login.')
@@ -212,43 +226,72 @@ function remoteBranches() {
   return branches
 }
 
-function publish(name, owners, remote) {
-  const dir = path.join(ROOT, name)
-  if (name === 'main' || git(['check-ref-format', '--branch', name], { ok: true }) === null) {
-    return { name, status: 'skipped', note: 'not usable as a branch name' }
+// main has to fast-forward to origin before the index changes, or pushing it fails.
+function syncMain(remote) {
+  if (!remote.has('main')) return
+  git(['fetch', '-q', 'origin', 'main'])
+  if (git(['merge', '-q', '--ff-only', 'origin/main'], { ok: true }) === null) {
+    die('Local main has diverged from origin/main. Reconcile them, then run this again.')
   }
+}
 
+// The tree a folder publishes as, with what its commit message says about it.
+// Returns null when the folder has nothing to publish.
+function snapshot(name, manifest) {
+  const dir = path.join(ROOT, name)
   const origin = originOf(dir)
+  const owners = manifest.owners.map((o) => o.toLowerCase())
   const owned = Boolean(origin?.slug && owners.includes(origin.slug.split('/')[0].toLowerCase()))
   const pointer = Boolean(origin && origin.clean && origin.pushed && !owned)
-
-  let tree, body, note, updated
   fs.rmSync(SCRATCH_INDEX, { force: true })
+
   if (pointer) {
     const blob = git(['hash-object', '-w', '--stdin'], { input: pointerReadme(name, origin) }).trim()
-    tree = git(['mktree'], { input: `100644 blob ${blob}\tREADME.md\n` }).trim()
-    updated = origin.date
-    note = `pointer to ${origin.slug ?? origin.url} @ ${origin.head.slice(0, 7)}`
-    body = `Pointer to ${origin.url} at ${origin.head} (${origin.branch}): the folder is an untouched clone.`
-  } else {
-    const found = collect(dir)
-    if (!found.files.length) return { name, status: 'skipped', note: 'nothing to publish' }
-    const env = hubEnv(dir)
-    git(['update-index', '--add', '-z', '--stdin'], { cwd: dir, env, input: `${found.files.join('\0')}\0` })
-    tree = git(['write-tree'], { env }).trim()
-    fs.rmSync(SCRATCH_INDEX, { force: true })
-    updated = new Date(found.newest)
-    const summary = `${count(found.files.length, 'file')}, ${size(found.bytes)}`
-    note = found.tooBig.length ? `${summary}; left out ${found.tooBig.length} over 100 MB` : summary
-    body = [
-      `Snapshot of the ${name} folder: ${summary}.`,
-      origin && `Source: ${origin.url} @ ${origin.head.slice(0, 7)} (${origin.branch}${origin.clean ? '' : ', plus local changes'})`,
-      found.tooBig.length &&
-        ["Left out, over GitHub's 100 MB file limit:", ...found.tooBig.map((f) => `  ${f.file} (${size(f.bytes)})`)].join('\n'),
-    ]
-      .filter(Boolean)
-      .join('\n')
+    return {
+      tree: git(['mktree'], { input: `100644 blob ${blob}\tREADME.md\n` }).trim(),
+      note: `pointer to ${origin.slug ?? origin.url} @ ${origin.head.slice(0, 7)}`,
+      body: `Pointer to ${origin.url} at ${origin.head} (${origin.branch}): the folder is an untouched clone.`,
+      updated: origin.date,
+      origin,
+      pointer,
+    }
   }
+
+  const found = collect(dir)
+  if (!found.files.length) return null
+  const env = hubEnv(dir)
+  git(['update-index', '--add', '-z', '--stdin'], { cwd: dir, env, input: `${found.files.join('\0')}\0` })
+  const tree = git(['write-tree'], { env }).trim()
+  fs.rmSync(SCRATCH_INDEX, { force: true })
+  const summary = `${count(found.files.length, 'file')}, ${size(found.bytes)}`
+  const body = [
+    `Snapshot of the ${name} folder: ${summary}.`,
+    origin && `Source: ${origin.url} @ ${origin.head.slice(0, 7)} (${origin.branch}${origin.clean ? '' : ', plus local changes'})`,
+    found.tooBig.length &&
+      ["Left out, over GitHub's 100 MB file limit:", ...found.tooBig.map((f) => `  ${f.file} (${size(f.bytes)})`)].join('\n'),
+  ]
+    .filter(Boolean)
+    .join('\n')
+  return {
+    tree,
+    note: found.tooBig.length ? `${summary}; left out ${found.tooBig.length} over 100 MB` : summary,
+    body,
+    updated: new Date(found.newest),
+    origin,
+    pointer,
+  }
+}
+
+function publish(name, manifest, remote, { dryRun, force }) {
+  if (RESERVED.has(name) || git(['check-ref-format', '--branch', name], { ok: true }) === null) {
+    return { name, status: 'skipped', note: 'not usable as a branch name' }
+  }
+  if (manifest.archived[name]) {
+    return { name, status: 'archived', note: 'in the archive branch; move it back under "experiments" to publish again' }
+  }
+  const snap = snapshot(name, manifest)
+  if (!snap) return { name, status: 'skipped', note: 'nothing to publish' }
+  const { tree, note, body, origin, pointer, updated } = snap
   const result = { name, note, origin, pointer, updated }
 
   const parent = remote.get(name) ?? null
@@ -286,15 +329,12 @@ function record(manifest, result) {
 }
 
 function renderIndex(manifest, live) {
-  const url = git(['config', '--get', 'remote.origin.url']).trim()
-  const slug = url.match(/github\.com[:/]+([^/]+\/[^/]+?)(?:\.git)?\/?$/)?.[1]
-  const repo = slug ? `https://github.com/${slug}` : url.replace(/\.git$/, '')
+  const repo = repoUrl()
   const cell = (text) => (text ?? '').replace(/\|/g, '\\|')
-  const rows = Object.entries(manifest.experiments)
-    .filter(([name]) => live.has(name))
-    .sort(([a, x], [b, y]) => (y.updated ?? '').localeCompare(x.updated ?? '') || a.localeCompare(b))
-  return [
-    `${rows.length} experiments, most recently changed first.`,
+  const newestFirst = (field) => ([a, x], [b, y]) => (y[field] ?? '').localeCompare(x[field] ?? '') || a.localeCompare(b)
+  const rows = Object.entries(manifest.experiments).filter(([name]) => live.has(name)).sort(newestFirst('updated'))
+  const lines = [
+    `${count(rows.length, 'experiment')}, most recently changed first.`,
     '',
     '| Experiment | What it is | Stack | Source | Updated |',
     '| --- | --- | --- | --- | --- |',
@@ -302,7 +342,21 @@ function renderIndex(manifest, live) {
       const source = e.source ? `[${e.source.replace('https://github.com/', '')}](${e.source})${e.pointer ? ' (pointer)' : ''}` : ''
       return `| [${name}](${repo}/tree/${name}) | ${cell(e.description)} | ${cell(e.stack)} | ${source} | ${e.updated ?? ''} |`
     }),
-  ].join('\n')
+  ]
+  const archived = Object.entries(manifest.archived).sort(newestFirst('archived'))
+  if (archived.length) {
+    lines.push(
+      '',
+      '### Archived',
+      '',
+      `Finished experiments, kept as folders in the [\`archive\`](${repo}/tree/archive) branch, most recently archived first.`,
+      '',
+      '| Experiment | What it was | Archived |',
+      '| --- | --- | --- |',
+      ...archived.map(([name, e]) => `| [${name}](${repo}/tree/archive/${name}) | ${cell(e.description)} | ${e.archived ?? ''} |`),
+    )
+  }
+  return lines.join('\n')
 }
 
 function writeReadme(index) {
@@ -313,31 +367,43 @@ function writeReadme(index) {
   fs.writeFileSync(README, `${text.slice(0, start + START.length)}\n${index}\n${text.slice(end)}`)
 }
 
+// Rewrite experiments.json and the README index, then commit and push them on main.
+function saveIndex(manifest, live, message) {
+  const sorted = (section) => Object.fromEntries(Object.entries(section).sort(([a], [b]) => a.localeCompare(b)))
+  manifest.experiments = sorted(manifest.experiments)
+  manifest.archived = sorted(manifest.archived)
+  fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)
+  writeReadme(renderIndex(manifest, live))
+  const files = ['README.md', 'experiments.json']
+  git(['add', '--', ...files])
+  if (git(['diff', '--cached', '--quiet', '--', ...files], { ok: true }) === null) {
+    git(['commit', '-q', '-m', message, '--', ...files])
+  }
+  const push = run(['push', '-q', 'origin', 'main'])
+  if (push.status !== 0) die(`Pushing main failed: ${lastLine(push.stderr)}`)
+}
+
 function main() {
+  const argv = process.argv.slice(2)
+  const dryRun = argv.includes('--dry-run')
+  const force = argv.includes('--force')
+  const only = argv.filter((a) => !a.startsWith('--'))
   if (!isRepo(ROOT)) die('Run ./publish from a checkout of the experiments repo.')
-  const manifest = readJson(MANIFEST) ?? die('experiments.json is missing or is not valid JSON.')
-  manifest.experiments ??= {}
-  const owners = (manifest.owners ?? []).map((o) => o.toLowerCase())
-  const skip = new Set(manifest.skip ?? [])
+  const manifest = loadManifest()
 
   const folders = fs
     .readdirSync(ROOT, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && !d.name.startsWith('.') && !skip.has(d.name))
+    .filter((d) => d.isDirectory() && !d.name.startsWith('.') && !manifest.skip.includes(d.name))
     .map((d) => d.name)
     .sort()
   for (const name of only) if (!folders.includes(name)) die(`No folder named "${name}" here, or it is listed under "skip".`)
 
   const remote = remoteBranches()
-  if (!dryRun && remote.has('main')) {
-    git(['fetch', '-q', 'origin', 'main'])
-    if (git(['merge', '-q', '--ff-only', 'origin/main'], { ok: true }) === null) {
-      die('Local main has diverged from origin/main. Reconcile them, then publish again.')
-    }
-  }
+  if (!dryRun) syncMain(remote)
 
   const results = []
   for (const name of only.length ? only : folders) {
-    const result = publish(name, owners, remote)
+    const result = publish(name, manifest, remote, { dryRun, force })
     results.push(result)
     console.log(`  ${name.padEnd(26)} ${result.status.padEnd(13)} ${result.note ?? ''}`)
     if (['created', 'updated', 'unchanged'].includes(result.status)) record(manifest, result)
@@ -346,21 +412,34 @@ function main() {
   if (failed.length) process.exitCode = 1
   if (dryRun) return console.log('\nDry run: nothing was written or pushed.')
 
-  manifest.experiments = Object.fromEntries(Object.entries(manifest.experiments).sort(([a], [b]) => a.localeCompare(b)))
-  fs.writeFileSync(MANIFEST, `${JSON.stringify(manifest, null, 2)}\n`)
   const live = new Set([...remote.keys(), ...results.filter((r) => r.changed).map((r) => r.name)])
-  writeReadme(renderIndex(manifest, live))
-  const files = ['README.md', 'experiments.json']
-  git(['add', '--', ...files])
-  if (git(['diff', '--cached', '--quiet', '--', ...files], { ok: true }) === null) {
-    git(['commit', '-q', '-m', 'Update the index', '--', ...files])
-  }
-  const push = run(['push', '-q', 'origin', 'main'])
-  if (push.status !== 0) die(`Pushing main failed: ${lastLine(push.stderr)}`)
+  saveIndex(manifest, live, 'Update the index')
 
   const changed = results.filter((r) => r.changed).length
   const listed = Object.keys(manifest.experiments).filter((name) => live.has(name)).length
-  console.log(`\n${changed} branch${changed === 1 ? '' : 'es'} published, ${failed.length} failed; the index lists ${listed}.`)
+  const archived = Object.keys(manifest.archived).length
+  console.log(
+    `\n${changed} branch${changed === 1 ? '' : 'es'} published, ${failed.length} failed; ` +
+      `the index lists ${listed}${archived ? ` plus ${archived} archived` : ''}.`,
+  )
 }
 
-main()
+module.exports = {
+  ROOT,
+  RESERVED,
+  git,
+  run,
+  die,
+  entries,
+  lastLine,
+  count,
+  day,
+  repoUrl,
+  loadManifest,
+  remoteBranches,
+  syncMain,
+  snapshot,
+  saveIndex,
+}
+
+if (require.main === module) main()

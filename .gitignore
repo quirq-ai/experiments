@@ -3,5 +3,6 @@
 !/.gitignore
 !/.publishignore
 !/README.md
+!/archive
 !/experiments.json
 !/publish

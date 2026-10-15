@@ -1,0 +1,145 @@
+{
+  "owners": [
+    "quirq-ai",
+    "sharmasuraj0123"
+  ],
+  "skip": [],
+  "experiments": {
+    "artifact-evolution": {
+      "description": "One idea in five forms: terminal, markdown one-pager, slide deck, notebook and Next.js app, each kept as an immutable artifact.",
+      "stack": "Next.js"
+    },
+    "assets": {
+      "description": "Shared quirq brand assets: the mark, favicon, Möbius artwork and OG image.",
+      "stack": "Images"
+    },
+    "autospawn-clone": {
+      "description": "Mock-data clone of autospawn.com, an AI outbound sales platform, built to study its UX.",
+      "stack": "Next.js"
+    },
+    "brand-dna-visualization": {
+      "description": "Brand DNA: explore the colors, stories, voice and visual world behind a brand.",
+      "stack": "Next.js"
+    },
+    "claude-messages": {
+      "description": "An iMessage-style window onto every Claude Code session running on the machine.",
+      "stack": "Node.js"
+    },
+    "computing-age": {
+      "description": "Video essay: computing as one accelerating project, from counting stones to thinking machines.",
+      "stack": "HyperFrames"
+    },
+    "experiment-20260612": {
+      "description": "Structured agent environments pilot: a hermetic harness that runs coding agents on xo-cowork-api tasks across environment variants.",
+      "stack": "Python"
+    },
+    "experiment-space-smoke": {
+      "description": "Generated content for smoke-testing one-click sandbox launch, the sandbox-local Space URL and Agents API turns.",
+      "stack": "Markdown"
+    },
+    "fractal-lab": {
+      "description": "Interactive canvas playground for exploring fractal simulations.",
+      "stack": "Next.js"
+    },
+    "galaxy-sandbox": {
+      "description": "Galaxy and particle simulation where every Claude Code session on the machine becomes its own galaxy.",
+      "stack": "Vite, React"
+    },
+    "hello-simulator": {
+      "description": "Hello Sim, a one-screen SwiftUI app where each card shows one thing Claude can do in the iOS Simulator, plus XO Space.",
+      "stack": "Swift"
+    },
+    "innernet": {
+      "description": "A personal internet made from your folders: search them like the web, read your projects like an encyclopedia.",
+      "stack": "Next.js"
+    },
+    "jev-hello": {
+      "description": "Hello world for Jev, TypeSafe's System One model: typed questions in, probabilities out.",
+      "stack": "Python"
+    },
+    "laya": {
+      "description": "Laya, a multilingual System 1 decision engine that answers typed questions in one forward pass, with local notes.",
+      "stack": "Python"
+    },
+    "linear-clone": {
+      "description": "Linear-style tracker (issues, OKRs, sprints, wiki) that mirrors the .xo state files XO agents write.",
+      "stack": "Next.js"
+    },
+    "makepad": {
+      "description": "Makepad, the AI-accelerated Rust app and game environment, studied for its file explorer and treemap.",
+      "stack": "Rust"
+    },
+    "my-video": {
+      "description": "Remotion project with the XO main video plus Clawdbot and XO Agency videos.",
+      "stack": "Remotion"
+    },
+    "navier-stokes": {
+      "description": "Flow Lab: an interactive Navier-Stokes fluid lab with four experiments and synchronized measurements.",
+      "stack": "Vite, React"
+    },
+    "nirvana": {
+      "description": "One-pager and create script for Nirvana agent sandboxes: isolated, managed environments for autonomous agents.",
+      "stack": "Shell"
+    },
+    "os-taxonomy": {
+      "description": "Marble's open taxonomy of what children learn (1,590 micro-topics in a prerequisite graph), plus a local viewer.",
+      "stack": "Vite, React"
+    },
+    "paperclip": {
+      "description": "Paperclip, open-source orchestration for zero-human companies, with two local patches.",
+      "stack": "Node.js"
+    },
+    "rea": {
+      "description": "REA: reverse engineer anything from the terminal or an agent, through one CLI and MCP server.",
+      "stack": "TypeScript"
+    },
+    "remotion-studio": {
+      "description": "Bare Remotion starter project.",
+      "stack": "Remotion"
+    },
+    "shipnotes-demo": {
+      "description": "Runnable tour of the shipnotes web components, vendored unmodified.",
+      "stack": "HTML"
+    },
+    "solar-claude": {
+      "description": "Observatory: pose a question, run it in real physics and keep the trace. Began as a real-ephemeris solar system.",
+      "stack": "Vite, Three.js"
+    },
+    "solar-system": {
+      "description": "Solar system simulation in Next.js and React Three Fiber.",
+      "stack": "Next.js, Three.js"
+    },
+    "space-walk": {
+      "description": "Replays coding-agent sessions on a 3D map of the codebase. A fork of cosmtrek/mindwalk.",
+      "stack": "Go"
+    },
+    "timesfm": {
+      "description": "TimesFM, Google Research's time-series foundation model, reworked locally.",
+      "stack": "Python"
+    },
+    "tiny-world-builder": {
+      "description": "A 3D voxel world editor in a single HTML file: build, sculpt, fly through and share tiny worlds.",
+      "stack": "HTML, Three.js"
+    },
+    "trees": {
+      "description": "How a Tree Eats Air: a single-page carbon simulation.",
+      "stack": "HTML"
+    },
+    "vercel": {
+      "description": "Three Vercel experiments: the AI SDK computer-use demo, a Next.js sandbox deployer and its Python twin.",
+      "stack": "Next.js, Python"
+    },
+    "visualizer": {
+      "description": "Histography-style animation of git history where every dot is a commit.",
+      "stack": "Next.js"
+    },
+    "workbench": {
+      "description": "Codex-style desktop app with two engines behind one UI: the Codex app-server and Claude through the Agent SDK.",
+      "stack": "Electron"
+    },
+    "zombie-survival": {
+      "description": "Zombie Survival, a single-file browser game.",
+      "stack": "HTML"
+    }
+  }
+}

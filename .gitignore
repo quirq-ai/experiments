@@ -1,0 +1,7 @@
+# main tracks only the index and the publisher; every folder here is its own branch
+/*
+!/.gitignore
+!/.publishignore
+!/README.md
+!/experiments.json
+!/publish

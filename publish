@@ -19,6 +19,7 @@ const MANIFEST = path.join(ROOT, 'experiments.json')
 const IGNORE = path.join(ROOT, '.publishignore')
 const README = path.join(ROOT, 'README.md')
 const SCRATCH_INDEX = path.join(GIT_DIR, 'publish.index')
+const LOCK = path.join(GIT_DIR, 'publish.lock')
 const MAX_FILE = 100 * 1024 * 1024 // GitHub rejects files over 100 MB
 const TRAILER = 'Published-by: publish'
 const RESERVED = new Set(['main', 'archive']) // branches that are not experiments
@@ -50,6 +51,32 @@ const lastLine = (buffer) => buffer.toString().trim().split('\n').pop()
 function die(message) {
   console.error(message)
   process.exit(1)
+}
+
+const alive = (pid) => {
+  try {
+    process.kill(pid, 0)
+    return true
+  } catch (error) {
+    return error.code === 'EPERM'
+  }
+}
+
+// Runs share the scratch index and the manifest, so a checkout runs one at a time.
+// A lock left behind by a run that died is taken over.
+function lock() {
+  let holder = 0
+  try {
+    holder = Number(fs.readFileSync(LOCK, 'utf8'))
+  } catch {}
+  if (holder && alive(holder)) die(`Another ./publish, ./archive or ./rename (pid ${holder}) is running in this checkout. Wait for it to finish.`)
+  if (holder) fs.rmSync(LOCK, { force: true })
+  try {
+    fs.writeFileSync(LOCK, `${process.pid}\n`, { flag: 'wx' })
+  } catch {
+    die('Another ./publish, ./archive or ./rename just started in this checkout. Wait for it to finish.')
+  }
+  process.on('exit', () => fs.rmSync(LOCK, { force: true }))
 }
 
 function readJson(file) {
@@ -411,12 +438,14 @@ function main() {
   const force = argv.includes('--force')
   const only = argv.filter((a) => !a.startsWith('--')).map(nameArg)
   if (!isRepo(ROOT)) die('Run ./publish from a checkout of the experiments repo.')
-  const manifest = loadManifest()
+  lock()
   const remote = remoteBranches()
+  // Read the manifest only once main has caught up, or this run writes over index changes made elsewhere.
+  if (!dryRun) syncMain(remote)
+  const manifest = loadManifest()
 
   const folders = discover(manifest, remote)
   for (const name of only) if (!folders.includes(name)) die(`No experiment folder named "${name}" here, or it is listed under "skip".`)
-  if (!dryRun) syncMain(remote)
 
   const results = []
   for (const name of only.length ? only : folders) {
@@ -450,6 +479,7 @@ module.exports = {
   count,
   day,
   nameArg,
+  lock,
   loadManifest,
   remoteBranches,
   syncMain,

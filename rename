@@ -9,7 +9,7 @@
 
 const fs = require('node:fs')
 const path = require('node:path')
-const { ROOT, RESERVED, git, run, die, nameArg, loadManifest, remoteBranches, syncMain, saveIndex } = require('./publish')
+const { ROOT, RESERVED, git, run, die, nameArg, lock, loadManifest, remoteBranches, syncMain, saveIndex } = require('./publish')
 
 const isDir = (dir) => fs.existsSync(dir) && fs.statSync(dir).isDirectory()
 const onlyJunk = (dir) => fs.readdirSync(dir).every((f) => f === '.DS_Store')
@@ -30,8 +30,10 @@ function main() {
   if (args.length !== 2) die('Usage: ./rename <old> <new>, for example: ./rename autospawn-clone agentic-ai/autoquirq')
   const [from, to] = args
 
-  const manifest = loadManifest()
+  lock()
   const remote = remoteBranches()
+  if (!dryRun) syncMain(remote)
+  const manifest = loadManifest()
   const fromDir = path.join(ROOT, from)
   const toDir = path.join(ROOT, to)
   const hasBranch = remote.has(from)
@@ -63,7 +65,7 @@ function main() {
       continue
     }
     if (!isDir(dir)) die(`${parent} is a file, so it can't hold ${to}.`)
-    const group = [...known].some((k) => k.startsWith(`${parent}/`))
+    const group = [...known, from].some((k) => k.startsWith(`${parent}/`))
     if (!group && !onlyJunk(dir)) {
       die(`${parent}/ would be published as an experiment of its own; moving ${to} into it would turn it into a group. Pick another path, or empty it first.`)
     }
@@ -74,7 +76,6 @@ function main() {
     hasFolder ? `  folder  ${from}/ -> ${to}/${created.length ? ` (creates ${created.join(', ')})` : ''}` : '  folder  none here; only the branch moves',
   ].join('\n')
   if (dryRun) return console.log(`${plan}\n\nDry run: nothing was written or pushed.`)
-  syncMain(remote)
 
   // The folder moves first: it is local, so it can go back if the push fails.
   if (hasFolder) {

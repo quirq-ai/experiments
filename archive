@@ -13,7 +13,7 @@
 
 const fs = require('node:fs')
 const path = require('node:path')
-const { ROOT, RESERVED, git, run, die, count, day, nameArg, loadManifest, remoteBranches, syncMain, snapshot, saveIndex } =
+const { ROOT, RESERVED, git, run, die, count, day, nameArg, lock, loadManifest, remoteBranches, syncMain, snapshot, saveIndex } =
   require('./publish')
 
 const BRANCH = 'archive'
@@ -28,13 +28,14 @@ function main() {
   const names = [...new Set(argv.filter((a) => !a.startsWith('--')).map(nameArg))]
   if (!names.length) die('Name the experiments to archive, for example: ./archive trees')
 
-  const manifest = loadManifest()
+  lock()
   const remote = remoteBranches()
   for (const name of names) {
     if (RESERVED.has(name)) die(`"${name}" is not an experiment.`)
     if (!remote.has(name)) die(`There is no "${name}" branch on origin.`)
   }
   if (!dryRun) syncMain(remote)
+  const manifest = loadManifest()
 
   // Everything the new commits build on has to be here locally.
   const missing = [BRANCH, ...names].filter((b) => remote.has(b) && !hasCommit(remote.get(b)))

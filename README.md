@@ -10,7 +10,7 @@ Every experiment starts as a folder. [`./publish`](publish) turns each folder in
 - **Branch root = folder contents.** Clone a branch and you have the folder back.
 - **Names can be paths.** The `agentic-ai/autoquirq/` folder is the `agentic-ai/autoquirq` branch. A folder that holds experiments, like `agentic-ai/`, is just a group and never a branch of its own.
 - **Branches are orphans.** They share no history with each other or with `main`.
-- **One commit per change.** Publishing adds a snapshot commit only when the folder changed, so a branch's log is that experiment's history. The author date is when the folder last changed.
+- **Commits append.** Publishing never rewrites a branch: each snapshot is a new commit on top, so a branch's log is that experiment's history. A plain `./publish` adds one only when the folder changed; naming the experiment (`./publish trees`) adds one even when nothing did. The author date is when the folder last changed.
 - **Ignored files stay home.** The folder's own `.gitignore` applies, and [`.publishignore`](.publishignore) always wins on top of it: dependencies, build caches, `.env` files, local state. Files over GitHub's 100 MB limit are left out and named in the commit message.
 - **Untouched clones become pointers.** A folder that is a clean clone of someone else's repo publishes a README with the upstream URL and exact commit instead of a copy.
 - **Finished experiments get compressed into `archive`.** [`./archive`](archive) squashes a branch into one commit on top of the `archive` branch, then deletes the branch. That commit holds only the experiment's final files, at the root, so the archive tip is the newest archived experiment and each commit back (`archive~1`, `archive~2`, ...) is the one archived before it. Earlier snapshots of the branch are not kept.
@@ -34,7 +34,7 @@ Clone `main`, keep experiment folders inside it, then:
 
 ```bash
 ./publish                # every folder; pushes what changed, then this index
-./publish innernet rea   # only these folders
+./publish innernet rea   # only these folders; always a new commit each
 ./publish --dry-run      # show what would happen; write and push nothing
 ./archive trees          # compress a finished experiment into the archive branch
 ./archive --dry-run trees

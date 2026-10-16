@@ -4,7 +4,7 @@
 // ./archive and ./rename build on the helpers exported at the bottom.
 //
 //   ./publish                 every folder; pushes what changed, then the index
-//   ./publish innernet rea    only these folders
+//   ./publish innernet rea    only these folders, each getting a new commit even if nothing changed
 //   ./publish --dry-run       show what would happen; write and push nothing
 //   ./publish --force         snapshot over branches that have commits made elsewhere
 'use strict'
@@ -332,7 +332,7 @@ function snapshot(name, manifest) {
   }
 }
 
-function publish(name, manifest, remote, { dryRun, force }) {
+function publish(name, manifest, remote, { dryRun, force, again }) {
   if (RESERVED.has(name) || git(['check-ref-format', '--branch', name], { ok: true }) === null) {
     return { name, status: 'skipped', note: 'not usable as a branch name' }
   }
@@ -345,18 +345,24 @@ function publish(name, manifest, remote, { dryRun, force }) {
   const result = { name, note, origin, pointer, updated }
 
   const parent = remote.get(name) ?? null
+  let same = false
   if (parent) {
     if (git(['cat-file', '-e', `${parent}^{commit}`], { ok: true }) === null) {
       git(['fetch', '-q', 'origin', `refs/heads/${name}:refs/remotes/origin/${name}`])
     }
-    if (git(['rev-parse', `${parent}^{tree}`]).trim() === tree) return { ...result, status: 'unchanged' }
-    if (!force && !git(['log', '-1', '--format=%B', parent]).includes(TRAILER)) {
+    same = git(['rev-parse', `${parent}^{tree}`]).trim() === tree
+    // A named experiment gets a new commit even when nothing changed; a plain ./publish skips it.
+    if (same && !again) return { ...result, status: 'unchanged' }
+    if (!same && !force && !git(['log', '-1', '--format=%B', parent]).includes(TRAILER)) {
       return { name, status: 'blocked', note: 'branch has commits made outside ./publish; --force snapshots over them' }
     }
   }
-  if (dryRun) return { name, status: parent ? 'would update' : 'would create', note }
+  const status = !parent ? 'created' : same ? 'republished' : 'updated'
+  if (same) result.note = `${note}; no changes`
+  if (dryRun) return { name, status: { created: 'would create', updated: 'would update', republished: 'would republish' }[status], note: result.note }
 
-  const message = `Publish ${name}\n\n${body}\n\n${TRAILER}\n`
+  const repeat = same ? `\nNothing changed since ${parent.slice(0, 7)}; published again on request.` : ''
+  const message = `Publish ${name}\n\n${body}${repeat}\n\n${TRAILER}\n`
   const commit = git(['commit-tree', tree, ...(parent ? ['-p', parent] : []), '-F', '-'], {
     input: message,
     env: { ...ENV, GIT_AUTHOR_DATE: gitDate(updated) },
@@ -364,7 +370,7 @@ function publish(name, manifest, remote, { dryRun, force }) {
   git(['update-ref', `refs/heads/${name}`, commit])
   const push = run(['push', '-q', 'origin', `refs/heads/${name}:refs/heads/${name}`])
   if (push.status !== 0) return { name, status: 'push failed', note: lastLine(push.stderr) }
-  return { ...result, status: parent ? 'updated' : 'created', changed: true }
+  return { ...result, status, changed: true }
 }
 
 // Descriptions and stacks are hand-editable; publishing only fills them in when missing.
@@ -449,10 +455,10 @@ function main() {
 
   const results = []
   for (const name of only.length ? only : folders) {
-    const result = publish(name, manifest, remote, { dryRun, force })
+    const result = publish(name, manifest, remote, { dryRun, force, again: only.length > 0 })
     results.push(result)
-    console.log(`  ${name.padEnd(26)} ${result.status.padEnd(13)} ${result.note ?? ''}`)
-    if (['created', 'updated', 'unchanged'].includes(result.status)) record(manifest, result)
+    console.log(`  ${name.padEnd(26)} ${result.status.padEnd(15)} ${result.note ?? ''}`)
+    if (['created', 'updated', 'republished', 'unchanged'].includes(result.status)) record(manifest, result)
   }
   const failed = results.filter((r) => ['blocked', 'push failed'].includes(r.status))
   if (failed.length) process.exitCode = 1

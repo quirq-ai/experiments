@@ -57,6 +57,10 @@
       "pointer": true,
       "updated": "2026-09-18"
     },
+    "meet-transcripts": {
+      "description": "Google Meet transcripts two ways: a self-hosted Attendee bot that joins the call, or Google's Meet REST API.",
+      "stack": "Next.js, Docker"
+    },
     "navier-stokes": {
       "description": "Flow Lab: an interactive Navier-Stokes fluid lab with four experiments and synchronized measurements.",
       "stack": "Vite, React",
@@ -96,6 +100,11 @@
       "description": "Bare Remotion starter project.",
       "stack": "Remotion",
       "updated": "2026-01-25"
+    },
+    "research-posts": {
+      "description": "Your agent activity, in one place.",
+      "stack": "Next.js",
+      "updated": "2026-10-30"
     },
     "shipnotes-demo": {
       "description": "Runnable tour of the shipnotes web components, vendored unmodified.",

@@ -53,10 +53,11 @@ Descriptions and stack labels live in [`experiments.json`](experiments.json): ed
 ## Index
 
 <!-- index:start -->
-27 experiments, most recently changed first.
+28 experiments, most recently changed first.
 
 | Experiment | What it is | Stack | Source | Updated |
 | --- | --- | --- | --- | --- |
+| [research-posts](https://github.com/quirq-ai/experiments/tree/research-posts) | Your agent activity, in one place. | Next.js |  | 2026-10-30 |
 | [rea](https://github.com/quirq-ai/experiments/tree/rea) | REA: reverse engineer anything from the terminal or an agent, through one CLI and MCP server. | TypeScript | [morluto/rea](https://github.com/morluto/rea) (pointer) | 2026-10-13 |
 | [workbench](https://github.com/quirq-ai/experiments/tree/workbench) | Codex-style desktop app with two engines behind one UI: the Codex app-server and Claude through the Agent SDK. | Electron |  | 2026-10-13 |
 | [claude-messages](https://github.com/quirq-ai/experiments/tree/claude-messages) | An iMessage-style window onto every Claude Code session running on the machine. | Node.js |  | 2026-10-09 |

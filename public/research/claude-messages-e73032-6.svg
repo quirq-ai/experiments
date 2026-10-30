@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" font-family="Inter, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+<defs><radialGradient id="g" cx="85%" cy="5%" r="90%"><stop offset="0" stop-color="#83d63a" stop-opacity="0.38"/><stop offset="0.55" stop-color="#83d63a" stop-opacity="0.06"/><stop offset="1" stop-color="#83d63a" stop-opacity="0"/></radialGradient></defs>
+<rect width="1080" height="1080" fill="#0d0f0c"/><rect width="1080" height="1080" fill="url(#g)"/>
+<text x="96" y="110" font-size="28" font-weight="600" fill="#ffffff" opacity="0.55">claude-messages</text>
+<text x="96" y="430" font-size="190" font-weight="800" fill="#83d63a">0</text><text x="96" y="560" font-size="54" font-weight="700" fill="#f5f6f2">Dependencies to install</text><text x="96" y="653.5" font-size="34" font-weight="400" fill="#b9bdb2">Run node server.mjs, open 127.0.0.1:4417. Needs</text><text x="96" y="696" font-size="34" font-weight="400" fill="#b9bdb2">Node 18+ and claude on your PATH.</text></svg>

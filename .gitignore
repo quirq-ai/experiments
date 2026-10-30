@@ -55,4 +55,6 @@ next-env.d.ts
 !/session/README.md
 /.instants/
 
-.research-cache/
+# Generated posts are shared; notes, uploads and scan state stay local.
+.research-cache/*
+!.research-cache/posts/

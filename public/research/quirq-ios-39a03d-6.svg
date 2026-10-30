@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080" font-family="Inter, -apple-system, 'Helvetica Neue', Arial, sans-serif">
-<defs><radialGradient id="g" cx="85%" cy="5%" r="90%"><stop offset="0" stop-color="#f4f3f0" stop-opacity="0.38"/><stop offset="0.55" stop-color="#f4f3f0" stop-opacity="0.06"/><stop offset="1" stop-color="#f4f3f0" stop-opacity="0"/></radialGradient></defs>
-<rect width="1080" height="1080" fill="#0d0f0c"/><rect width="1080" height="1080" fill="url(#g)"/>
-<text x="96" y="110" font-size="28" font-weight="600" fill="#ffffff" opacity="0.55">quirq-ios</text>
-<text x="96" y="430" font-size="107" font-weight="800" fill="#f4f3f0">0x8140 vs 0x81</text><text x="96" y="560" font-size="54" font-weight="700" fill="#f5f6f2">The blocker</text><text x="96" y="653.5" font-size="34" font-weight="400" fill="#b9bdb2">Xcode 16.4 supports chips up to the A18 Pro</text><text x="96" y="696" font-size="34" font-weight="400" fill="#b9bdb2">(0x8140). The iPhone 17 Pro's A19 Pro is 0x8150,</text><text x="96" y="738.5" font-size="34" font-weight="400" fill="#b9bdb2">so it cannot mount, register or build.</text></svg>

@@ -84,6 +84,11 @@
       "source": "https://github.com/paperclipai/paperclip",
       "updated": "2026-04-08"
     },
+    "quantum-lab": {
+      "description": "Quantum Lab is seven hands-on quantum mechanics experiments, with the Schrödinger equation solved live in the browser.",
+      "stack": "HTML",
+      "updated": "2026-11-10"
+    },
     "rea": {
       "description": "REA: reverse engineer anything from the terminal or an agent, through one CLI and MCP server.",
       "stack": "TypeScript",
